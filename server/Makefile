@@ -2,13 +2,14 @@
 
 CC = c++
 
-SRCS := main.cpp
+SRCS := main.cpp signalcallbacks.cpp
 OUT := build/tmsd
+INCLUDES := -Iinclude
 
 all: tv-managing-server
 
 tv-managing-server:
-	${CC} ${SRCS} -o ${OUT}
+	${CC} ${INCLUDES} ${SRCS} -o ${OUT}
 	chmod 744 ${OUT}
 
 install: tv-managing-server
