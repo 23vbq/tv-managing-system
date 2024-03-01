@@ -1,0 +1,4 @@
+.vscode
+client/build
+endpoint/build
+server/build
