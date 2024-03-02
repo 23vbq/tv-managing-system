@@ -1,6 +1,4 @@
 #include "signalcallbacks.h"
-#include <signal.h>
-#include <syslog.h>
 
 void SignalCallbacks::termination_callback(int sig){
     using namespace std;

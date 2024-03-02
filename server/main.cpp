@@ -1,10 +1,14 @@
 #include <syslog.h>
+
 #include "signalcallbacks.h"
+
 // For testing
 #include <chrono>
 #include <thread>
 
 static bool mainloop = true;
+
+const int LOGMASK = LOG_UPTO (LOG_INFO);
 const char* DAEMONNAME = "tmsd";
 
 using namespace std;
@@ -12,6 +16,7 @@ using namespace std;
 int main(int argc, char* argv[]){
     // Open syslog
     openlog(DAEMONNAME, LOG_CONS | LOG_PID, LOG_USER);
+    setlogmask(LOGMASK);
     syslog(LOG_INFO, "Starting server daemon");
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&mainloop);
