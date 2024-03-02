@@ -23,5 +23,5 @@ class ConfigLoader{
         // void Load(string); // może się tego pozbyć i filenae jako const?
         template <typename T>
         bool GetProperty(string key, T& valueOut);
-}
+};
 #endif

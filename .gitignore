@@ -1,4 +1,12 @@
 .vscode
+!.vscode/launch.json
+
+# Ignore builds
 client/build
 endpoint/build
 server/build
+
+# Ignore tests
+client/test
+endpoint/test
+server/test
