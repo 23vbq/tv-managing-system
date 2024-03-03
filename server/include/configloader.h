@@ -3,10 +3,11 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include <fstream>
 #include <string>
-#include <syslog.h>
 #include <sstream>
+#include <syslog.h>
 
 using namespace std;
 
@@ -16,6 +17,9 @@ class ConfigLoader{
         unordered_map<string, string> m_properties;
 
         ifstream* OpenFile();
+        bool kvpCheck(string&, int&, size_t&);
+        void ClearWhitespaces(string&);
+        // void LoadList(string&, string&, bool&, int&);
     public:
         // ConfigLoader();
         ConfigLoader(string);
