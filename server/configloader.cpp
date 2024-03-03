@@ -13,9 +13,14 @@ ifstream* ConfigLoader::OpenFile(){
 ConfigLoader::ConfigLoader(string path){
     m_path = path;
 }
+
 string ConfigLoader::GetPath(){
     return m_path;
 }
+bool ConfigLoader::isEmpty(){
+    return m_properties.size() == 0;
+}
+
 void ConfigLoader::Load(){
     using namespace std;
     syslog(LOG_INFO, "Loading config file: %s", &m_path[0]);

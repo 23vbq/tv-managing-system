@@ -6,6 +6,7 @@
 // For testing
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 static bool mainloop = true;
 
@@ -24,10 +25,13 @@ int main(int argc, char* argv[]){
     // FIXME Test
     ConfigLoader cfgl = ConfigLoader("./test/test.cfg");
     cfgl.Load();
-    /*while (mainloop)
+    int l = 0;
+    bool b1 = cfgl.GetProperty<int>("liczba", l);
+    bool b2 = cfgl.GetProperty<int>("testing", l);
+    while (mainloop)
     {
         syslog(LOG_NOTICE, "Test message");
-        this_thread::sleep_for(chrono::milliseconds(1000));
-    }*/
+        this_thread::sleep_for(chrono::seconds(10));
+    }
     return 0;
 }
