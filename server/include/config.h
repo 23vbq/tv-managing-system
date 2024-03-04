@@ -29,7 +29,8 @@ class Config
             ss>>valueOut;
             return true;
         }
-        vector<Config> GetList();
+        vector<Config>* GetList(string);
+        string ToString();
 };
 
 #endif
