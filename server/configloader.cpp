@@ -9,14 +9,6 @@ ifstream* ConfigLoader::OpenFile(){
     }
     return in;
 }
-bool ConfigLoader::kvpCheck(string& line, int& n, size_t& posOut){
-    posOut = line.find('=');
-    if (posOut == string::npos){
-        syslog(LOG_ERR, "Invalid data at line %i in file %s", n, &m_path[0]);
-        return false;
-    }
-    return true;
-}
 void ConfigLoader::ClearWhitespaces(string& line){
     int n = line.length();
     for (int i = 0; i < n; i++){
@@ -42,6 +34,10 @@ bool ConfigLoader::isEmpty(){
 }
 
 void ConfigLoader::Load(){
+    if (m_path == ""){
+        syslog(LOG_WARNING, "Trying to load config without path!");
+        return;
+    }
     using namespace std;
     syslog(LOG_INFO, "Loading config file: %s", &m_path[0]);
     // Clean map
@@ -74,16 +70,20 @@ void ConfigLoader::Load(){
                 continue;
             }
             // Handle if equals not found
-            if (!kvpCheck(line, n, eqPos))
+            if ((eqPos = line.find('=')) == string::npos && line.find('{') == string::npos && line.find('}') == string::npos){
+                syslog(LOG_ERR, "Invalid data at line %i in file %s", n, &m_path[0]);
                 continue;
+            }
             // Add to value
             m_properties[key] += line + '\n';
             syslog(LOG_DEBUG, "List line: %s", &line[0]);
             continue;
         }
         // Handle if equals not found
-        if (!kvpCheck(line, n, eqPos))
+        if ((eqPos = line.find('=')) == string::npos){
+            syslog(LOG_ERR, "Invalid data at line %i in file %s", n, &m_path[0]);
             continue;
+        }
         // Get key and validate if exists
         key = line.substr(0, eqPos);
         if (m_properties.count(key) != 0){
