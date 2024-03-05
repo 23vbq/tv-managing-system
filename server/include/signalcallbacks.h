@@ -5,7 +5,7 @@
 #include <syslog.h>
 
 namespace SignalCallbacks{
-    static bool* mainloopPtr;
+    static bool* s_mainloopPtr;
 
     void SetupCallbacks(bool *mainloop);
     void termination_callback(int);

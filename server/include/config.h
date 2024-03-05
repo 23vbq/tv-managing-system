@@ -24,6 +24,11 @@ class Config
                 syslog(LOG_WARNING, "Property [%s] not found!", &key[0]);
                 return false;
             }
+            // Handle if type is string
+            if (typeid(T) == typeid(string)){
+                valueOut = m_properties[key];
+                return true;
+            }
             stringstream ss;
             ss<<m_properties[key];
             ss>>valueOut;
