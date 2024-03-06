@@ -37,4 +37,24 @@ TODO
 TODO
 
 ### Endpoint
+*Linux*
+
+Endpoint allows to display images on TV (any display connected to machine), using X11 library. Its main advantage is that is written in C++, so it allows to obtain low system requirements. That allows you to make low cost and practical display system (e.g. TV connected to Raspberry Pi). Endpoint program gets settings from server. Files to be displayed are obtained from path. To make fully centrally managed system (meaning easy access to files on endpoint) you can setup SMB server, mount it on every endpoint and configure path on tv-managing-system server to this mountpoint.
+
+## Configuration
 TODO
+
+## ToDo
+- [ ] Description (Readme)
+- [ ] Documentation
+- [ ] Server
+  - [x] Configuration
+    - [x] Loading configuration
+    - [x] Storing configuration
+  - [ ] Socket
+    - [x] Creating socket
+    - [x] Making connection
+    - [ ] Multiple connections
+  - [ ] Requests handling
+- [ ] Client
+- [ ] Endpoint
