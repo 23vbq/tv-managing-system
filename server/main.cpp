@@ -4,6 +4,7 @@
 #include "configloader.h"
 #include "serversettings.h"
 #include "endpointconnection.h"
+#include "serversocket.h"
 
 // For testing
 #include <chrono>
@@ -32,13 +33,7 @@ int main(int argc, char* argv[]){
     // Load config
     LoadServerConfig();
     // FIXME tests
-    int x = 0, x2 = 0;
-    // bool b1 = cfgl.GetProperty<int>("liczba", x);
-    // bool b2 = cfgl.GetProperty<int>("testing", x);
-    // vector<Config>* l1 = cfgl.GetList("lista");
-    // for (int i = 0; i < l1->size(); i++)
-    //     syslog(LOG_CRIT, "%s", &(l1->at(i).ToString())[0]);
-    // bool b3 = l1->at(0).GetProperty<int>("fajne", x2);
+    ServerSocket srv(m_settings.listeningPort);
     while (s_mainloop)
     {
         syslog(LOG_NOTICE, "Test message");
