@@ -36,8 +36,9 @@ int main(int argc, char* argv[]){
     ServerSocket srv(m_settings.listeningPort);
     while (s_mainloop)
     {
-        syslog(LOG_NOTICE, "Test message");
-        this_thread::sleep_for(chrono::seconds(10));
+        //syslog(LOG_NOTICE, "Test message");
+        srv.Handle();
+        this_thread::sleep_for(chrono::seconds(1));
     }
     //delete l1;
     syslog(LOG_INFO, "Daemon exited successfully");

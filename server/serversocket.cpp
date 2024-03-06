@@ -23,12 +23,56 @@ ServerSocket::ServerSocket(uint16_t port){
         throw "listen";
     }
     // Accept
-    int new_sock;
-    if ((new_sock = accept(m_server_fd, (sockaddr*)&m_address, &m_addrlen)) < 0){
-        throw "accept";
+    
+    // std::string hello = "Test";
+    // send(new_sock, &hello[0], hello.length(), 0);
+    // close(new_sock);
+    // close(m_server_fd);
+}
+ServerSocket::~ServerSocket(){
+    for (int conn : m_connections){
+        syslog(LOG_INFO, "Closing connection: %i", conn);
+        close(conn);
     }
-    std::string hello = "Test";
-    send(new_sock, &hello[0], hello.length(), 0);
-    close(new_sock);
+    syslog(LOG_INFO, "Closing socket");
     close(m_server_fd);
+}
+
+void ServerSocket::Disconnect(int connection){
+    using namespace std;
+    close(connection);
+    int n = m_connections.size();
+    for (int i = 0; i < n; i++){
+        if (m_connections.at(i) == connection){
+            m_connections.erase(m_connections.begin() + i);
+            syslog(LOG_INFO, "Successfully disconnected: %i", connection);
+        }
+    }
+}
+
+void ServerSocket::Handle(){
+    using namespace std;
+    if (m_connections.size() == 0){
+        int new_sock;
+        if ((new_sock = accept(m_server_fd, (sockaddr*)&m_address, &m_addrlen)) < 0){
+            throw "accept";
+        }
+        m_connections.push_back(new_sock);
+        syslog(LOG_INFO, "Successfully connected: %i", new_sock);
+    }
+    char buffer[1024] = { 0 };
+    size_t readlen;
+    for (int conn : m_connections){
+        readlen = read(conn, buffer, 1024 - 1);
+        if (readlen < 1){
+            syslog(LOG_WARNING, "Connection lost with: %i", conn);
+            Disconnect(conn);
+            continue;
+        }
+        // FIXME testing
+        char rev[1024] = {0};
+        for (int i = 0; i < readlen; i++)
+            rev[i] = buffer[readlen - i - 1];
+        send(conn, rev, readlen, 0);
+    }
 }
