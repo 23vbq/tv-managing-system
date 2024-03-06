@@ -2,18 +2,19 @@
 
 CC = g++
 
-SRCS := main.cpp signalcallbacks.cpp configloader.cpp config.cpp serversocket.cpp
+MAIN := main.cpp
+SRCS := src/signalcallbacks.cpp src/configloader.cpp src/config.cpp src/serversocket.cpp
 OUT := build/tmsd
 INCLUDES := -Iinclude
 
 all: tmsd
 
 tmsd:
-	${CC} ${INCLUDES} ${SRCS} -o ${OUT}
+	${CC} ${MAIN} ${INCLUDES} ${SRCS} -o ${OUT}
 	chmod 744 ${OUT}
 
 debug:
-	${CC} -g ${INCLUDES} ${SRCS} -o ${OUT}
+	${CC} -g ${MAIN} ${INCLUDES} ${SRCS} -o ${OUT}
 	chmod 777 ${OUT}
 
 install: tmsd
