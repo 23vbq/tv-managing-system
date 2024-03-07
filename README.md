@@ -54,7 +54,17 @@ TODO
   - [ ] Socket
     - [x] Creating socket
     - [x] Making connection
-    - [ ] Multiple connections
+    - [x] Multiple connections
+    - [ ] Cleanup code
+  - [ ] Endpoint settings
+    - [ ] Class
+    - [ ] Loading from file
+    - [ ] Creating default file
+    - [ ] Sending through socket
   - [ ] Requests handling
 - [ ] Client
+  - [ ] Socket
+  - [ ] Getting data
+    - [ ] Endpoint settings
+  - [ ] Sending data
 - [ ] Endpoint
