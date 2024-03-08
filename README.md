@@ -70,3 +70,6 @@ TODO
     - [ ] Endpoint settings
   - [ ] Sending data
 - [ ] Endpoint
+
+
+> **SEGFAULT COUNTER**: 1
