@@ -14,7 +14,10 @@ using namespace std;
 class ServerSocket
 {
 public:
-    static const int MAX_CLIENTS = 10;
+    static const int MAX_SOCKETS = 2;
+    static const string SMSG_HELLO;
+    static const string SMSG_REFNRE;
+
 private:
     int m_server_fd;
     sockaddr_in m_address;
@@ -22,10 +25,10 @@ private:
     int m_opt = 1;
 
     fd_set m_readfds;
-    int m_sockets[MAX_CLIENTS];
+    int m_sockets[MAX_SOCKETS];
 
-    const string hello_msg = "Hello TMS";
     //vector<int> m_connections;
+    bool AcceptConnectionHandle();
     void Disconnect(int);
 public:
     ServerSocket(uint16_t);

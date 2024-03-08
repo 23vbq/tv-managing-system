@@ -1,8 +1,12 @@
 #include "serversocket.h"
 
+// Static strings
+const string ServerSocket::SMSG_HELLO = "Hello TMSD\r\n";
+const string ServerSocket::SMSG_REFNRE = "Connection refused: ";
+
 ServerSocket::ServerSocket(uint16_t port){
     // Initialize client sockets
-    for (int i = 0; i < MAX_CLIENTS; i++){
+    for (int i = 0; i < MAX_SOCKETS; i++){
         m_sockets[i] = 0;
     }
     // Create server socket fd
@@ -39,7 +43,7 @@ ServerSocket::~ServerSocket(){
         close(conn);
     }
     syslog(LOG_INFO, "Closing socket");*/
-    for (int i = 0; i < MAX_CLIENTS; i++){
+    for (int i = 0; i < MAX_SOCKETS; i++){
         close(m_sockets[i]);
     }
     close(m_server_fd);
@@ -56,6 +60,34 @@ void ServerSocket::Disconnect(int connection){
         }
     }*/
 }
+bool ServerSocket::AcceptConnectionHandle(){
+    int new_socket;
+    if (FD_ISSET(m_server_fd, &m_readfds)){
+        if ((new_socket = accept(m_server_fd, (sockaddr*)&m_address, &m_addrlen)) < 0){
+            throw "Error on handling new connection";
+        }
+        syslog(LOG_INFO, "Accepted connection [fd: %i, ip: %s, port: %i]", new_socket, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+        if (send(new_socket, &SMSG_HELLO[0], SMSG_HELLO.length(), 0) != SMSG_HELLO.length()){
+            syslog(LOG_ERR, "Error on sending hello message!");
+        }
+        bool inArray = false;
+        for (int i = 0; i < MAX_SOCKETS; i++){
+            if (m_sockets[i] == 0){
+                m_sockets[i] = new_socket;
+                inArray = true;
+                break; // Break wazny bo inaczej zapelniam caly array
+            }
+        }
+        if (!inArray) {
+            string smsg_ref = SMSG_REFNRE + "Too many clients connected.\r\n";
+            syslog(LOG_WARNING, "%s", &smsg_ref[0]);
+            send(new_socket, &smsg_ref[0], smsg_ref.length(), 0);
+            close(new_socket);
+        }
+        return true;
+    }
+    return false;
+}
 
 void ServerSocket::Handle(){
     using namespace std;
@@ -64,7 +96,7 @@ void ServerSocket::Handle(){
     FD_SET(m_server_fd, &m_readfds);
     int max_sd = m_server_fd;
     int sd, activity, new_socket;
-    for (int i = 0; i < MAX_CLIENTS; i++){
+    for (int i = 0; i < MAX_SOCKETS; i++){
         sd = m_sockets[i];
         if (sd > 0)
             FD_SET(sd, &m_readfds);
@@ -77,25 +109,12 @@ void ServerSocket::Handle(){
         syslog(LOG_ERR, "FD select error!");
     }
     // Handle new connection
-    if (FD_ISSET(m_server_fd, &m_readfds)){
-        if ((new_socket = accept(m_server_fd, (sockaddr*)&m_address, &m_addrlen)) < 0){
-            throw "Error on handling new connection";
-        }
-        syslog(LOG_INFO, "Accepted connection [fd: %i, ip: %s, port: %i]", new_socket, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
-        if (send(new_socket, &hello_msg[0], hello_msg.length(), 0) != hello_msg.length()){
-            syslog(LOG_ERR, "Error on sending hello message!");
-        }
-        for (int i = 0; i < MAX_CLIENTS; i++){
-            if (m_sockets[i] == 0){
-                m_sockets[i] = new_socket;
-                return;
-            }
-        }
-    }
+    if (AcceptConnectionHandle())
+        return;
     // Handle existing connections
     char buffer[1024] = {0};
     size_t readlen;
-    for (int i = 0; i < MAX_CLIENTS; i++){
+    for (int i = 0; i < MAX_SOCKETS; i++){
         sd = m_sockets[i];
         if (FD_ISSET(sd, &m_readfds)){
             // Handle disconnection
