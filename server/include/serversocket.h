@@ -29,7 +29,7 @@ private:
 
     //vector<int> m_connections;
     bool AcceptConnectionHandle();
-    void Disconnect(int);
+    void LostConnectionHandle(int);
 public:
     ServerSocket(uint16_t);
     ~ServerSocket();

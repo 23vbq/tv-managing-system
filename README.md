@@ -56,6 +56,8 @@ TODO
     - [x] Making connection
     - [x] Multiple connections
     - [ ] Cleanup code
+    - [ ] Callback function for every read
+  - [ ] Command handling
   - [ ] Endpoint settings
     - [ ] Class
     - [ ] Loading from file

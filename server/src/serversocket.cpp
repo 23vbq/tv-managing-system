@@ -18,7 +18,7 @@ ServerSocket::ServerSocket(uint16_t port){
     }
     // Setup address struct
     m_address.sin_family = AF_INET;
-    m_address.sin_addr.s_addr = INADDR_ANY;
+    m_address.sin_addr.s_addr = INADDR_ANY; // TODO ip from config
     m_address.sin_port = htons(port);
     m_addrlen = sizeof(m_address);
     // Bind
@@ -29,13 +29,6 @@ ServerSocket::ServerSocket(uint16_t port){
     if (listen(m_server_fd, 3) < 0){
         throw "listen";
     }
-    // FIXME Tests
-    // Accept
-    
-    // std::string hello = "Test";
-    // send(new_sock, &hello[0], hello.length(), 0);
-    // close(new_sock);
-    // close(m_server_fd);
 }
 ServerSocket::~ServerSocket(){
     /*for (int conn : m_connections){
@@ -43,23 +36,12 @@ ServerSocket::~ServerSocket(){
         close(conn);
     }
     syslog(LOG_INFO, "Closing socket");*/
-    for (int i = 0; i < MAX_SOCKETS; i++){
+    for (int i = 0; i < MAX_SOCKETS; i++){ // TODO check is valid to new connection handling
         close(m_sockets[i]);
     }
     close(m_server_fd);
 }
 
-void ServerSocket::Disconnect(int connection){
-    using namespace std;
-    close(connection);
-    /*int n = m_connections.size();
-    for (int i = 0; i < n; i++){
-        if (m_connections.at(i) == connection){
-            m_connections.erase(m_connections.begin() + i);
-            syslog(LOG_INFO, "Successfully disconnected: %i", connection);
-        }
-    }*/
-}
 bool ServerSocket::AcceptConnectionHandle(){
     int new_socket;
     if (FD_ISSET(m_server_fd, &m_readfds)){
@@ -88,6 +70,16 @@ bool ServerSocket::AcceptConnectionHandle(){
     }
     return false;
 }
+void ServerSocket::LostConnectionHandle(int connection){
+    using namespace std;
+    getpeername(connection, (sockaddr*)&m_address, &m_addrlen); // FIXME when last connection wasn't localhost, and localhost disconnects it return last connection (in my example gateway)
+    close(connection);
+    for (int i = 0; i < MAX_SOCKETS; i++){
+        if (m_sockets[i] == connection)
+            m_sockets[i] = 0;
+    }
+    syslog(LOG_WARNING, "Lost connection [fd: %i, ip: %s, port: %i]", connection, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+}
 
 void ServerSocket::Handle(){
     using namespace std;
@@ -95,7 +87,7 @@ void ServerSocket::Handle(){
     FD_ZERO(&m_readfds);
     FD_SET(m_server_fd, &m_readfds);
     int max_sd = m_server_fd;
-    int sd, activity, new_socket;
+    int sd, activity;
     for (int i = 0; i < MAX_SOCKETS; i++){
         sd = m_sockets[i];
         if (sd > 0)
@@ -119,7 +111,7 @@ void ServerSocket::Handle(){
         if (FD_ISSET(sd, &m_readfds)){
             // Handle disconnection
             if ((readlen = read(sd, buffer, 1024 - 1)) == 0){
-                close(sd);
+                LostConnectionHandle(sd);
             } else{
                 char rev[1024] = {0};
                 for (int i = 0; i < readlen; i++)
@@ -129,30 +121,3 @@ void ServerSocket::Handle(){
         }
     }
 }
-
-/*void ServerSocket::Handle(){
-    using namespace std;
-    if (m_connections.size() == 0){
-        int new_sock;
-        if ((new_sock = accept(m_server_fd, (sockaddr*)&m_address, &m_addrlen)) < 0){
-            throw "accept";
-        }
-        m_connections.push_back(new_sock);
-        syslog(LOG_INFO, "Successfully connected: %i", new_sock);
-    }
-    char buffer[1024] = { 0 };
-    size_t readlen;
-    for (int conn : m_connections){
-        readlen = read(conn, buffer, 1024 - 1);
-        if (readlen < 1){
-            syslog(LOG_WARNING, "Connection lost with: %i", conn);
-            Disconnect(conn);
-            continue;
-        }
-        // FIXME testing
-        char rev[1024] = {0};
-        for (int i = 0; i < readlen; i++)
-            rev[i] = buffer[readlen - i - 1];
-        send(conn, rev, readlen, 0);
-    }
-}*/
