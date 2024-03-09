@@ -15,10 +15,13 @@ class ServerSocket
 {
 public:
     static const int MAX_SOCKETS = 2;
-    static const string SMSG_HELLO;
-    static const string SMSG_REFNRE;
+    static const string SMSG_HELLO; // Hello message
+    static const string SMSG_REFNRE; // Connection refused w/o reason
+    static const string SMSG_CLSD; // Connection closed
 
 private:
+    bool* s_termination;
+
     int m_server_fd;
     sockaddr_in m_address;
     socklen_t m_addrlen;
@@ -31,10 +34,12 @@ private:
     bool AcceptConnectionHandle();
     void LostConnectionHandle(int);
 public:
-    ServerSocket(uint16_t);
+    ServerSocket(bool*, uint16_t);
     ~ServerSocket();
 
     void Handle();
+    void Disconnect(int);
+    //void Disconnect(int, string);
 };
 
 #endif

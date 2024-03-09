@@ -5,9 +5,13 @@
 #include <syslog.h>
 
 namespace SignalCallbacks{
-    static bool* s_mainloopPtr;
+    static bool* s_termination;
 
-    void SetupCallbacks(bool *mainloop);
+    static sighandler_t oldHandler;
+
     void termination_callback(int);
+    
+    void SetupCallbacks(bool*);
+    void RevertCallbacks();
 }
 #endif

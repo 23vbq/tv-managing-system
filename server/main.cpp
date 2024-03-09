@@ -14,8 +14,9 @@
 const int LOGMASK = LOG_UPTO (LOG_DEBUG);
 const char* DAEMONNAME = "tmsd";
 
-static bool s_mainloop = true;
+static bool s_termination = false;
 
+ServerSocket* m_srv;
 ServerSettings m_settings;
 vector<EndpointConnection> m_endpoints;
 
@@ -29,18 +30,20 @@ int main(int argc, char* argv[]){
     setlogmask(LOGMASK);
     syslog(LOG_INFO, "Starting server daemon");
     // Create signal handles
-    SignalCallbacks::SetupCallbacks(&s_mainloop);
+    SignalCallbacks::SetupCallbacks(&s_termination);
     // Load config
     LoadServerConfig();
     // FIXME tests
-    ServerSocket srv(m_settings.listeningPort);
-    while (s_mainloop)
+    m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
+    while (!s_termination)
     {
         //syslog(LOG_NOTICE, "Test message");
-        srv.Handle();
+        m_srv->Handle();
         this_thread::sleep_for(chrono::seconds(1));
     }
     //delete l1;
+    SignalCallbacks::RevertCallbacks();
+    delete m_srv;
     syslog(LOG_INFO, "Daemon exited successfully");
     return 0;
 }

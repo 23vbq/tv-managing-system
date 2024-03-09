@@ -72,4 +72,4 @@ TODO
 - [ ] Endpoint
 
 
-> **SEGFAULT COUNTER**: 1
+> **SEGFAULT COUNTER**: 2

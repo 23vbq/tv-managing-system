@@ -1,10 +1,12 @@
 #include "serversocket.h"
 
-// Static strings
+// Static variables
 const string ServerSocket::SMSG_HELLO = "Hello TMSD\r\n";
 const string ServerSocket::SMSG_REFNRE = "Connection refused: ";
+const string ServerSocket::SMSG_CLSD = "Connection closed by server\r\n";
 
-ServerSocket::ServerSocket(uint16_t port){
+ServerSocket::ServerSocket(bool* termination, uint16_t port){
+    s_termination = termination;
     // Initialize client sockets
     for (int i = 0; i < MAX_SOCKETS; i++){
         m_sockets[i] = 0;
@@ -31,15 +33,13 @@ ServerSocket::ServerSocket(uint16_t port){
     }
 }
 ServerSocket::~ServerSocket(){
-    /*for (int conn : m_connections){
-        syslog(LOG_INFO, "Closing connection: %i", conn);
-        close(conn);
-    }
-    syslog(LOG_INFO, "Closing socket");*/
+    using namespace std;
+    syslog(LOG_INFO, "Closing ServerSocket");
     for (int i = 0; i < MAX_SOCKETS; i++){ // TODO check is valid to new connection handling
-        close(m_sockets[i]);
+        Disconnect(m_sockets[i]);
     }
     close(m_server_fd);
+    syslog(LOG_INFO, "Closed ServerSocket successfully");
 }
 
 bool ServerSocket::AcceptConnectionHandle(){
@@ -96,12 +96,17 @@ void ServerSocket::Handle(){
             max_sd = sd;
     }
     // Get active fd
-    activity = select(max_sd + 1, &m_readfds, NULL, NULL, NULL);
+    try{
+        activity = select(max_sd + 1, &m_readfds, NULL, NULL, NULL); // FIXME throws exception here but cannot catch it
+    } catch (...){
+        syslog(LOG_ERR, "activity");
+        return;
+    }
     if ((activity < 0) && (errno != EINTR)){
         syslog(LOG_ERR, "FD select error!");
     }
     // Handle new connection
-    if (AcceptConnectionHandle())
+    if (*s_termination || AcceptConnectionHandle())
         return;
     // Handle existing connections
     char buffer[1024] = {0};
@@ -120,4 +125,17 @@ void ServerSocket::Handle(){
             }
         }
     }
+}
+void ServerSocket::Disconnect(int connection){
+    if (connection == 0)
+        return;
+    using namespace std;
+    getpeername(connection, (sockaddr*)&m_address, &m_addrlen);
+    send(connection, &SMSG_CLSD[0], SMSG_CLSD.length(), 0);
+    close(connection);
+    for (int i = 0; i < MAX_SOCKETS; i++){
+        if (m_sockets[i] == connection)
+            m_sockets[i] = 0;
+    }
+    syslog(LOG_INFO, "Disconnected [fd: %i, ip: %s, port: %i]", connection, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
 }
