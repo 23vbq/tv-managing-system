@@ -23,6 +23,8 @@ vector<EndpointConnection> m_endpoints;
 using namespace std;
 
 void LoadServerConfig();
+// Test
+string rtest(char[], int);
 
 int main(int argc, char* argv[]){
     // Open syslog
@@ -38,7 +40,7 @@ int main(int argc, char* argv[]){
     while (!s_termination)
     {
         //syslog(LOG_NOTICE, "Test message");
-        m_srv->Handle();
+        m_srv->Handle(rtest);
         this_thread::sleep_for(chrono::seconds(1));
     }
     //delete l1;
@@ -73,4 +75,11 @@ void LoadServerConfig(){
         }
     }
     delete epList;
+}
+
+string rtest(char buffer[], int n){
+    string res = "";
+    for (int i = n - 2; i >= 0; i--)
+        res += buffer[i];
+    return res + '\n';
 }

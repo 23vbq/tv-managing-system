@@ -81,7 +81,7 @@ void ServerSocket::LostConnectionHandle(int connection){
     syslog(LOG_WARNING, "Lost connection [fd: %i, ip: %s, port: %i]", connection, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
 }
 
-void ServerSocket::Handle(){
+void ServerSocket::Handle(string (*responseCall)(char[], int)){
     using namespace std;
     // Prepare sockets fd list
     FD_ZERO(&m_readfds);
@@ -118,10 +118,15 @@ void ServerSocket::Handle(){
             if ((readlen = read(sd, buffer, 1024 - 1)) == 0){
                 LostConnectionHandle(sd);
             } else{
-                char rev[1024] = {0};
-                for (int i = 0; i < readlen; i++)
-                    rev[i] = buffer[readlen - i - 1];
-                send(sd, rev, readlen, 0);
+                string data = responseCall(buffer, readlen);
+                size_t datalen = data.length();
+                if (send(sd, &data[0], datalen, 0) != datalen){
+                    syslog(LOG_ERR, "Error on sending response message");
+                    Disconnect(sd);
+                } else{
+                    getpeername(sd, (sockaddr*)&m_address, &m_addrlen);
+                    syslog(LOG_DEBUG, "Response sent [fd: %i, ip: %s, port: %i]", sd, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+                }
             }
         }
     }

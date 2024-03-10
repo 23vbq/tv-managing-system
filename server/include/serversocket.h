@@ -37,7 +37,7 @@ public:
     ServerSocket(bool*, uint16_t);
     ~ServerSocket();
 
-    void Handle();
+    void Handle(string (*)(char[], int));
     void Disconnect(int);
     //void Disconnect(int, string);
 };
