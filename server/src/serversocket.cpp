@@ -36,7 +36,7 @@ ServerSocket::~ServerSocket(){
     using namespace std;
     syslog(LOG_INFO, "Closing ServerSocket");
     for (int i = 0; i < MAX_SOCKETS; i++){ // TODO check is valid to new connection handling
-        Disconnect(m_sockets[i]);
+        Disconnect(m_sockets[i], SMSG_CLSD);
     }
     close(m_server_fd);
     syslog(LOG_INFO, "Closed ServerSocket successfully");
@@ -122,7 +122,7 @@ void ServerSocket::Handle(string (*responseCall)(char[], int)){
                 size_t datalen = data.length();
                 if (send(sd, &data[0], datalen, 0) != datalen){
                     syslog(LOG_ERR, "Error on sending response message");
-                    Disconnect(sd);
+                    Disconnect(sd, "Connection closed: Error on sending response message.");
                 } else{
                     getpeername(sd, (sockaddr*)&m_address, &m_addrlen);
                     syslog(LOG_DEBUG, "Response sent [fd: %i, ip: %s, port: %i]", sd, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
@@ -131,12 +131,13 @@ void ServerSocket::Handle(string (*responseCall)(char[], int)){
         }
     }
 }
-void ServerSocket::Disconnect(int connection){
+void ServerSocket::Disconnect(int connection, string reason){
     if (connection == 0)
         return;
     using namespace std;
     getpeername(connection, (sockaddr*)&m_address, &m_addrlen);
-    send(connection, &SMSG_CLSD[0], SMSG_CLSD.length(), 0);
+    if (reason != "")
+        send(connection, &reason[0], reason.length(), 0);
     close(connection);
     for (int i = 0; i < MAX_SOCKETS; i++){
         if (m_sockets[i] == connection)
