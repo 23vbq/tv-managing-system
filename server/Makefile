@@ -3,7 +3,7 @@
 CC = g++
 
 MAIN := main.cpp
-SRCS := src/signalcallbacks.cpp src/configloader.cpp src/config.cpp src/serversocket.cpp
+SRCS := src/signalcallbacks.cpp src/configloader.cpp src/config.cpp src/serversocket.cpp src/commandhandler.cpp
 OUT := build/tmsd
 INCLUDES := -Iinclude
 

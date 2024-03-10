@@ -5,6 +5,7 @@
 #include "serversettings.h"
 #include "endpointconnection.h"
 #include "serversocket.h"
+#include "commandhandler.h"
 
 // For testing
 #include <chrono>
@@ -23,8 +24,9 @@ vector<EndpointConnection> m_endpoints;
 using namespace std;
 
 void LoadServerConfig();
-// Test
+// FIXME testing functions
 string rtest(char[], int);
+void cmdtest();
 
 int main(int argc, char* argv[]){
     // Open syslog
@@ -36,7 +38,12 @@ int main(int argc, char* argv[]){
     // Load config
     LoadServerConfig();
     // FIXME tests
+    CommandHandler cmd;
+    cmd.AddCommand("test", cmdtest);
+    cmd.Handle("test");
+    // Create ServerSocket
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
+    // Main loop
     while (!s_termination)
     {
         //syslog(LOG_NOTICE, "Test message");
@@ -57,13 +64,9 @@ void LoadServerConfig(){
     cfgl.GetProperty<string>("ListeningIp", m_settings.listeningIp);
     cfgl.GetProperty<unsigned short>("ListeningPort", m_settings.listeningPort);
     cfgl.GetProperty<string>("PasswordHash", m_settings.passwordHash);
-    // List
+    // Endpoint list
     vector<Config>* epList = cfgl.GetList("Endpoints");
     EndpointConnection buffer;
-    /*int nEpList = epList->size();
-    for (int i = 0; i < nEpList; i++){
-        if (epList->at(i))
-    }*/
     for (Config x : *epList){
         if (x.GetProperty<string>("Name", buffer.name) &&
             x.GetProperty<string>("Ip", buffer.ip) &&
@@ -77,9 +80,13 @@ void LoadServerConfig(){
     delete epList;
 }
 
+// FIXME testing functions
 string rtest(char buffer[], int n){
     string res = "";
     for (int i = n - 2; i >= 0; i--)
         res += buffer[i];
     return res + '\n';
+}
+void cmdtest(){
+    syslog(LOG_ALERT, "Test of cmd handler!");
 }
