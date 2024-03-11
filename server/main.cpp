@@ -26,7 +26,7 @@ using namespace std;
 void LoadServerConfig();
 // FIXME testing functions
 string rtest(char[], int);
-void cmdtest();
+void cmdtest(vector<string> x);
 
 int main(int argc, char* argv[]){
     // Open syslog
@@ -39,8 +39,9 @@ int main(int argc, char* argv[]){
     LoadServerConfig();
     // FIXME tests
     CommandHandler cmd;
-    cmd.AddCommand("test", cmdtest);
-    cmd.Handle("test");
+    Command x{2, cmdtest};
+    cmd.AddCommand("SAY", x);
+    cmd.Handle("SAY hello 5");
     // Create ServerSocket
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
     // Main loop
@@ -87,6 +88,6 @@ string rtest(char buffer[], int n){
         res += buffer[i];
     return res + '\n';
 }
-void cmdtest(){
-    syslog(LOG_ALERT, "Test of cmd handler!");
+void cmdtest(vector<string> x){
+    syslog(LOG_ALERT, "Function said: %s %i", &(x[0])[0], stoi(x[1]));
 }
