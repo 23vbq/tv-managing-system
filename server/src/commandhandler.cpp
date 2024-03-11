@@ -1,6 +1,9 @@
 #include "commandhandler.h"
 
- size_t CommandHandler::SplitCommand(vector<string>& cmdarray, string cmd){
+const string CommandHandler::CMD_VALID = "OK\r\n";
+const string CommandHandler::CMD_BAD = "BAD\r\n";
+
+size_t CommandHandler::SplitCommand(vector<string>& cmdarray, string cmd){
     cmdarray.clear();
     // size_t ePos = cmd.find(' ');
     size_t ePos, fPos = 0;
@@ -29,8 +32,11 @@ bool CommandHandler::Handle(string command){
     if (cmdPtr->argc != n - 1)
         return false;
     m_cmdbuffer.erase(m_cmdbuffer.begin());
-    cmdPtr->function(m_cmdbuffer);
+    cmdPtr->function(m_cmdbuffer, m_output);
     return true;
     // Inaczej. Muszę brać tego stringa jako cmd. Rozbić go na string[], a następnie to handlować.
     // To jest bardzo do przemyślenia, czy jakimś drzewkiem, czy tak?
+}
+string CommandHandler::GetOutput(){
+    return m_output;
 }

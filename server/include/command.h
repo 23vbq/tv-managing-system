@@ -7,10 +7,7 @@
 struct Command
 {
     size_t argc; // Arguments count
-    void (*function)(std::vector<std::string>); // Function to execute
-
-    // Command(size_t, void (*)(std::vector<std::string>));
+    void (*function)(std::vector<std::string>, std::string& output); // Function to execute
 };
-
 
 #endif

@@ -17,6 +17,7 @@ const char* DAEMONNAME = "tmsd";
 
 static bool s_termination = false;
 
+CommandHandler m_cmd;
 ServerSocket* m_srv;
 ServerSettings m_settings;
 vector<EndpointConnection> m_endpoints;
@@ -25,8 +26,8 @@ using namespace std;
 
 void LoadServerConfig();
 // FIXME testing functions
-string rtest(char[], int);
-void cmdtest(vector<string> x);
+void rtest(vector<string> x, string& output);
+void cmdtest(vector<string>, string&);
 
 int main(int argc, char* argv[]){
     // Open syslog
@@ -38,17 +39,24 @@ int main(int argc, char* argv[]){
     // Load config
     LoadServerConfig();
     // FIXME tests
-    CommandHandler cmd;
     Command x{2, cmdtest};
-    cmd.AddCommand("SAY", x);
-    cmd.Handle("SAY hello 5");
+    m_cmd.AddCommand("SAY", x);
+    x.argc = 1; x.function = rtest;
+    m_cmd.AddCommand("REV", x);
+    m_cmd.Handle("SAY hello 5");
     // Create ServerSocket
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
     // Main loop
     while (!s_termination)
     {
         //syslog(LOG_NOTICE, "Test message");
-        m_srv->Handle(rtest);
+        m_srv->Handle([](char msg[], int n) -> string {
+            string s(msg, n);
+            if (m_cmd.Handle(s)){
+                return m_cmd.GetOutput();
+            }
+            return CommandHandler::CMD_BAD;
+        });
         this_thread::sleep_for(chrono::seconds(1));
     }
     //delete l1;
@@ -82,12 +90,15 @@ void LoadServerConfig(){
 }
 
 // FIXME testing functions
-string rtest(char buffer[], int n){
-    string res = "";
+void rtest(vector<string> x, string& output){
+    size_t n = x[0].length();
+    output = "";
     for (int i = n - 2; i >= 0; i--)
-        res += buffer[i];
-    return res + '\n';
+        output += x[0][i];
+    output += '\n';
+    //return res + '\n';
 }
-void cmdtest(vector<string> x){
+void cmdtest(vector<string> x, string& output){
     syslog(LOG_ALERT, "Function said: %s %i", &(x[0])[0], stoi(x[1]));
+    output = "fajne";
 }
