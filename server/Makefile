@@ -3,7 +3,7 @@
 CC = g++
 
 MAIN := main.cpp
-SRCS := src/signalcallbacks.cpp src/configloader.cpp src/config.cpp src/serversocket.cpp src/commandhandler.cpp
+SRCS := src/signalcallbacks.cpp src/configloader.cpp src/config.cpp src/serversocket.cpp src/commandhandler.cpp src/commandfunctions.cpp
 OUT := build/tmsd
 INCLUDES := -Iinclude
 
@@ -14,7 +14,7 @@ tmsd:
 	chmod 744 ${OUT}
 
 debug:
-	${CC} -g ${MAIN} ${INCLUDES} ${SRCS} -o ${OUT}
+	${CC} -g -D DEBUG ${MAIN} ${INCLUDES} ${SRCS} -o ${OUT}
 	chmod 777 ${OUT}
 
 install: tmsd

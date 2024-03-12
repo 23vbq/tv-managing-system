@@ -1,3 +1,9 @@
+#ifdef DEBUG
+#define _LOGMASK LOG_UPTO (LOG_DEBUG)
+#else
+#define _LOGMASK LOG_UPTO (LOG_INFO)
+#endif
+
 #include <syslog.h>
 
 #include "signalcallbacks.h"
@@ -6,13 +12,14 @@
 #include "endpointconnection.h"
 #include "serversocket.h"
 #include "commandhandler.h"
+#include "commandfunctions.h"
 
 // For testing
 #include <chrono>
 #include <thread>
 #include <iostream>
 
-const int LOGMASK = LOG_UPTO (LOG_DEBUG);
+const int LOGMASK = _LOGMASK;
 const char* DAEMONNAME = "tmsd";
 
 static bool s_termination = false;
@@ -25,9 +32,7 @@ vector<EndpointConnection> m_endpoints;
 using namespace std;
 
 void LoadServerConfig();
-// FIXME testing functions
-void rtest(vector<string> x, string& output);
-void cmdtest(vector<string>, string&);
+void InitializeCommands();
 
 int main(int argc, char* argv[]){
     // Open syslog
@@ -38,26 +43,21 @@ int main(int argc, char* argv[]){
     SignalCallbacks::SetupCallbacks(&s_termination);
     // Load config
     LoadServerConfig();
-    // FIXME tests
-    Command x{2, cmdtest};
-    m_cmd.AddCommand("SAY", x);
-    x.argc = 1; x.function = rtest;
-    m_cmd.AddCommand("REV", x);
-    m_cmd.Handle("SAY hello 5");
+    // Initialize commands
+    InitializeCommands();
     // Create ServerSocket
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
     // Main loop
     while (!s_termination)
     {
-        //syslog(LOG_NOTICE, "Test message");
         m_srv->Handle([](char msg[], int n) -> string {
             string s(msg, n);
             if (m_cmd.Handle(s)){
-                return m_cmd.GetOutput();
+                return CommandHandler::CMD_VALID + m_cmd.GetOutput();
             }
             return CommandHandler::CMD_BAD;
         });
-        this_thread::sleep_for(chrono::seconds(1));
+        this_thread::sleep_for(chrono::seconds(1)); // FIXME time to change
     }
     //delete l1;
     SignalCallbacks::RevertCallbacks();
@@ -88,17 +88,7 @@ void LoadServerConfig(){
     }
     delete epList;
 }
-
-// FIXME testing functions
-void rtest(vector<string> x, string& output){
-    size_t n = x[0].length();
-    output = "";
-    for (int i = n - 2; i >= 0; i--)
-        output += x[0][i];
-    output += '\n';
-    //return res + '\n';
-}
-void cmdtest(vector<string> x, string& output){
-    syslog(LOG_ALERT, "Function said: %s %i", &(x[0])[0], stoi(x[1]));
-    output = "fajne";
+void InitializeCommands(){
+    m_cmd.AddCommand("TEST", Command{2, CommandFunctions::cmdtest});
+    m_cmd.AddCommand("REV", Command{1, CommandFunctions::rtest});
 }

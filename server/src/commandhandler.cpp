@@ -18,7 +18,7 @@ size_t CommandHandler::SplitCommand(vector<string>& cmdarray, string cmd){
     return n;
 }
 
-void CommandHandler::AddCommand(string name, Command& command){
+void CommandHandler::AddCommand(string name, const Command& command){
     m_commands[name] = command;
 }
 bool CommandHandler::Handle(string command){

@@ -21,7 +21,7 @@ private:
 
     size_t SplitCommand(vector<string>&, string);
 public:
-    void AddCommand(string, Command&);
+    void AddCommand(string, const Command&);
     bool Handle(string);
     string GetOutput();
 };
