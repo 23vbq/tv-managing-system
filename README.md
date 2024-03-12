@@ -35,7 +35,8 @@ TODO
 
 ### Client
 *Windows*
-TODO
+
+Client application gives end-user ability to easily manage the system. It provides GUI based communication with server, so it is user-friendly. You can check actual status of endpoints, manage global / per endpoint configuration and reload endpoints settings.
 
 ### Endpoint
 *Linux*
@@ -44,6 +45,9 @@ Endpoint allows to display images on TV (any display connected to machine), usin
 
 ## Configuration
 TODO
+
+## Security
+TODO about authentication and secure connection
 
 ## ToDo
 - [ ] Description (Readme)
@@ -74,6 +78,7 @@ TODO
     - [ ] Endpoint settings
   - [ ] Sending data
 - [ ] Endpoint
+- [ ] Automatic sync
 
 
 > **SEGFAULT COUNTER**: 2
