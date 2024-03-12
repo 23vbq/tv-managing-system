@@ -34,6 +34,7 @@ Server is responsible for managing whole system. It communicates with endpoint t
 TODO
 
 ### Client
+*Windows*
 TODO
 
 ### Endpoint

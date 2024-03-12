@@ -7,6 +7,4 @@ endpoint/build
 server/build
 
 # Ignore tests
-client/test
-endpoint/test
-server/test
+*/test
