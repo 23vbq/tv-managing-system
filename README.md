@@ -58,6 +58,9 @@ TODO
     - [ ] Cleanup code
     - [x] Callback function for every read
   - [ ] Command handling
+    - [x] System for handling
+    - [ ] Real functions to use
+    - [ ] Cleanup and testing
   - [ ] Endpoint settings
     - [ ] Class
     - [ ] Loading from file
