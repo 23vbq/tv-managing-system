@@ -10,7 +10,7 @@
 #include <string>
 #include <cstring>
 
-using namespace std;
+// using namespace std;
 
 class Logger
 {
@@ -20,18 +20,18 @@ public:
     static const LogLevel LOG_WARNING; // Warning
     static const LogLevel LOG_ERROR; // Error
 private:
-    string m_path;
-    ofstream m_fs;
+    std::string m_path;
+    std::ofstream m_fs;
 
     time_t m_unixtime;
     char m_timebuffer[_TIMEDATE_LEN];
 
     char* GetTime();
 public:
-    Logger(string);
+    Logger(std::string);
     ~Logger();
 
-    void Log(const LogLevel&, string);
+    void Log(const LogLevel&, std::string);
 };
 
 #endif

@@ -9,12 +9,12 @@ const LogLevel Logger::LOG_ERROR = LogLevel{3, "ERROR"};
 
 // Constructors
 
-Logger::Logger(string path){
+Logger::Logger(std::string path){
     // Initialize variables
     m_path = path;
     memset(m_timebuffer, 0, _TIMEDATE_LEN);
     // Open log file
-    m_fs.open(m_path, ios::app);
+    m_fs.open(m_path, std::ios::app);
     if (!m_fs.is_open()){
         throw "Cannot open log file!";
     }
@@ -37,6 +37,6 @@ char* Logger::GetTime(){
 
 // Public functions
 
-void Logger::Log(const LogLevel& level, string message){
+void Logger::Log(const LogLevel& level, std::string message){
     m_fs<<GetTime()<<" ["<<level.name<<"] "<<message<<"\n";
 }
