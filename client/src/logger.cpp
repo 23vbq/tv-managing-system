@@ -24,7 +24,7 @@ Logger::Logger(string path){
 }
 Logger::~Logger(){
     Log(LOG_INFO, "Closing logger");
-    m_fs.close();
+    m_fs.close(); // Should check?
 }
 
 // Private functions

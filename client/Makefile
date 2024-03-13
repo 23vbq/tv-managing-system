@@ -3,9 +3,10 @@
 CC = g++
 
 MAIN := main.cpp
-SRCS := src/logger.cpp
+SRCS := src/logger.cpp src/clientsocket_win.cpp
 OUT := build/tmsc.exe
 INCLUDES := -Iinclude
+WARNS := -Wterminate
 
 all: tmsc
 
