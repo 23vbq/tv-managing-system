@@ -1,9 +1,14 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#define _TIMEDATE_LEN 20
+
 #include "loglevel.h"
 
 #include <fstream>
+#include <ctime>
+#include <string>
+#include <cstring>
 
 using namespace std;
 
@@ -15,12 +20,18 @@ public:
     static const LogLevel LOG_WARNING; // Warning
     static const LogLevel LOG_ERROR; // Error
 private:
+    string m_path;
     ofstream m_fs;
+
+    time_t m_unixtime;
+    char m_timebuffer[_TIMEDATE_LEN];
+
+    char* GetTime();
 public:
-    Logger();
+    Logger(string);
     ~Logger();
 
-    void Log(string);
+    void Log(const LogLevel&, string);
 };
 
 #endif

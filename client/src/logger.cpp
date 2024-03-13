@@ -9,21 +9,34 @@ const LogLevel Logger::LOG_ERROR = LogLevel{3, "ERROR"};
 
 // Constructors
 
-Logger::Logger(){
-    m_fs.open("test/log", ios::app);
+Logger::Logger(string path){
+    // Initialize variables
+    m_path = path;
+    memset(m_timebuffer, 0, _TIMEDATE_LEN);
+    // Open log file
+    m_fs.open(m_path, ios::app);
     if (!m_fs.is_open()){
         throw "Cannot open log file!";
     }
-    // FIXME test
-    Log("TEST");
+    // Write info
+    m_fs<<"<======="<<GetTime()<<"=======>\n";
+    Log(LOG_INFO, "Started logger");
 }
 Logger::~Logger(){
-    Log("Closing logger");
+    Log(LOG_INFO, "Closing logger");
     m_fs.close();
+}
+
+// Private functions
+
+char* Logger::GetTime(){
+    m_unixtime = time(NULL);
+    strftime(m_timebuffer, _TIMEDATE_LEN, "%H:%M:%S %d.%m.%Y", localtime(&m_unixtime));
+    return m_timebuffer;
 }
 
 // Public functions
 
-void Logger::Log(string message){
-    m_fs<<message<<"\n";
+void Logger::Log(const LogLevel& level, string message){
+    m_fs<<GetTime()<<" ["<<level.name<<"] "<<message<<"\n";
 }

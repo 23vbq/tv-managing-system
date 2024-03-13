@@ -5,9 +5,10 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-    cout<<"test";
     // Initialize logger
-    Logger log;
+    Logger log("test/log");
+    cout<<"TEST";
+    _sleep(1000);
     // Initialize ClientSocket
     // Window
     return 0;
