@@ -80,5 +80,9 @@ TODO about authentication and secure connection
 - [ ] Endpoint
 - [ ] Automatic sync
 
+## Bug list
+- Server
+  - [ ] #1 CommandHandler: *if command not found* (now it executes everytime) executes probably last added command *(REV in this example)*
+
 
 > **SEGFAULT COUNTER**: 2
