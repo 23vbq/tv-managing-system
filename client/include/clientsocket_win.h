@@ -15,8 +15,13 @@ class ClientSocket{
 private:
     WSADATA m_wsaData;
     SOCKET m_conSock;
+
+    bool m_connected;
+    addrinfo m_addrConHints;
 public:
     ClientSocket();
+
+    void Connect();
 };
 
 #endif

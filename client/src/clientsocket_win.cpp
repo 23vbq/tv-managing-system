@@ -5,47 +5,23 @@ extern Logger* m_log;
 // Constructors
 
 ClientSocket::ClientSocket(){
+    // Initialize variables
+    m_conSock = INVALID_SOCKET;
+    m_connected = false;
+    // Initialize hints
+    ZeroMemory( &m_addrConHints, sizeof(m_addrConHints));
+    m_addrConHints.ai_family = AF_INET;
+    m_addrConHints.ai_socktype = SOCK_STREAM;
+    m_addrConHints.ai_protocol = IPPROTO_TCP;
     int iResult;
     iResult = WSAStartup(MAKEWORD(2,2), &m_wsaData);
     if (iResult != 0){
         throw "WSAStartup failed: " + iResult;
     }
-    m_conSock = INVALID_SOCKET;
     // FIXME test
     const char* testmsg = "TEST hello 2";
-    addrinfo *result = NULL, *ptr = NULL, hints;
-    // Initialize hints
-    ZeroMemory( &hints, sizeof(hints));
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
     m_log->Log(Logger::LOG_INFO, "Successfully created client socket");
-    // Resolve address
-    iResult = getaddrinfo("192.168.121.132", "5555", &hints, &result);
-    if (iResult != 0)
-        throw "Getaddrinfo failed: " + iResult;
-    // Connect to valid address // FIXME to rewrite to while (ptr && socketerror?)
-    for (ptr = result; ptr != NULL; ptr = ptr->ai_next){
-        m_conSock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-        if (m_conSock == INVALID_SOCKET){
-            int err = WSAGetLastError();
-            WSACleanup();
-            throw "Socket failed: " + err;
-        }
-        iResult = connect(m_conSock, ptr->ai_addr, (int)ptr->ai_addrlen);
-        if (iResult == SOCKET_ERROR){
-            closesocket(m_conSock);
-            m_conSock = INVALID_SOCKET;
-            continue;
-        }
-        break;
-    }
-    freeaddrinfo(result);
-    // To do innej funkcji i bez throwa ale zwracanie wyniku or sth
-    if (m_conSock == INVALID_SOCKET){
-        WSACleanup();
-        throw "Unable to connect to server";
-    }
+    Connect();
     char read[1024] = {0};
     do { // To jest zjechane wtf kto tak robi, bedzie normalnie w funkcji read - potem handle
         iResult = recv(m_conSock, read, 1024, 0);
@@ -62,4 +38,38 @@ ClientSocket::ClientSocket(){
     } while (iResult > 0);
     closesocket(m_conSock);
     WSACleanup();
+}
+
+// Public functions
+
+void ClientSocket::Connect(){ // Should i instead throwing log error and return some error code to user and then display msg based on code?
+    int iResult;
+    addrinfo *addrResult = NULL, *addrPtr = NULL;
+    // Resolve address
+    iResult = getaddrinfo("192.168.121.132", "5555", &m_addrConHints, &addrResult);
+    if (iResult != 0)
+        throw "Getaddrinfo failed: " + iResult;
+    addrPtr = addrResult;
+    while (addrPtr){
+        m_conSock = socket(addrPtr->ai_family, addrPtr->ai_socktype, addrPtr->ai_protocol);
+        if (m_conSock == INVALID_SOCKET){
+            int err = WSAGetLastError();
+            WSACleanup();
+            throw "Socket failed: " + err;
+        }
+        iResult = connect(m_conSock, addrPtr->ai_addr, (int)addrPtr->ai_addrlen);
+        // Break if connection is valid
+        if (iResult == 0)
+            break;
+        closesocket(m_conSock);
+        m_conSock = INVALID_SOCKET;
+        addrPtr = addrPtr->ai_next;
+    }
+    freeaddrinfo(addrResult);
+    if (m_conSock == INVALID_SOCKET){
+        WSACleanup();
+        m_connected = false;
+        throw "Unable to connect to server";
+    }
+    m_connected = true;
 }

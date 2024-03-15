@@ -122,7 +122,7 @@ void ServerSocket::Handle(string (*responseCall)(char[], int)){
                 size_t datalen = data.length();
                 if (send(sd, &data[0], datalen, 0) != datalen){
                     syslog(LOG_ERR, "Error on sending response message");
-                    Disconnect(sd, "Connection closed: Error on sending response message.");
+                    Disconnect(sd, ""); // Connection closed: Error on sending response message. // Result cannot be sent here
                 } else{
                     getpeername(sd, (sockaddr*)&m_address, &m_addrlen);
                     syslog(LOG_DEBUG, "Response sent [fd: %i, ip: %s, port: %i]", sd, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));

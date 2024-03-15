@@ -83,6 +83,7 @@ TODO about authentication and secure connection
 ## Bug list
 - Server
   - [ ] #1 CommandHandler: *if command not found* (now it executes everytime) executes probably last added command *(REV in this example)*
+    **It was probably not compiled and installed latest version when testing**
 
 
 > **SEGFAULT COUNTER**: 2
