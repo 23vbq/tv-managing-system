@@ -16,7 +16,11 @@ int main(int argc, char* argv[]){
     _sleep(1000);*/
     // Window
     // Initialize ClientSocket
-    ClientSocket cs;
+    try{
+        ClientSocket cs;
+    } catch (char const* e){
+        std::cerr<<e;
+    }
     // Cleanup
     delete m_log;
     return 0;

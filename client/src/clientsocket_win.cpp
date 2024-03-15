@@ -24,6 +24,7 @@ ClientSocket::ClientSocket(){
     Connect();
     char read[1024] = {0};
     do { // To jest zjechane wtf kto tak robi, bedzie normalnie w funkcji read - potem handle
+        memset(read, 0, 1024);
         iResult = recv(m_conSock, read, 1024, 0);
         if (iResult > 0)
             std::cout<<read<<"\n";
@@ -72,4 +73,8 @@ void ClientSocket::Connect(){ // Should i instead throwing log error and return 
         throw "Unable to connect to server";
     }
     m_connected = true;
+}
+
+bool ClientSocket::isConnected(){
+    return m_connected;
 }

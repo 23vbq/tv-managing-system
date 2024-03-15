@@ -22,6 +22,7 @@ public:
     ClientSocket();
 
     void Connect();
+    bool isConnected();
 };
 
 #endif
