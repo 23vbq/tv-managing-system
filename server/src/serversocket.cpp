@@ -113,19 +113,20 @@ void ServerSocket::Handle(string (*responseCall)(char[], int, int)){
     if (*s_termination || AcceptConnectionHandle())
         return;
     // Handle existing connections
-    char buffer[1024] = {0};
-    size_t readlen;
+    size_t readlen, datalen;
+    string data;
     for (int i = 0; i < MAX_SOCKETS; i++){
+        // FIXME should i clean buffer? length is obtained so maybe not
         sd = m_sockets[i];
         if (FD_ISSET(sd, &m_readfds)){
             // Handle disconnection
-            if ((readlen = read(sd, buffer, 1024 - 1)) == 0){
+            if ((readlen = read(sd, m_readbuff, _READBUFF_LEN - 1)) == 0){
                 LostConnectionHandle(sd);
             } else{
-                string data = responseCall(buffer, readlen, sd);
+                data = responseCall(m_readbuff, readlen, sd);
                 if (data.find(SOCKET_LOOP_IGNORE_SIG) != string::npos)
                     continue;
-                size_t datalen = data.length();
+                datalen = data.length();
                 if (send(sd, &data[0], datalen, 0) != datalen){
                     syslog(LOG_ERR, "Error on sending response message");
                     LostConnectionHandle(sd); // Connection closed: Error on sending response message. // Result cannot be sent here

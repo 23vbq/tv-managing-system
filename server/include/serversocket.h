@@ -1,6 +1,8 @@
 #ifndef SERVER_SOCKET_H
 #define SERVER_SOCKET_H
 
+#define _READBUFF_LEN 1024
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string>
@@ -30,6 +32,7 @@ private:
 
     fd_set m_readfds;
     int m_sockets[MAX_SOCKETS];
+    char m_readbuff[_READBUFF_LEN];
 
     /**
      * Accepts new connections
