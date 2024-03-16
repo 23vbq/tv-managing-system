@@ -16,11 +16,14 @@ int main(int argc, char* argv[]){
     _sleep(1000);*/
     // Window
     // Initialize ClientSocket
-    try{
-        ClientSocket cs;
-    } catch (char const* e){
-        std::cerr<<e;
-    }
+    ClientSocket cs;
+    cs.Connect();
+    std::string testbuff;
+    cs.Receive(testbuff);
+    std::cout<<testbuff<<'\n';
+    cs.Send("TEST kot 8");
+    cs.Receive(testbuff);
+    std::cout<<testbuff<<'\n';
     // Cleanup
     delete m_log;
     return 0;
