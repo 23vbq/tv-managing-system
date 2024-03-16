@@ -1,9 +1,13 @@
 #include "serversocket.h"
 
 // Static variables
+
 const string ServerSocket::SMSG_HELLO = "Hello TMSD\r\n";
 const string ServerSocket::SMSG_REFNRE = "Connection refused: ";
 const string ServerSocket::SMSG_CLSD = "Connection closed by server\r\n";
+const string ServerSocket::SOCKET_LOOP_IGNORE_SIG = "SOCKLOOPIGN";
+
+// Constructors
 
 ServerSocket::ServerSocket(bool* termination, uint16_t port){
     s_termination = termination;
@@ -81,7 +85,7 @@ void ServerSocket::LostConnectionHandle(int connection){
     syslog(LOG_WARNING, "Lost connection [fd: %i, ip: %s, port: %i]", connection, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
 }
 
-void ServerSocket::Handle(string (*responseCall)(char[], int)){
+void ServerSocket::Handle(string (*responseCall)(char[], int, int)){
     using namespace std;
     // Prepare sockets fd list
     FD_ZERO(&m_readfds);
@@ -118,7 +122,9 @@ void ServerSocket::Handle(string (*responseCall)(char[], int)){
             if ((readlen = read(sd, buffer, 1024 - 1)) == 0){
                 LostConnectionHandle(sd);
             } else{
-                string data = responseCall(buffer, readlen);
+                string data = responseCall(buffer, readlen, sd);
+                if (data.find(SOCKET_LOOP_IGNORE_SIG) != string::npos)
+                    continue;
                 size_t datalen = data.length();
                 if (send(sd, &data[0], datalen, 0) != datalen){
                     syslog(LOG_ERR, "Error on sending response message");

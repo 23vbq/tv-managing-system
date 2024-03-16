@@ -18,6 +18,7 @@ public:
     static const string SMSG_HELLO; // Hello message
     static const string SMSG_REFNRE; // Connection refused w/o reason
     static const string SMSG_CLSD; // Connection closed
+    static const string SOCKET_LOOP_IGNORE_SIG;
 
 private:
     bool* s_termination;
@@ -51,9 +52,9 @@ public:
     /***
      * Handles ServerSocket work. Should be run in loop.
      * @param responseCall function returning string to be sent as response
-     *      for char[] message with length n from client
+     *      for char[] message with length n from client and sd socket descriptor
     */
-    void Handle(string (*)(char[], int));
+    void Handle(string (*)(char[], int, int));
     /**
      * Disconnects client with reason message
      * @param connection FD of connection

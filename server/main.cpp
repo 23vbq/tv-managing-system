@@ -24,7 +24,7 @@ const char* DAEMONNAME = "tmsd";
 
 static bool s_termination = false;
 
-CommandHandler m_cmd;
+CommandHandler* m_cmd;
 ServerSocket* m_srv;
 ServerSettings m_settings;
 vector<EndpointConnection> m_endpoints;
@@ -44,16 +44,17 @@ int main(int argc, char* argv[]){
     // Load config
     LoadServerConfig();
     // Initialize commands
+    m_cmd = new CommandHandler;
     InitializeCommands();
     // Create ServerSocket
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
     // Main loop
     while (!s_termination)
     {
-        m_srv->Handle([](char msg[], int n) -> string {
+        m_srv->Handle([](char msg[], int n, int sd) -> string {
             string s(msg, n);
-            if (m_cmd.Handle(s)){
-                return CommandHandler::CMD_VALID + m_cmd.GetOutput();
+            if (m_cmd->Handle(s, sd)){
+                return CommandHandler::CMD_VALID + m_cmd->GetOutput();
             }
             return CommandHandler::CMD_BAD;
         });
@@ -89,6 +90,7 @@ void LoadServerConfig(){
     delete epList;
 }
 void InitializeCommands(){
-    m_cmd.AddCommand("TEST", Command{2, CommandFunctions::cmdtest});
-    m_cmd.AddCommand("REV", Command{1, CommandFunctions::rtest});
+    m_cmd->AddCommand("TEST", Command{2, CommandFunctions::cmdtest});
+    m_cmd->AddCommand("REV", Command{1, CommandFunctions::rtest});
+    m_cmd->AddCommand("DISCON", Command{0, CommandFunctions::disconnect});
 }

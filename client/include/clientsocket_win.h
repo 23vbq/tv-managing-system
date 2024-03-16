@@ -29,7 +29,8 @@ public:
     ClientSocket();
     ~ClientSocket();
 
-    void Connect();
+    void Connect(std::string, std::string);
+    void Disconnect();
     int Send(std::string);
     int Receive(std::string&);
     bool isConnected();

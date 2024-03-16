@@ -19,39 +19,20 @@ ClientSocket::ClientSocket(){
         throw "WSAStartup failed: " + m_iResult;
     }
     m_log->Log(Logger::LOG_INFO, "Successfully created client socket");
-    // FIXME test
-    /*const char* testmsg = "TEST hello 2";
-    Connect();
-    char read[1024] = {0};
-    do { // To jest zjechane wtf kto tak robi, bedzie normalnie w funkcji read - potem handle
-        memset(read, 0, 1024);
-        iResult = recv(m_conSock, read, 1024, 0);
-        if (iResult > 0)
-            std::cout<<read<<"\n";
-        else if (iResult < 0){
-            throw "recv failed with error: " + WSAGetLastError();
-        } else break;
-        iResult = send(m_conSock, testmsg, (int)strlen(testmsg), 0);
-        if (iResult == SOCKET_ERROR){
-            m_log->Log(Logger::LOG_ERROR, "Send failed: " + WSAGetLastError());
-            break;
-        }
-    } while (iResult > 0);
-    closesocket(m_conSock);
-    WSACleanup();*/
 }
 ClientSocket::~ClientSocket(){
-    closesocket(m_conSock);
+    if (m_connected)
+        Disconnect();
     WSACleanup();
     m_log->Log(Logger::LOG_INFO, "Destructed client socket");
 }
 
 // Public functions
 
-void ClientSocket::Connect(){ // Should i instead throwing log error and return some error code to user and then display msg based on code?
+void ClientSocket::Connect(std::string address, std::string port){ // Should i instead throwing log error and return some error code to user and then display msg based on code?
     addrinfo *addrResult = NULL, *addrPtr = NULL;
     // Resolve address
-    m_iResult = getaddrinfo("192.168.121.132", "5555", &m_addrConHints, &addrResult);
+    m_iResult = getaddrinfo(&address[0], &port[0], &m_addrConHints, &addrResult);
     if (m_iResult != 0)
         throw "Getaddrinfo failed: " + m_iResult;
     addrPtr = addrResult;
@@ -78,8 +59,13 @@ void ClientSocket::Connect(){ // Should i instead throwing log error and return 
     }
     m_connected = true;
 }
+void ClientSocket::Disconnect(){
+    Send("DISCON");
+    m_connected = false;
+    closesocket(m_conSock);
+}
 int ClientSocket::Send(std::string message){ // maybe return int error code too
-    if (!isConnected())
+    if (!m_connected)
         return CS_NOTCONN;
     m_iResult = send(m_conSock, &message[0], message.length(), 0);
     if (m_iResult == SOCKET_ERROR)
@@ -87,7 +73,7 @@ int ClientSocket::Send(std::string message){ // maybe return int error code too
     return CS_SUCCESS;
 }
 int ClientSocket::Receive(std::string& result){
-    if (!isConnected())
+    if (!m_connected)
         return CS_NOTCONN;
     memset(m_readbuff, 0, CS_READBUFF_LEN);
     m_iResult = recv(m_conSock, m_readbuff, CS_READBUFF_LEN - 1, 0); // -1 for last NULL byte

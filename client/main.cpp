@@ -6,6 +6,7 @@
 // using namespace std;
 
 Logger* m_log;
+ClientSocket* m_clientsock;
 
 int main(int argc, char* argv[]){
     // Initialize logger
@@ -16,15 +17,17 @@ int main(int argc, char* argv[]){
     _sleep(1000);*/
     // Window
     // Initialize ClientSocket
-    ClientSocket cs;
-    cs.Connect();
+    m_clientsock = new ClientSocket();
+    m_clientsock->Connect("192.168.121.132", "5555");
+    // FIXME test
     std::string testbuff;
-    cs.Receive(testbuff);
+    m_clientsock->Receive(testbuff);
     std::cout<<testbuff<<'\n';
-    cs.Send("TEST kot 8");
-    cs.Receive(testbuff);
+    m_clientsock->Send("TEST kot 8");
+    m_clientsock->Receive(testbuff);
     std::cout<<testbuff<<'\n';
     // Cleanup
+    delete m_clientsock;
     delete m_log;
     return 0;
 }

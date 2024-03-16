@@ -18,12 +18,15 @@ private:
     unordered_map<string, Command> m_commands; // FIXME should it be on tree? - root->command->param
     vector<string> m_cmdbuffer;
     string m_output;
+    int m_current_sd;
 
     size_t SplitCommand(vector<string>&, string);
 public:
+
     void AddCommand(string, const Command&);
-    bool Handle(string);
+    bool Handle(string, int);
     string GetOutput();
+    int GetCurrentSd();
 };
 
 #endif

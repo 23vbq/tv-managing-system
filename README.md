@@ -74,6 +74,10 @@ TODO about authentication and secure connection
   - [ ] Requests handling
 - [ ] Client
   - [ ] Socket
+    - [x] Creating socket
+    - [x] Connecting
+    - [x] Send and Receive
+    - [ ] Cleanup, improvements and testing
   - [ ] Getting data
     - [ ] Endpoint settings
   - [ ] Sending data
@@ -84,6 +88,7 @@ TODO about authentication and secure connection
 - Server
   - [ ] #1 CommandHandler: *if command not found* (now it executes everytime) executes probably last added command *(REV in this example)*
     **It was probably not compiled and installed latest version when testing**
+  - [ ] #2 ServerSocket?: if client terminate connection server can occur exception on basic_string.tcc:225
 
 
 > **SEGFAULT COUNTER**: 2

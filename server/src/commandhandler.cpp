@@ -21,13 +21,13 @@ size_t CommandHandler::SplitCommand(vector<string>& cmdarray, string cmd){
 void CommandHandler::AddCommand(string name, const Command& command){
     m_commands[name] = command;
 }
-bool CommandHandler::Handle(string command){
+bool CommandHandler::Handle(string command, int currentSd){
     size_t n = SplitCommand(m_cmdbuffer, command);
-    //size_t n = 0;
     if (!n)
         return false;
     if (m_commands.count(m_cmdbuffer[0]) == 0)
         return false;
+    m_current_sd = currentSd;
     Command *cmdPtr = &m_commands[m_cmdbuffer[0]];
     if (cmdPtr->argc != n - 1)
         return false;
@@ -39,4 +39,7 @@ bool CommandHandler::Handle(string command){
 }
 string CommandHandler::GetOutput(){
     return m_output;
+}
+int CommandHandler::GetCurrentSd(){
+    return m_current_sd;
 }
