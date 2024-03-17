@@ -10,6 +10,7 @@
 #include "configloader.h"
 #include "serversettings.h"
 #include "endpointconnection.h"
+#include "endpointsettings.h"
 #include "serversocket.h"
 #include "commandhandler.h"
 #include "commandfunctions.h"
@@ -48,6 +49,8 @@ int main(int argc, char* argv[]){
     InitializeCommands();
     // Create ServerSocket
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
+    // FIXME test
+    EndpointSettings est {"Test", true, "/mnt/images", 15};
     // Main loop
     while (!s_termination)
     {
@@ -78,7 +81,7 @@ void LoadServerConfig(){
     vector<Config>* epList = cfgl.GetList("Endpoints");
     EndpointConnection buffer;
     for (Config x : *epList){
-        if (x.GetProperty<string>("Name", buffer.name) &&
+        if (x.GetProperty<string>("Name", buffer.settings.name) &&
             x.GetProperty<string>("Ip", buffer.ip) &&
             x.GetProperty<unsigned short>("Port", buffer.port)){
             syslog(LOG_DEBUG, "Successfully loaded EndpointConnection");
