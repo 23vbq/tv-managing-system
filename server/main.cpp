@@ -54,11 +54,15 @@ int main(int argc, char* argv[]){
     EndpointSettings est {"Test", true, "/mnt/images", 15};
     Serializer s;
     s.AddValue(est.name);
-    s.AddValue(est.localcfg);
+    // s.AddValue(est.localcfg);
     s.AddValue(est.dir);
-    s.AddValue(est.showtime);
-    string h = s.Serialize();
-    syslog(LOG_DEBUG, "%s", &h[0]);
+    // s.AddValue(est.showtime);
+    s.Serialize();
+    string h1 = s.DeserializeNext();
+    string h2 = s.DeserializeNext();
+    // string h3 = s.DeserializeNext(); // It should throw and it throws
+    syslog(LOG_DEBUG, "%s", &h1[0]);
+    syslog(LOG_DEBUG, "%s", &h2[0]);
     // Main loop
     while (!s_termination)
     {
