@@ -14,6 +14,7 @@
 #include "serversocket.h"
 #include "commandhandler.h"
 #include "commandfunctions.h"
+#include "serializer.h"
 
 // For testing
 #include <chrono>
@@ -51,6 +52,13 @@ int main(int argc, char* argv[]){
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
     // FIXME test
     EndpointSettings est {"Test", true, "/mnt/images", 15};
+    Serializer s;
+    s.AddValue(est.name);
+    s.AddValue(est.localcfg);
+    s.AddValue(est.dir);
+    s.AddValue(est.showtime);
+    string h = s.Serialize();
+    syslog(LOG_DEBUG, "%s", &h[0]);
     // Main loop
     while (!s_termination)
     {
