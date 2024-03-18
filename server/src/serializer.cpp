@@ -31,10 +31,11 @@ std::string Serializer::DeserializeNext(){
     // Check occurence of first "
     size_t sPos = m_serialized.find('"', m_serializedPtr);
     if (sPos == std::string::npos)
-        throw "Serialized string is empty";
+        throw "Deserializer hits end of string";
     // Get length of string
-    size_t len;
+    size_t len = 0;
     m_parser.str(m_serialized.substr(++sPos));
+    m_parser.clear();
     m_parser >> len;
     // Find string start
     sPos = m_serialized.find(':', sPos);
