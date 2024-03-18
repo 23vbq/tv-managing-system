@@ -13,9 +13,10 @@ public:
     Serializer();
     Serializer(std::string);
 
+    void AddValue(std::string);
     template <typename T>
     void AddValue(T value){
-        m_parser.clear();
+        m_parser.str("");
         m_parser<<value;
         m_data.push_back(m_parser.str());
     }
