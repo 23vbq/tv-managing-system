@@ -1,5 +1,7 @@
 #include "logger.h"
 #include "clientsocket_win.h"
+#include "serializer.h"
+#include "endpointsettings.h"
 
 #include <iostream>
 
@@ -23,8 +25,10 @@ int main(int argc, char* argv[]){
     std::string testbuff;
     m_clientsock->Receive(testbuff);
     std::cout<<testbuff<<'\n';
-    m_clientsock->Send("TEST kot 8");
+    m_clientsock->Send("GETEPSET Testowytv");
     m_clientsock->Receive(testbuff);
+    Serializer sr(testbuff);
+    EndpointSettings eps{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
     std::cout<<testbuff<<'\n';
     // Cleanup
     delete m_clientsock;

@@ -7,7 +7,8 @@ Serializer::Serializer(){
     m_serializedPtr = 0;
 }
 Serializer::Serializer(std::string dataString){
-
+    m_serialized = dataString;
+    m_serializedPtr = 0;
 }
 
 // Public functions

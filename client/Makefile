@@ -4,18 +4,19 @@ CC = g++
 
 MAIN := main.cpp
 SRCS := src/logger.cpp src/clientsocket_win.cpp
+SHAREDSRC := ../shared/src/serializer.cpp
 OUT := build/tmsc.exe
-INCLUDES := -Iinclude
+INCLUDES := -Iinclude -I../shared/include
 LIBS := -lws2_32
 
 all: tmsc
 
 tmsc:
-	${CC} ${MAIN} ${INCLUDES} ${SRCS} -o ${OUT} ${LIBS}
+	${CC} ${MAIN} ${INCLUDES} ${SHAREDSRC} ${SRCS} -o ${OUT} ${LIBS}
 # chmod 744 ${OUT}
 
 debug:
-	${CC} -g -D DEBUG ${MAIN} ${INCLUDES} ${SRCS} -o ${OUT} ${LIBS}
+	${CC} -g -D DEBUG ${MAIN} ${INCLUDES} ${SHAREDSRC} ${SRCS} -o ${OUT} ${LIBS}
 # chmod 777 ${OUT}
 
 # install: tmsd
