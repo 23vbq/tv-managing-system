@@ -21,6 +21,7 @@ private:
     int m_current_sd;
 
     size_t SplitCommand(vector<string>&, string);
+    void RemoveNewLineEnd(string&);
 public:
 
     void AddCommand(string, const Command&);

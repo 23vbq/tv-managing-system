@@ -1,7 +1,11 @@
 #include "commandhandler.h"
 
+// Static variables
+
 const string CommandHandler::CMD_VALID = "OK\r\n";
 const string CommandHandler::CMD_BAD = "BAD\r\n";
+
+// Private functions
 
 size_t CommandHandler::SplitCommand(vector<string>& cmdarray, string cmd){
     cmdarray.clear();
@@ -17,11 +21,20 @@ size_t CommandHandler::SplitCommand(vector<string>& cmdarray, string cmd){
     cmdarray.push_back(cmd.substr(fPos));
     return n;
 }
+void CommandHandler::RemoveNewLineEnd(string& command){
+    size_t n = command.length();
+    if (command.find('\n', n - 1) == string::npos)
+        return;
+    command = command.substr(0, n - 1);
+}
+
+// Public functions
 
 void CommandHandler::AddCommand(string name, const Command& command){
     m_commands[name] = command;
 }
 bool CommandHandler::Handle(string command, int currentSd){
+    RemoveNewLineEnd(command);
     size_t n = SplitCommand(m_cmdbuffer, command);
     if (!n)
         return false;

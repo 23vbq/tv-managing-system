@@ -51,8 +51,11 @@ int main(int argc, char* argv[]){
     // Create ServerSocket
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
     // FIXME test
-    EndpointSettings est {"Test", true, "/mnt/images", 15};
-    Serializer s;
+    EndpointSettings est {m_endpoints[0].settings.name, true, "/mnt/images", 15};
+    m_endpoints[0].settings = est;
+    est = EndpointSettings{m_endpoints[1].settings.name, false, "/mnt/server/obrazki/telewizory/", 32};
+    m_endpoints[1].settings = est;
+    /*Serializer s;
     s.AddValue(est.name);
     s.AddValue(est.localcfg);
     s.AddValue(est.dir);
@@ -63,7 +66,7 @@ int main(int argc, char* argv[]){
     string hs2 = s.DeserializeNext();
     unsigned int hi1 = s.DeserializeNext<unsigned int>();
     // string h3 = s.DeserializeNext(); // It should throw and it throws
-    syslog(LOG_DEBUG, "%s %b %s %i", &hs1[0], hb1, &hs2[0], hi1);
+    syslog(LOG_DEBUG, "%s %b %s %i", &hs1[0], hb1, &hs2[0], hi1);*/
     // syslog(LOG_DEBUG, "%s", &h2[0]);
     // Main loop
     while (!s_termination)
@@ -110,4 +113,5 @@ void InitializeCommands(){
     m_cmd->AddCommand("TEST", Command{2, CommandFunctions::cmdtest});
     m_cmd->AddCommand("REV", Command{1, CommandFunctions::rtest});
     m_cmd->AddCommand("DISCON", Command{0, CommandFunctions::disconnect});
+    m_cmd->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName});
 }
