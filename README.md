@@ -95,4 +95,4 @@ TODO about authentication and secure connection
   - [ ] #3 ConfigLoader: removes all spaces in string (including in value) *(maybe i make it as feature - you need to set values without spaces)*
 
 
-> **SEGFAULT COUNTER**: 2
+> **SEGFAULT COUNTER**: 3

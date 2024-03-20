@@ -15,7 +15,8 @@ public:
     void LoadConnectionData(vector<Config>*);
     void LoadSettingsData(string);
 
-    EndpointSettings GetSettings(string);
+    vector<string>* GetNames();
+    EndpointSettings* GetSettings(string&);
     EndpointSettings GetSettings(string, unsigned short);
 };
 

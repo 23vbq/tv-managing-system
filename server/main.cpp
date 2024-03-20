@@ -9,12 +9,14 @@
 #include "signalcallbacks.h"
 #include "configloader.h"
 #include "serversettings.h"
-#include "endpointconnection.h"
-#include "endpointsettings.h"
 #include "serversocket.h"
 #include "commandhandler.h"
 #include "commandfunctions.h"
 #include "serializer.h"
+
+#include "endpointconnection.h"
+// #include "endpointsettings.h"
+#include "endpointmanager.h"
 
 // For testing
 #include <chrono>
@@ -29,7 +31,7 @@ static bool s_termination = false;
 CommandHandler* m_cmd;
 ServerSocket* m_srv;
 ServerSettings m_settings;
-vector<EndpointConnection> m_endpoints;
+EndpointManager* m_EndpointManager;
 
 using namespace std;
 
@@ -43,6 +45,8 @@ int main(int argc, char* argv[]){
     syslog(LOG_INFO, "Starting server daemon");
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
+    // Initialize EndpointManager
+    m_EndpointManager = new EndpointManager();
     // Load config
     LoadServerConfig();
     // Initialize commands
@@ -51,10 +55,10 @@ int main(int argc, char* argv[]){
     // Create ServerSocket
     m_srv = new ServerSocket(&s_termination, m_settings.listeningPort);
     // FIXME test
-    EndpointSettings est {m_endpoints[0].settings.name, true, "/mnt/images", 15};
+    /*EndpointSettings est(m_endpoints[0].settings.name, true, "/mnt/images", 15);
     m_endpoints[0].settings = est;
-    est = EndpointSettings{m_endpoints[1].settings.name, false, "/mnt/server/obrazki/telewizory/", 32};
-    m_endpoints[1].settings = est;
+    est = EndpointSettings(m_endpoints[1].settings.name, false, "/mnt/server/obrazki/telewizory/", 32);
+    m_endpoints[1].settings = est;*/
     /*Serializer s;
     s.AddValue(est.name);
     s.AddValue(est.localcfg);
@@ -83,6 +87,8 @@ int main(int argc, char* argv[]){
     //delete l1;
     SignalCallbacks::RevertCallbacks();
     delete m_srv;
+    delete m_cmd;
+    delete m_EndpointManager;
     syslog(LOG_INFO, "Daemon exited successfully");
     return 0;
 }
@@ -96,7 +102,8 @@ void LoadServerConfig(){
     cfgl.GetProperty<string>("PasswordHash", m_settings.passwordHash);
     // Endpoint list
     vector<Config>* epList = cfgl.GetList("Endpoints");
-    EndpointConnection buffer;
+    m_EndpointManager->LoadConnectionData(epList);
+    /*EndpointConnection buffer;
     for (Config x : *epList){
         if (x.GetProperty<string>("Name", buffer.settings.name) &&
             x.GetProperty<string>("Ip", buffer.ip) &&
@@ -106,7 +113,7 @@ void LoadServerConfig(){
         } else{
             syslog(LOG_DEBUG, "Failure on loading EndpointConnection");
         }
-    }
+    }*/
     delete epList;
 }
 void InitializeCommands(){
