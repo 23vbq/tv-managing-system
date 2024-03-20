@@ -49,6 +49,8 @@ int main(int argc, char* argv[]){
     m_EndpointManager = new EndpointManager();
     // Load config
     LoadServerConfig();
+    // Load endpoints config
+    m_EndpointManager->LoadSettingsData("");
     // Initialize commands
     m_cmd = new CommandHandler;
     InitializeCommands();

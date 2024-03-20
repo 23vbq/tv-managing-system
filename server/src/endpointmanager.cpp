@@ -15,6 +15,13 @@ void EndpointManager::LoadConnectionData(vector<Config>* endpoints){
         }
     }
 }
+void EndpointManager::LoadSettingsData(string path){
+    // FIXME test
+    EndpointSettings est(m_data[0].settings.name, true, "/mnt/images", 15);
+    m_data[0].settings = est;
+    est = EndpointSettings(m_data[1].settings.name, false, "/mnt/server/obrazki/telewizory/", 32);
+    m_data[1].settings = est;
+}
 
 vector<string>* EndpointManager::GetNames(){
     vector<string>* result = new vector<string>;
