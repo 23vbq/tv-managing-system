@@ -67,10 +67,11 @@ TODO about authentication and secure connection
     - [ ] Real functions to use
     - [ ] Cleanup and testing
   - [ ] Endpoint settings
-    - [x] Class
+    - [x] Struct
     - [ ] Loading from file
     - [ ] Creating default file
     - [x] Sending through socket
+  - [ ] Endpoint manager
   - [ ] Requests handling
 - [ ] Client
   - [ ] Socket
@@ -79,8 +80,9 @@ TODO about authentication and secure connection
     - [x] Send and Receive
     - [ ] Cleanup, improvements and testing
   - [ ] Getting data
-    - [ ] List of endpoints
+    - [x] List of endpoints
     - [x] Endpoint settings
+    - [ ] Is endpoint connected
   - [ ] Sending data
 - [ ] Endpoint
 - [ ] Automatic sync

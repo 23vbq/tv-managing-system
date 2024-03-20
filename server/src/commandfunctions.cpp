@@ -29,6 +29,15 @@ namespace CommandFunctions{
             }
         }
     }
+    void getEndpointList(vector<string> x, string& output){
+        output = "";
+        Serializer sr;
+        sr.AddValue<size_t>(m_endpoints.size());
+        for (const EndpointConnection& ep : m_endpoints){
+            sr.AddValue(ep.settings.name);
+        }
+        output = sr.Serialize();
+    }
     void rtest(vector<string> x, string& output){
         size_t n = x[0].length();
         output = "";

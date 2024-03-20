@@ -12,7 +12,6 @@ ClientSocket* m_clientsock;
 
 int main(int argc, char* argv[]){
     // Initialize logger
-    // Logger log("test/log");
     m_log = new Logger("test/log");
     // FIXME test
     /*cout<<"TEST";
@@ -23,12 +22,21 @@ int main(int argc, char* argv[]){
     m_clientsock->Connect("192.168.121.132", "5555");
     // FIXME test
     std::string testbuff;
+    std::vector<EndpointSettings> eps;
     m_clientsock->Receive(testbuff);
     std::cout<<testbuff<<'\n';
-    m_clientsock->Send("GETEPSET Testowytv");
+    m_clientsock->Send("GETEPLS");
     m_clientsock->Receive(testbuff);
     Serializer sr(testbuff);
-    EndpointSettings eps{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
+    size_t n = sr.DeserializeNext<size_t>();
+    for (int i = 0; i < n; i++){
+        m_clientsock->Send("GETEPSET " + sr.DeserializeNext());
+        m_clientsock->Receive(testbuff);
+        Serializer esr(testbuff);
+        EndpointSettings epbuff{esr.DeserializeNext(), esr.DeserializeNext<bool>(), esr.DeserializeNext(), esr.DeserializeNext<unsigned int>()};
+        eps.push_back(epbuff);
+    }
+    //EndpointSettings eps{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
     std::cout<<testbuff<<'\n';
     // Cleanup
     delete m_clientsock;

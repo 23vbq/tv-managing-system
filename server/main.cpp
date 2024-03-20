@@ -114,4 +114,5 @@ void InitializeCommands(){
     m_cmd->AddCommand("REV", Command{1, CommandFunctions::rtest});
     m_cmd->AddCommand("DISCON", Command{0, CommandFunctions::disconnect});
     m_cmd->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName});
+    m_cmd->AddCommand("GETEPLS", Command{0, CommandFunctions::getEndpointList});
 }
