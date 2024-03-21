@@ -2,22 +2,27 @@
 #define ENDPOINT_MANAGER_H
 
 #include "endpointconnection.h"
-#include "config.h"
+#include "configloader.h"
 
 #include <vector>
+#include <filesystem>
 
 using namespace std;
 
 class EndpointManager{
+public:
+    static const string SETTINGS_EXTENSION;
 private:
     vector<EndpointConnection> m_data;
+
+    bool LoadSettingsFile(const string&, EndpointSettings&);
 public:
     void LoadConnectionData(vector<Config>*);
     void LoadSettingsData(string);
 
     vector<string>* GetNames();
     EndpointSettings* GetSettings(string&);
-    EndpointSettings GetSettings(string, unsigned short);
+    EndpointSettings* GetSettings(string&, unsigned short&);
 };
 
 #endif

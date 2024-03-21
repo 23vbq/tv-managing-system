@@ -25,6 +25,7 @@
 
 const int LOGMASK = _LOGMASK;
 const char* DAEMONNAME = "tmsd";
+const char* CONFIG_PATH = "/home/_vbq/cpp/tv-managing-system/server/";
 
 static bool s_termination = false;
 
@@ -50,7 +51,7 @@ int main(int argc, char* argv[]){
     // Load config
     LoadServerConfig();
     // Load endpoints config
-    m_EndpointManager->LoadSettingsData("");
+    m_EndpointManager->LoadSettingsData(CONFIG_PATH + (string)"test/");
     // Initialize commands
     m_cmd = new CommandHandler;
     InitializeCommands();
@@ -96,7 +97,7 @@ int main(int argc, char* argv[]){
 }
 
 void LoadServerConfig(){
-    ConfigLoader cfgl = ConfigLoader("/home/_vbq/cpp/tv-managing-system/server/example_config.cfg");
+    ConfigLoader cfgl = ConfigLoader(CONFIG_PATH + (string)"example_config.cfg");
     cfgl.Load();
     // Properties
     cfgl.GetProperty<string>("ListeningIp", m_settings.listeningIp);
