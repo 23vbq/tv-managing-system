@@ -7,8 +7,6 @@
 
 class WindowManager{
 private:
-    const wchar_t CLASS_NAME[] = L"TMSC Window";
-
     HNINSTANCE m_hInstance;
     WNDCLASS m_wc;
 
