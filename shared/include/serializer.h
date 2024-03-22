@@ -7,11 +7,11 @@
 
 class Serializer{
 private:
-    std::vector<std::string> m_data;
-    std::stringstream m_parser;
+    std::vector<std::string> m_data; // Data provided to serializer
+    std::stringstream m_parser; // Any data type parser
 
-    std::string m_serialized;
-    size_t m_serializedPtr;
+    std::string m_serialized; // Serialized data
+    size_t m_serializedPtr; // Position in `m_serialized` that is used to get DeserializeNext()
 public:
     /**
      * Initialize empty serializer class
@@ -26,11 +26,13 @@ public:
     /**
      * Adds string value to serializer data
      * Added string is in format `length:text`
+     * @param value string to add
     */
     void AddValue(std::string);
     /**
      * Adds any type of data to serialized class
      * Data is parsed to string using stringstream
+     * @param value variable to add
     */
     template <typename T>
     void AddValue(T value){
@@ -45,7 +47,13 @@ public:
     */
     std::string Serialize();
 
+    /**
+     * Deserializes string from serialized data provided to serializer
+    */
     std::string DeserializeNext();
+    /**
+     * Deserializes any type of data from serialized data provided to serializer
+    */
     template <typename T>
     T DeserializeNext(){
         size_t sPos = m_serialized.find('"', m_serializedPtr);

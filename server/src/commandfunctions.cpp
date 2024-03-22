@@ -17,17 +17,6 @@ namespace CommandFunctions{
     void getEndpointSettingsByName(vector<string> x, string& output){
         output = "";
         string* name = &x[0];
-        /*for (const EndpointConnection& ep : m_endpoints){
-            if (ep.settings.name == *name){
-                Serializer sr;
-                sr.AddValue(ep.settings.name);
-                sr.AddValue(ep.settings.localcfg);
-                sr.AddValue(ep.settings.dir);
-                sr.AddValue(ep.settings.showtime);
-                output = sr.Serialize();
-                return;
-            }
-        }*/
         EndpointSettings* ep = m_EndpointManager->GetSettings(*name);
         if (ep == NULL)
             return;
