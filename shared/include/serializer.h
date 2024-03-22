@@ -42,6 +42,23 @@ public:
     }
 
     /**
+     * Adds vector list of string values to serializer data
+     * Added list is in format `vector_size` `length:text`...
+    */
+    void AddList(std::vector<std::string>);
+    /**
+     * Adds vector list of any type of data to serializer data
+     * Added list is in format `vector_size` `variable`...
+    */
+    template <typename T>
+    void AddList(std::vector<T> list){
+        AddValue<size_t>(list.size());
+        for (const T& x : list){
+            AddValue<T>(x);
+        }
+    }
+
+    /**
      * Serializes all objects added to serializer into one string
      * @return Serialized data in string
     */

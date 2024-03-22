@@ -32,10 +32,11 @@ namespace CommandFunctions{
         output = "";
         Serializer sr;
         vector<string>* names = m_EndpointManager->GetNames();
-        sr.AddValue<size_t>(names->size());
+        sr.AddList(*names);
+        /*sr.AddValue<size_t>(names->size());
         for (const string& x : *names){
             sr.AddValue(x);
-        }
+        }*/
         output = sr.Serialize();
         delete names;
     }

@@ -19,6 +19,13 @@ void Serializer::AddValue(std::string value){
     m_data.push_back(m_parser.str());
 }
 
+void Serializer::AddList(std::vector<std::string> list){
+    AddValue<size_t>(list.size());
+    for (const std::string& x : list){
+        AddValue(x);
+    }
+}
+
 std::string Serializer::Serialize(){
     m_serialized = "";
     for (const std::string& element : m_data){
