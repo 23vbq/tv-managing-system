@@ -3,7 +3,7 @@
 CC = g++
 
 MAIN := main.cpp
-SRCS := src/logger.cpp src/clientsocket_win.cpp
+SRCS := src/logger.cpp src/clientsocket_win.cpp src/windowmanager.cpp
 SHAREDSRC := ../shared/src/serializer.cpp ../shared/src/endpointsettings.cpp
 OUT := build/tmsc.exe
 INCLUDES := -Iinclude -I../shared/include

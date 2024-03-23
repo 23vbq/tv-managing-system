@@ -2,6 +2,7 @@
 #include "clientsocket_win.h"
 #include "serializer.h"
 #include "endpointsettings.h"
+#include "windowmanager.h"
 
 #include <iostream>
 
@@ -9,6 +10,7 @@
 
 Logger* m_log;
 ClientSocket* m_clientsock;
+WindowManager* m_WindowManager;
 
 int main(int argc, char* argv[]){
     // Initialize logger
@@ -17,6 +19,13 @@ int main(int argc, char* argv[]){
     /*cout<<"TEST";
     _sleep(1000);*/
     // Window
+    // FIXME test
+    m_WindowManager = new WindowManager();
+    while (true){
+        if (!m_WindowManager->ProcessMessage())
+            break;
+        Sleep(10);
+    }
     // Initialize ClientSocket
     m_clientsock = new ClientSocket();
     m_clientsock->Connect("192.168.121.132", "5555");
@@ -39,6 +48,7 @@ int main(int argc, char* argv[]){
     //EndpointSettings eps{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
     std::cout<<testbuff<<'\n';
     // Cleanup
+    delete m_WindowManager;
     delete m_clientsock;
     delete m_log;
     return 0;

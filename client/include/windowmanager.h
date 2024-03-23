@@ -5,14 +5,24 @@
 
 #include <windows.h>
 
+LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
+
 class WindowManager{
 private:
-    HNINSTANCE m_hInstance;
-    WNDCLASS m_wc;
+    LPCSTR CLASS_NAME = "TMSC Window";
 
-    LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
+    HWND m_hWnd;
+    HINSTANCE m_hInstance;
+    WNDCLASS m_wndClass;
+
+
 public:
     WindowManager();
+    ~WindowManager();
+
+    bool ProcessMessage();
+
+    static int testcolor;
 };
 
 #endif
