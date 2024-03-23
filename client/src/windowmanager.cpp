@@ -1,7 +1,5 @@
 #include "windowmanager.h"
 
-int WindowManager::testcolor = 1;
-
 // Constructors
 
 WindowManager::WindowManager()
@@ -30,7 +28,18 @@ WindowManager::WindowManager()
         NULL
     );
 
+    HWND text1 = CreateWindowEx(
+        WS_EX_CLIENTEDGE,
+        TEXT("Edit"),
+        TEXT("Test"),
+        WS_VISIBLE | WS_CHILD,
+        20, 20, 100, 100,
+        m_hWnd,
+        NULL, NULL, NULL
+    );
+
     ShowWindow(m_hWnd, SW_SHOW);
+    UpdateWindow(m_hWnd);
 }
 
 WindowManager::~WindowManager(){
@@ -39,16 +48,26 @@ WindowManager::~WindowManager(){
 
 // Private functions
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
+LRESULT CALLBACK WindowManager::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
     switch (uMsg)
     {
+    // case WM_CREATE:
+    //     HWND textfield1 = CreateWindow(
+    //         "STATIC",
+    //         "Testowy napis",
+    //         WS_VISIBLE | WS_CHILD,
+    //         20, 20, 100, 20,
+    //         &,
+    //         NULL, NULL, NULL
+    //     );
+    //     break;
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
     case WM_PAINT:
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
-        FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW + WindowManager::testcolor++));
+        FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW + 1));
         EndPaint(hwnd, &ps);
         return 0;
     }
