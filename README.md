@@ -68,7 +68,7 @@ TODO about authentication and secure connection
     - [ ] Cleanup and testing
   - [ ] Endpoint settings
     - [x] Struct
-    - [ ] Loading from file
+    - [x] Loading from file
     - [ ] Creating default file
     - [x] Sending through socket
   - [ ] Endpoint manager
