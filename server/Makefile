@@ -10,11 +10,11 @@ INCLUDES := -Iinclude -I../shared/include
 
 all: tmsd
 
-tmsd:
+tmsd: builddir
 	${CC} ${MAIN} ${INCLUDES} ${SHAREDSRC} ${SRCS} -o ${OUT}
 	chmod 744 ${OUT}
 
-debug:
+debug: builddir
 	${CC} -g -D DEBUG ${MAIN} ${INCLUDES} ${SHAREDSRC} ${SRCS} -o ${OUT}
 	chmod 777 ${OUT}
 
@@ -24,3 +24,6 @@ install: tmsd
 
 clean:
 	rm ${OUT}
+
+builddir:
+	@mkdir -p build
