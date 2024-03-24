@@ -18,15 +18,16 @@ bool EndpointManager::LoadSettingsFile(const string& filePath, EndpointSettings&
 
 void EndpointManager::LoadConnectionData(vector<Config>* endpoints){
     EndpointConnection buffer;
+    int code;
     for (Config& x : *endpoints){
-        if (x.GetProperty<string>("Name", buffer.settings.name) &&
-            x.GetProperty<string>("Ip", buffer.ip) &&
-            x.GetProperty<unsigned short>("Port", buffer.port)){
-            m_data.push_back(buffer);
+        code = 0;
+        x.GetProperty<string>("Name", buffer.settings.name, code);
+        x.GetProperty<string>("Ip", buffer.ip, code);
+        x.GetProperty<unsigned short>("Port", buffer.port, code);
+        if (code)
+            syslog(LOG_DEBUG, "Failure on loading EndpointConnection. Failcode: %i", code);
+        else 
             syslog(LOG_DEBUG, "Loaded endpoint connection: %s", &buffer.settings.name[0]);
-        } else{
-            syslog(LOG_DEBUG, "Failure on loading EndpointConnection");
-        }
     }
 }
 void EndpointManager::LoadSettingsData(string path){

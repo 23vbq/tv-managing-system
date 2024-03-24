@@ -25,7 +25,7 @@
 
 const int LOGMASK = _LOGMASK;
 const char* DAEMONNAME = "tmsd";
-const char* CONFIG_PATH = "/home/_vbq/cpp/tv-managing-system/server/";
+const char* CONFIG_PATH = "/home/_vbq/Desktop/cpp/tv-managing-system/server/"; // "/home/_vbq/cpp/tv-managing-system/server/"
 
 static bool s_termination = false;
 

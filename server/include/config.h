@@ -34,6 +34,14 @@ class Config
             ss>>valueOut;
             return true;
         }
+        template <typename T>
+        bool GetProperty(string key, T& valueOut, int& failCode){
+            bool res = GetProperty<T>(key, valueOut);
+            failCode = failCode<<1;
+            if (!res)
+                failCode++;
+            return res;
+        }
         vector<Config>* GetList(string);
         string ToString();
 };
