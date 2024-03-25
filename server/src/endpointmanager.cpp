@@ -53,14 +53,6 @@ void EndpointManager::LoadSettingsData(string path){
             syslog(LOG_DEBUG, "Loaded endpoint settings: %s", &x.settings.name[0]);
         }
     }
-    // for (const filesystem::directory_entry& file : filesystem::directory_iterator(path)){
-    //     LoadSettingsFile(file.path());
-    // }
-    // FIXME test
-    /*EndpointSettings est(m_data[0].settings.name, true, "/mnt/images", 15);
-    m_data[0].settings = est;
-    est = EndpointSettings(m_data[1].settings.name, false, "/mnt/server/obrazki/telewizory/", 32);
-    m_data[1].settings = est;*/
 }
 
 vector<string>* EndpointManager::GetNames(){
@@ -71,9 +63,9 @@ vector<string>* EndpointManager::GetNames(){
     return result;
 }
 EndpointSettings* EndpointManager::GetSettings(string& name){
-    for (const EndpointConnection& x : m_data){
+    for (EndpointConnection& x : m_data){
         if (x.settings.name == name)
-            return new EndpointSettings(x.settings);
+            return &(x.settings); // new EndpointSettings(x.settings)
     }
     return NULL;
 }
@@ -83,4 +75,16 @@ EndpointSettings* EndpointManager::GetSettings(string& ip, unsigned short& port)
             return new EndpointSettings(x.settings);
     }
     return NULL;
+}
+
+void EndpointManager::SetSettings(EndpointSettings* ptr, EndpointSettings& settings){ // string& name
+    /*EndpointSettings* ep = GetSettings(name);
+    if (ep == NULL){
+        syslog(LOG_ERR, "Requested SetSettings for invalid endpoint name: %s", &name[0]);
+        return false;
+    }*/
+    ptr->localcfg = settings.localcfg;
+    ptr->dir = settings.dir;
+    ptr->showtime = settings.showtime;
+    syslog(LOG_INFO, "Successfully changed settings for endpoint: %s", &ptr->name[0]);
 }

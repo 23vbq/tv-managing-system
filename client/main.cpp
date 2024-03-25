@@ -5,6 +5,7 @@
 #include "windowmanager.h"
 
 #include <iostream>
+#include <vector>
 
 // using namespace std;
 
@@ -20,12 +21,12 @@ int main(int argc, char* argv[]){
     _sleep(1000);*/
     // Window
     // FIXME test
-    m_WindowManager = new WindowManager();
+    /*m_WindowManager = new WindowManager();
     while (true){
         if (!m_WindowManager->ProcessMessage())
             break;
         Sleep(10);
-    }
+    }*/
     // Initialize ClientSocket
     m_clientsock = new ClientSocket();
     m_clientsock->Connect("192.168.121.132", "5555");
@@ -45,6 +46,14 @@ int main(int argc, char* argv[]){
         EndpointSettings epbuff{esr.DeserializeNext(), esr.DeserializeNext<bool>(), esr.DeserializeNext(), esr.DeserializeNext<unsigned int>()};
         eps.push_back(epbuff);
     }
+    eps[1].dir = "/mnt/test/bardo";
+    Serializer sr2;
+    sr2.AddValue(eps[1].name);
+    sr2.AddValue<bool>(eps[1].localcfg);
+    sr2.AddValue(eps[1].dir);
+    sr2.AddValue<unsigned int>(eps[1].showtime);
+    m_clientsock->Send("SETEPSET " + eps[1].name + " " + sr2.Serialize());
+    m_clientsock->Receive(testbuff);
     //EndpointSettings eps{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
     std::cout<<testbuff<<'\n';
     // Cleanup

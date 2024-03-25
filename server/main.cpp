@@ -118,6 +118,7 @@ void InitializeCommands(){
     m_CommandHandler->AddCommand("DISCON", Command{0, CommandFunctions::disconnect});
     m_CommandHandler->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName});
     m_CommandHandler->AddCommand("GETEPLS", Command{0, CommandFunctions::getEndpointList});
+    m_CommandHandler->AddCommand("SETEPSET", Command{2, CommandFunctions::setEndpointSettings});
 }
 void CleanUp(){
     SignalCallbacks::RevertCallbacks();

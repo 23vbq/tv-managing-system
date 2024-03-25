@@ -23,6 +23,8 @@ public:
     vector<string>* GetNames();
     EndpointSettings* GetSettings(string&);
     EndpointSettings* GetSettings(string&, unsigned short&);
+
+    void SetSettings(EndpointSettings*, EndpointSettings&);
 };
 
 #endif
