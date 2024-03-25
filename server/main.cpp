@@ -25,7 +25,8 @@
 
 const int LOGMASK = _LOGMASK;
 const char* DAEMONNAME = "tmsd";
-const char* CONFIG_PATH = "/home/_vbq/Desktop/cpp/tv-managing-system/server/"; // "/home/_vbq/cpp/tv-managing-system/server/"
+const char* CONFIG_PATH = "/home/_vbq/cpp/tv-managing-system/server/";
+// const char* CONFIG_PATH = "/home/_vbq/Desktop/cpp/tv-managing-system/server/"; // "/home/_vbq/cpp/tv-managing-system/server/"
 
 static bool s_termination = false;
 
@@ -106,17 +107,6 @@ void LoadServerConfig(){
     // Endpoint list
     vector<Config>* epList = cfgl.GetList("Endpoints");
     m_EndpointManager->LoadConnectionData(epList);
-    /*EndpointConnection buffer;
-    for (Config x : *epList){
-        if (x.GetProperty<string>("Name", buffer.settings.name) &&
-            x.GetProperty<string>("Ip", buffer.ip) &&
-            x.GetProperty<unsigned short>("Port", buffer.port)){
-            syslog(LOG_DEBUG, "Successfully loaded EndpointConnection");
-            m_endpoints.push_back(buffer);
-        } else{
-            syslog(LOG_DEBUG, "Failure on loading EndpointConnection");
-        }
-    }*/
     delete epList;
 }
 void InitializeCommands(){

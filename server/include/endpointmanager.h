@@ -15,7 +15,7 @@ public:
 private:
     vector<EndpointConnection> m_data;
 
-    bool LoadSettingsFile(const string&, EndpointSettings&);
+    int LoadSettingsFile(const string&, EndpointSettings&);
 public:
     void LoadConnectionData(vector<Config>*);
     void LoadSettingsData(string);
