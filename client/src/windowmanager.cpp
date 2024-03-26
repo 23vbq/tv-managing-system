@@ -43,9 +43,18 @@ WindowManager::WindowManager()
         "Button",
         "Fajny buton",
         WS_TABSTOP | WS_VISIBLE | WS_CHILD,
-        10, 50, 50, 20,
+        10, 50, 200, 20,
         m_hWnd,
         (HMENU) 1, (HINSTANCE)GetWindowLongPtr(m_hWnd, GWLP_HINSTANCE), NULL
+    );
+    HWND button2 = CreateWindowEx(
+        0,
+        "Button",
+        "Lepszy buton",
+        WS_TABSTOP | WS_VISIBLE | WS_CHILD,
+        10, 80, 200, 20,
+        m_hWnd,
+        (HMENU) 2, (HINSTANCE)GetWindowLongPtr(m_hWnd, GWLP_HINSTANCE), NULL
     );
 
     ShowWindow(m_hWnd, SW_SHOW);
@@ -77,6 +86,10 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, 
         case 1:
             ::MessageBeep(MB_ICONERROR);
             ::MessageBoxA(hwnd, "Wystapil oczekiwany blad!", "Dziala ale bez polskich znakow", MB_ICONERROR);
+            break;
+        case 2:
+            ::MessageBeep(MB_OK);
+            ::MessageBoxA(hwnd, "A ten blad jest jeszcze lepszy i bardziej oczekiwany!", "Lepszy", MB_ICONWARNING);
             break;
         }
         break;
