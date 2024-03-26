@@ -13,9 +13,17 @@ Logger* m_log;
 ClientSocket* m_clientsock;
 WindowManager* m_WindowManager;
 
+void CleanUp();
+
 int main(int argc, char* argv[]){
     // Initialize logger
-    m_log = new Logger("test/log");
+    try{
+        m_log = new Logger("test/log");
+    } catch (const char* ex){
+        std::cerr<<"[Exception] "<<ex<<'\n';
+        CleanUp();
+        return 1;
+    }
     // FIXME test
     /*cout<<"TEST";
     _sleep(1000);*/
@@ -57,8 +65,12 @@ int main(int argc, char* argv[]){
     //EndpointSettings eps{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
     std::cout<<testbuff<<'\n';
     // Cleanup
+    CleanUp();
+    return 0;
+}
+
+void CleanUp(){
     delete m_WindowManager;
     delete m_clientsock;
     delete m_log;
-    return 0;
 }
