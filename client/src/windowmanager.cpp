@@ -21,14 +21,35 @@ WindowManager::WindowManager()
         CLASS_NAME,
         "TMSC Test",
         style,
-        CW_USEDEFAULT, CW_USEDEFAULT, 450, 200,
+        CW_USEDEFAULT, CW_USEDEFAULT, W_WIDTH + 5, W_HEIGHT + 29,
         NULL,
         NULL,
         m_hInstance,
         NULL
     );
 
-    HWND text1 = CreateWindowEx(
+    int iHalfWindowWidth = (W_WIDTH - W_PADDING * 2) / 2 - 5;
+    HWND leftWindow = CreateWindowEx(
+        0,
+        "STATIC",
+        "Test1",
+        WS_VISIBLE | WS_CHILD | WS_BORDER,
+        W_PADDING, W_PADDING, iHalfWindowWidth, W_HEIGHT - W_PADDING * 2,
+        m_hWnd,
+        NULL, NULL, NULL
+    );
+
+    HWND rightWindow = CreateWindowEx(
+        0,
+        "STATIC",
+        "Test2",
+        WS_VISIBLE | WS_CHILD | WS_BORDER,
+        W_WIDTH / 2 + 5, W_PADDING, iHalfWindowWidth, W_HEIGHT - W_PADDING * 2,
+        m_hWnd,
+        NULL, NULL, NULL
+    );
+
+    /*HWND text1 = CreateWindowEx(
         WS_EX_CLIENTEDGE,
         TEXT("Edit"),
         TEXT("Test"),
@@ -55,7 +76,7 @@ WindowManager::WindowManager()
         10, 80, 200, 20,
         m_hWnd,
         (HMENU) 2, (HINSTANCE)GetWindowLongPtr(m_hWnd, GWLP_HINSTANCE), NULL
-    );
+    );*/
 
     ShowWindow(m_hWnd, SW_SHOW);
     UpdateWindow(m_hWnd);

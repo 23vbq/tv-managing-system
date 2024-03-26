@@ -18,11 +18,11 @@ void CleanUp();
 int main(int argc, char* argv[]){
     // Initialize logger
     try{
-        m_log = new Logger("test/log");
+        m_log = new Logger("./test/log");
     } catch (const char* ex){
         std::cerr<<"[Exception] "<<ex<<'\n';
         CleanUp();
-        return 1;
+        //return 1;
     }
     // FIXME test
     /*cout<<"TEST";
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]){
         Sleep(10);
     }
     // Initialize ClientSocket
-    m_clientsock = new ClientSocket();
+    /*m_clientsock = new ClientSocket();
     m_clientsock->Connect("192.168.121.132", "5555");
     // FIXME test
     std::string testbuff;
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]){
     m_clientsock->Send("SETEPSET " + eps[1].name + " " + sr2.Serialize());
     m_clientsock->Receive(testbuff);
     //EndpointSettings eps{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
-    std::cout<<testbuff<<'\n';
+    std::cout<<testbuff<<'\n';*/
     // Cleanup
     CleanUp();
     return 0;

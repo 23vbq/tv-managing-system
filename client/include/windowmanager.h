@@ -3,6 +3,10 @@
 #ifndef WINDOW_MANAGER_H
 #define WINDOW_MANAGER_H
 
+#define W_WIDTH 1280
+#define W_HEIGHT 720
+#define W_PADDING 10
+
 #include <windows.h>
 #include <iostream>
 
