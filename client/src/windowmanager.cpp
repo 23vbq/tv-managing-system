@@ -33,9 +33,19 @@ WindowManager::WindowManager()
         TEXT("Edit"),
         TEXT("Test"),
         WS_VISIBLE | WS_CHILD,
-        20, 20, 100, 100,
+        10, 10, 100, 40,
         m_hWnd,
         NULL, NULL, NULL
+    );
+
+    HWND button1 = CreateWindowEx(
+        0,
+        "Button",
+        "Fajny buton",
+        WS_TABSTOP | WS_VISIBLE | WS_CHILD,
+        10, 50, 50, 20,
+        m_hWnd,
+        (HMENU) 1, (HINSTANCE)GetWindowLongPtr(m_hWnd, GWLP_HINSTANCE), NULL
     );
 
     ShowWindow(m_hWnd, SW_SHOW);
@@ -61,6 +71,15 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, 
     //         NULL, NULL, NULL
     //     );
     //     break;
+    case WM_COMMAND:
+        switch (LOWORD(wParam))
+        {
+        case 1:
+            ::MessageBeep(MB_ICONERROR);
+            ::MessageBoxA(hwnd, "Wystapil oczekiwany blad!", "Dziala ale bez polskich znakow", MB_ICONERROR);
+            break;
+        }
+        break;
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;

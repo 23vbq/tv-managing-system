@@ -4,6 +4,7 @@
 #define WINDOW_MANAGER_H
 
 #include <windows.h>
+#include <iostream>
 
 class WindowManager{
 private:

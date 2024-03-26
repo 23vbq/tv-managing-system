@@ -21,12 +21,12 @@ int main(int argc, char* argv[]){
     _sleep(1000);*/
     // Window
     // FIXME test
-    /*m_WindowManager = new WindowManager();
+    m_WindowManager = new WindowManager();
     while (true){
         if (!m_WindowManager->ProcessMessage())
             break;
         Sleep(10);
-    }*/
+    }
     // Initialize ClientSocket
     m_clientsock = new ClientSocket();
     m_clientsock->Connect("192.168.121.132", "5555");
