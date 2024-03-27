@@ -8,15 +8,20 @@
 #define W_PADDING 10
 
 #include <windows.h>
+#include <wingdi.h>
 #include <iostream>
+#include <vector>
 
 class WindowManager{
 private:
     LPCSTR CLASS_NAME = "TMSC Window";
 
-    HWND m_hWnd;
+    static HWND s_hWnd;
     HINSTANCE m_hInstance;
     WNDCLASS m_wndClass;
+
+    // std::vector<HWND> m_childs;
+    static COLORREF bg;
 
     static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 public:

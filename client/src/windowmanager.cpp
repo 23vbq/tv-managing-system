@@ -1,5 +1,7 @@
 #include "windowmanager.h"
 
+HWND WindowManager::s_hWnd = NULL;
+
 // Constructors
 
 WindowManager::WindowManager()
@@ -16,7 +18,7 @@ WindowManager::WindowManager()
 
     DWORD style = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
-    m_hWnd = CreateWindowEx(
+    s_hWnd = CreateWindowEx(
         0,
         CLASS_NAME,
         "TMSC Test",
@@ -35,9 +37,12 @@ WindowManager::WindowManager()
         "Test1",
         WS_VISIBLE | WS_CHILD | WS_BORDER,
         W_PADDING, W_PADDING, iHalfWindowWidth, W_HEIGHT - W_PADDING * 2,
-        m_hWnd,
+        s_hWnd,
         NULL, NULL, NULL
     );
+    
+    // SetBkColor
+    // m_childs.push_back(leftWindow);
 
     HWND rightWindow = CreateWindowEx(
         0,
@@ -45,7 +50,7 @@ WindowManager::WindowManager()
         "Test2",
         WS_VISIBLE | WS_CHILD | WS_BORDER,
         W_WIDTH / 2 + 5, W_PADDING, iHalfWindowWidth, W_HEIGHT - W_PADDING * 2,
-        m_hWnd,
+        s_hWnd,
         NULL, NULL, NULL
     );
 
@@ -57,7 +62,7 @@ WindowManager::WindowManager()
         10, 10, 100, 40,
         m_hWnd,
         NULL, NULL, NULL
-    );
+    );*/
 
     HWND button1 = CreateWindowEx(
         0,
@@ -65,10 +70,10 @@ WindowManager::WindowManager()
         "Fajny buton",
         WS_TABSTOP | WS_VISIBLE | WS_CHILD,
         10, 50, 200, 20,
-        m_hWnd,
-        (HMENU) 1, (HINSTANCE)GetWindowLongPtr(m_hWnd, GWLP_HINSTANCE), NULL
+        s_hWnd,
+        (HMENU) 1, (HINSTANCE)GetWindowLongPtr(s_hWnd, GWLP_HINSTANCE), NULL
     );
-    HWND button2 = CreateWindowEx(
+    /*HWND button2 = CreateWindowEx(
         0,
         "Button",
         "Lepszy buton",
@@ -77,9 +82,13 @@ WindowManager::WindowManager()
         m_hWnd,
         (HMENU) 2, (HINSTANCE)GetWindowLongPtr(m_hWnd, GWLP_HINSTANCE), NULL
     );*/
+    /*HDC hdc = GetDC(leftWindow);
+    SetBkColor(hdc, RGB(0, 255, 0));
+    InvalidateRect(leftWindow, NULL, TRUE);
+    ReleaseDC(leftWindow, hdc);*/
 
-    ShowWindow(m_hWnd, SW_SHOW);
-    UpdateWindow(m_hWnd);
+    ShowWindow(s_hWnd, SW_SHOW);
+    UpdateWindow(s_hWnd);
 }
 
 WindowManager::~WindowManager(){
@@ -87,8 +96,9 @@ WindowManager::~WindowManager(){
 }
 
 // Private functions
-
+COLORREF WindowManager::bg = RGB(255, 255, 255);
 LRESULT CALLBACK WindowManager::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
+    HDC hdc;
     switch (uMsg)
     {
     // case WM_CREATE:
@@ -105,9 +115,22 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, 
         switch (LOWORD(wParam))
         {
         case 1:
+        {
             ::MessageBeep(MB_ICONERROR);
             ::MessageBoxA(hwnd, "Wystapil oczekiwany blad!", "Dziala ale bez polskich znakow", MB_ICONERROR);
+            bg = RGB(0, 255, 0);
+            InvalidateRect(hwnd, NULL, TRUE);
+            HWND test = CreateWindowEx(
+                0,
+                "Edit",
+                "",
+                WS_CHILD | WS_VISIBLE | WS_BORDER,
+                200, 200, 400, 400,
+                s_hWnd,
+                NULL, NULL, NULL
+            );
             break;
+        }
         case 2:
             ::MessageBeep(MB_OK);
             ::MessageBoxA(hwnd, "A ten blad jest jeszcze lepszy i bardziej oczekiwany!", "Lepszy", MB_ICONWARNING);
@@ -119,9 +142,17 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, 
         return 0;
     case WM_PAINT:
         PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hwnd, &ps);
-        FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW + 1));
+        hdc = BeginPaint(hwnd, &ps);
+        //FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW + 1));
         EndPaint(hwnd, &ps);
+        return 0;
+    case WM_ERASEBKGND:
+        hdc = (HDC)wParam;
+        RECT rect;
+        GetClientRect(hwnd, &rect);
+        HBRUSH brush = CreateSolidBrush(bg); // RGB(0, 255, 0) to kolor zielony
+        FillRect(hdc, &rect, brush);
+        DeleteObject(brush);
         return 0;
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
