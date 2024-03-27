@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "serializer.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -6,6 +7,9 @@
 
 int main(int argc, char *argv[])
 {
+    Serializer sr;
+    sr.AddValue((std::string)"Test");
+    std::string s = sr.Serialize();
     QApplication a(argc, argv);
 
     QTranslator translator;

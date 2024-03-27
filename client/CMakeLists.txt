@@ -17,10 +17,15 @@ set(TS_FILES client_en_US.ts)
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
-        mainwindow.h
+        include/mainwindow.h
+        ../shared/src/serializer.cpp
         mainwindow.ui
         ${TS_FILES}
 )
+
+include_directories(include)
+include_directories(../shared/include)
+# add_library(serializer ../shared/src/serializer.cpp ../shared/include/serializer.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(client
@@ -44,6 +49,7 @@ else()
         add_executable(client
             ${PROJECT_SOURCES}
         )
+        target_include_directories(client PUBLIC include)
     endif()
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
