@@ -17,9 +17,12 @@ void Logger::logToFile(QtMsgType type, const QMessageLogContext& context, const 
     QString message = qFormatLogMessage(type, context, msg);
     static FILE* f = fopen(s_path, "a");
     if (f == nullptr){
-        QMessageBox msgBox;
+        /*QMessageBox msgBox;
         msgBox.setText("Cannot open log file!");
-        msgBox.exec();
+        msgBox.exec();*/
+        // QMessageBox::Critical(nullptr, "Log", "Cannot open log file!");
+        QMessageBox msgBox;
+        msgBox.critical(nullptr, "Log", "Cannot open log file!");
         exit(1);
     }
     fprintf(f, "%s\n", qPrintable(message));
