@@ -17,6 +17,8 @@ set(TS_FILES client_en_US.ts)
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
+        logger.cpp
+        logger.h
         include/mainwindow.h
         ../shared/src/serializer.cpp
         mainwindow.ui

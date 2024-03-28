@@ -4,9 +4,14 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <QMessageBox>
+
+#include "logger.h"
 
 int main(int argc, char *argv[])
 {
+    // Construct logger class
+    Logger log("E:\\programowanie\\cpp\\tv-managing-system\\client\\test\\syslog");
     Serializer sr;
     sr.AddValue((std::string)"Test");
     std::string s = sr.Serialize();
@@ -23,5 +28,6 @@ int main(int argc, char *argv[])
     }
     MainWindow w;
     w.show();
+    log.Initialize();
     return a.exec();
 }
