@@ -29,5 +29,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     log.Initialize();
+    //w.ReloadEndpointListView("\"2\"\"4:Test\"\"5:kotek\"");
+    // w.ReloadEndpointListView("2\"3:kot\"\"6:piesek\"");
     return a.exec();
 }
