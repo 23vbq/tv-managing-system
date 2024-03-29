@@ -6,7 +6,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    // ui->endpointListWidget->clear();
     ReloadEndpointListView("\"2\"\"5:Test1\"\"6:Test12\"");
 
     connect(ui->pushButton, &QPushButton::clicked, [this](){

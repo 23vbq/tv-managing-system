@@ -3,15 +3,18 @@
 
 #include <QTcpSocket>
 
+#define CONNECTION_TIMEOUT 5000
+
 class ClientSocketQt{
 private:
-    QTcpSocket m_socket;
+    QTcpSocket* m_socket;
 
     QByteArray m_readbuff;
 public:
     ClientSocketQt(QObject*);
     ~ClientSocketQt();
 
+    bool Connect(const std::string&, const unsigned int&);
     void Send(std::string);
     void Read(std::string&);
 };

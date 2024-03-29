@@ -7,14 +7,13 @@
 #include <QMessageBox>
 
 #include "logger.h"
+#include "clientsocketqt.h"
 
 int main(int argc, char *argv[])
 {
     // Construct logger class
     Logger log("E:\\programowanie\\cpp\\tv-managing-system\\client\\test\\syslog");
-    Serializer sr;
-    sr.AddValue((std::string)"Test");
-    std::string s = sr.Serialize();
+
     QApplication a(argc, argv);
 
     QTranslator translator;
@@ -28,7 +27,15 @@ int main(int argc, char *argv[])
     }
     MainWindow w;
     w.show();
+    // Initialize logger
     log.Initialize();
+    // Initialize client socket
+    ClientSocketQt cs(nullptr);
+    QMessageBox conMsg;
+    if (cs.Connect("192.168.121.132", (unsigned int)5555))
+        conMsg.information(nullptr, "Client Socket", "Successfully connected!");
+    else
+        conMsg.critical(nullptr, "Client Socket", "Unable to connect!");
     //w.ReloadEndpointListView("\"2\"\"4:Test\"\"5:kotek\"");
     // w.ReloadEndpointListView("2\"3:kot\"\"6:piesek\"");
     return a.exec();
