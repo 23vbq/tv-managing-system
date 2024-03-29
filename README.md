@@ -74,6 +74,7 @@ TODO about authentication and secure connection
   - [ ] Endpoint manager
   - [ ] Requests handling
 - [ ] Client
+  - [ ] **Rewrite to Qt**
   - [ ] Socket
     - [x] Creating socket
     - [x] Connecting
@@ -95,4 +96,4 @@ TODO about authentication and secure connection
   - [ ] #3 ConfigLoader: removes all spaces in string (including in value) *(maybe i make it as feature - you need to set values without spaces)*
 
 
-> **SEGFAULT COUNTER**: 3
+> **SEGFAULT COUNTER**: 4
