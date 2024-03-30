@@ -11,10 +11,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton, &QPushButton::clicked, [this](){
         ReloadEndpointListView("\"2\"\"7:Test123\"\"8:Test1234\"");
     });
+
+    cw = new ConnectWindow(this);
+    cw->show();
 }
 
 MainWindow::~MainWindow()
 {
+    delete cw;
     delete ui;
 }
 

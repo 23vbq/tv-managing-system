@@ -30,12 +30,12 @@ int main(int argc, char *argv[])
     // Initialize logger
     log.Initialize();
     // Initialize client socket
-    ClientSocketQt cs(nullptr);
+    /*ClientSocketQt cs(nullptr);
     QMessageBox conMsg;
     if (cs.Connect("192.168.121.132", (unsigned int)5555))
         conMsg.information(nullptr, "Client Socket", "Successfully connected!");
     else
-        conMsg.critical(nullptr, "Client Socket", "Unable to connect!");
+        conMsg.critical(nullptr, "Client Socket", "Unable to connect!");*/
     //w.ReloadEndpointListView("\"2\"\"4:Test\"\"5:kotek\"");
     // w.ReloadEndpointListView("2\"3:kot\"\"6:piesek\"");
     return a.exec();

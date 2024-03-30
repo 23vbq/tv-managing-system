@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "serializer.h"
+#include "connectwindow.h"
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -24,5 +25,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    ConnectWindow *cw;
 };
 #endif // MAINWINDOW_H
