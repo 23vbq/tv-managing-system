@@ -2,6 +2,7 @@
 #define CONNECTWINDOW_H
 
 #include <QMainWindow>
+#include <QLineEdit>
 #include <QPushButton>
 
 QT_BEGIN_NAMESPACE
@@ -20,6 +21,8 @@ public:
 
 private:
     Ui::ConnectWindow *ui;
+
+    void PortLineEditTextHandler();
 };
 
 #endif

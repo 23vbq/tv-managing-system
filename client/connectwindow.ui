@@ -51,28 +51,6 @@
      <enum>Qt::AutoText</enum>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="ipTextEdit">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>35</y>
-      <width>180</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Roboto</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="tabChangesFocus">
-     <bool>true</bool>
-    </property>
-    <property name="placeholderText">
-     <string>0.0.0.0</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
@@ -95,7 +73,39 @@
      <enum>Qt::AutoText</enum>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="portTextEdit">
+   <widget class="QPushButton" name="connectButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>75</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Connect</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="ipLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>35</y>
+      <width>180</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Roboto</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="placeholderText">
+     <string>0.0.0.0</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="portLineEdit">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -113,24 +123,11 @@
     <property name="inputMethodHints">
      <set>Qt::ImhDigitsOnly</set>
     </property>
-    <property name="tabChangesFocus">
-     <bool>true</bool>
+    <property name="maxLength">
+     <number>5</number>
     </property>
     <property name="placeholderText">
      <string>65535</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="connectButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>75</y>
-      <width>80</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Connect</string>
     </property>
    </widget>
   </widget>
