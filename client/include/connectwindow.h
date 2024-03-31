@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QCloseEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,9 +21,14 @@ public:
     ~ConnectWindow();
 
 private:
+    QWidget* parent;
     Ui::ConnectWindow *ui;
 
     void PortLineEditTextHandler();
+signals:
+    void closed();
+protected:
+    void closeEvent(QCloseEvent*);
 };
 
 #endif

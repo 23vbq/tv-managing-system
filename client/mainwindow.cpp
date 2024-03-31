@@ -6,21 +6,25 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setFixedSize(QSize(1280, 741));
     ReloadEndpointListView("\"2\"\"5:Test1\"\"6:Test12\"");
 
     connect(ui->pushButton, &QPushButton::clicked, [this](){
         ReloadEndpointListView("\"2\"\"7:Test123\"\"8:Test1234\"");
     });
 
-    cw = new ConnectWindow(this);
-    cw->show();
+    // cw = new ConnectWindow(this);
+    // cw->show();
+    // ReloadEndpointListView("\"2\"\"7:Test123\"\"8:Test1234\"");
 }
 
 MainWindow::~MainWindow()
 {
-    delete cw;
+    // delete cw;
     delete ui;
 }
+
+// Public functions
 
 void MainWindow::ReloadEndpointListView(std::string serializedEndpointList){
     std::vector<std::string> names;
@@ -32,4 +36,26 @@ void MainWindow::ReloadEndpointListView(std::string serializedEndpointList){
         names.push_back(name);
         ui->endpointListWidget->addItem(QString::fromStdString(name));
     }
+}
+
+void MainWindow::SetCwPtr(ConnectWindow* ptr){
+    cw = ptr;
+    connect(cw, &ConnectWindow::closed, this, &MainWindow::CloseConnectWindow);
+}
+
+// Private slots functions
+
+void MainWindow::on_actionConnect_to_triggered()
+{
+    OpenConnectWindow();
+}
+
+// Private functions
+
+void MainWindow::OpenConnectWindow(){
+    this->setEnabled(false);
+    cw->show();
+}
+void MainWindow::CloseConnectWindow(){
+    this->setEnabled(true);
 }

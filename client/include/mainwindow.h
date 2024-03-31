@@ -6,6 +6,7 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,8 +23,14 @@ public:
     ~MainWindow();
 
     void ReloadEndpointListView(std::string);
+    void SetCwPtr(ConnectWindow*);
+private slots:
+    void on_actionConnect_to_triggered();
 
 private:
+    void OpenConnectWindow();
+    void CloseConnectWindow();
+
     Ui::MainWindow *ui;
     ConnectWindow *cw;
 };

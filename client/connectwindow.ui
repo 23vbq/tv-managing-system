@@ -2,9 +2,6 @@
 <ui version="4.0">
  <class>ConnectWindow</class>
  <widget class="QMainWindow" name="ConnectWindow">
-  <property name="enabled">
-   <bool>true</bool>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -34,7 +31,7 @@
      <rect>
       <x>10</x>
       <y>15</y>
-      <width>62</width>
+      <width>111</width>
       <height>19</height>
      </rect>
     </property>
@@ -45,7 +42,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Server IP</string>
+     <string>Server address</string>
     </property>
     <property name="textFormat">
      <enum>Qt::AutoText</enum>

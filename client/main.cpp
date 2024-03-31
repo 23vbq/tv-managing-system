@@ -25,8 +25,11 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    MainWindow w;
-    w.show();
+    MainWindow mainWindow;
+    ConnectWindow connectWindow;
+    mainWindow.SetCwPtr(&connectWindow);
+    mainWindow.show();
+    // connectWindow.show();
     // Initialize logger
     log.Initialize();
     // Initialize client socket

@@ -5,6 +5,10 @@ ConnectWindow::ConnectWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ConnectWindow)
 {
+    /*this->parent = parent;
+    if (parent != nullptr){
+        parent->setEnabled(false);
+    }*/
     ui->setupUi(this);
     this->setFixedSize(QSize(400,120));
 
@@ -13,6 +17,7 @@ ConnectWindow::ConnectWindow(QWidget *parent)
 
 ConnectWindow::~ConnectWindow()
 {
+    //this->parent->setEnabled(true);
     delete ui;
 }
 
@@ -28,4 +33,13 @@ void ConnectWindow::PortLineEditTextHandler(){
         }
     }
     ui->portLineEdit->setText(text);
+}
+
+// Protected
+void ConnectWindow::closeEvent(QCloseEvent * event)
+{
+    QMainWindow::closeEvent(event);
+
+    if (event->isAccepted())
+        emit closed();
 }

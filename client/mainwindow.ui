@@ -47,7 +47,31 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuServer">
+    <property name="title">
+     <string>Server</string>
+    </property>
+    <addaction name="actionConnect_to"/>
+    <addaction name="actionReconnect"/>
+    <addaction name="actionDisconnect"/>
+   </widget>
+   <addaction name="menuServer"/>
   </widget>
+  <action name="actionConnect_to">
+   <property name="text">
+    <string>Connect to...</string>
+   </property>
+  </action>
+  <action name="actionReconnect">
+   <property name="text">
+    <string>Reconnect</string>
+   </property>
+  </action>
+  <action name="actionDisconnect">
+   <property name="text">
+    <string>Disconnect</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
