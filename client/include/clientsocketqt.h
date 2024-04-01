@@ -9,15 +9,17 @@ class ClientSocketQt{
 private:
     QTcpSocket* m_socket;
 
-    bool m_connected;
     QByteArray m_readbuff;
 public:
     ClientSocketQt(QObject* parent = nullptr);
     ~ClientSocketQt();
 
     bool Connect(const std::string&, const unsigned int&);
-    void Send(std::string);
+    void Disconnect();
+    bool Send(std::string);
     void Read(std::string&);
+
+    bool IsConnected();
 };
 
 #endif

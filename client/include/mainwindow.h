@@ -29,6 +29,8 @@ public:
 private slots:
     void on_actionConnect_to_triggered();
 
+    void on_actionDisconnect_triggered();
+
 private:
     void OpenConnectWindow();
     void CloseConnectWindow();

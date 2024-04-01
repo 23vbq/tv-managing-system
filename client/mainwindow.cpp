@@ -66,10 +66,15 @@ void MainWindow::CloseConnectWindow(){
 
 void MainWindow::closeEvent(QCloseEvent * event)
 {
-    QMainWindow::closeEvent(event);
-
     delete m_ClientSocket;
+    QMainWindow::closeEvent(event);
 
     if (event->isAccepted())
         emit closed();
 }
+
+void MainWindow::on_actionDisconnect_triggered()
+{
+    m_ClientSocket->Disconnect();
+}
+
