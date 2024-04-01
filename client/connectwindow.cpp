@@ -1,6 +1,8 @@
 #include "connectwindow.h"
 #include "./ui_connectwindow.h"
 
+extern ClientSocketQt* m_ClientSocket;
+
 ConnectWindow::ConnectWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ConnectWindow)
@@ -12,7 +14,8 @@ ConnectWindow::ConnectWindow(QWidget *parent)
     ui->setupUi(this);
     this->setFixedSize(QSize(400,120));
 
-    QLineEdit::connect(ui->portLineEdit, &QLineEdit::textEdited, this, &ConnectWindow::PortLineEditTextHandler);
+    QLineEdit::connect(ui->portLineEdit, &QLineEdit::textEdited, this, &ConnectWindow::PortLineEditTextHandler); // Input mask for port (allow only numbers)
+    connect(ui->connectButton, &QPushButton::clicked, this, &ConnectWindow::ConnectBtnHandler); // Connect button action
 }
 
 ConnectWindow::~ConnectWindow()
@@ -23,6 +26,28 @@ ConnectWindow::~ConnectWindow()
 
 // Private functions
 
+void ConnectWindow::ConnectBtnHandler(){
+    bool ok = true;
+    QMessageBox msg;
+    // Get input
+    QString sAddr = ui->ipLineEdit->text();
+    QString sPort = ui->portLineEdit->text();
+    unsigned int port = sPort.toUInt(&ok);
+    if (!ok){
+        msg.critical(this, "Connection", "Invalid address or port!");
+        return;
+    }
+    // Try to connect
+    if (!m_ClientSocket->Connect(sAddr.toStdString(), port)){
+        msg.critical(this, "Connection", "Cannot connect to: " + sAddr + ':' + sPort);
+        return;
+    }
+    msg.information(this, "Connection", "Successfully connected");
+    /*connect(msg, &QMessageBox::buttonClicked, this, [this](){
+        return;
+    });*/
+    this->close();
+}
 void ConnectWindow::PortLineEditTextHandler(){
     QString text = ui->portLineEdit->text();
     size_t n = text.length();

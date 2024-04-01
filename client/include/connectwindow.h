@@ -5,6 +5,9 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QCloseEvent>
+#include <QMessageBox>
+
+#include "clientsocketqt.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,6 +27,7 @@ private:
     QWidget* parent;
     Ui::ConnectWindow *ui;
 
+    void ConnectBtnHandler();
     void PortLineEditTextHandler();
 signals:
     void closed();

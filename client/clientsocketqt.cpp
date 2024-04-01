@@ -2,7 +2,7 @@
 
 // Constructors
 
-ClientSocketQt::ClientSocketQt(QObject* parent = nullptr){
+ClientSocketQt::ClientSocketQt(QObject* parent){
     m_socket = new QTcpSocket(parent);
 }
 
@@ -16,7 +16,12 @@ bool ClientSocketQt::Connect(const std::string& address, const unsigned int& por
     m_socket->connectToHost(QString::fromStdString(address), port);
     if (m_socket->waitForConnected(CONNECTION_TIMEOUT)){
         m_readbuff = m_socket->readAll();
-        return true;
+        m_connected = true;
+        return m_connected;
     }
-    return false;
+    m_connected = false;
+    return m_connected;
+}
+bool ClientSocketQt::IsConnected(){
+    return m_connected;
 }
