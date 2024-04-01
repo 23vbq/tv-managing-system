@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+extern ClientSocketQt* m_ClientSocket;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -58,4 +60,16 @@ void MainWindow::OpenConnectWindow(){
 }
 void MainWindow::CloseConnectWindow(){
     this->setEnabled(true);
+}
+
+// Protected
+
+void MainWindow::closeEvent(QCloseEvent * event)
+{
+    QMainWindow::closeEvent(event);
+
+    delete m_ClientSocket;
+
+    if (event->isAccepted())
+        emit closed();
 }

@@ -9,6 +9,8 @@
 #include "logger.h"
 #include "clientsocketqt.h"
 
+ClientSocketQt* m_ClientSocket;
+
 int main(int argc, char *argv[])
 {
     // Construct logger class
@@ -33,6 +35,7 @@ int main(int argc, char *argv[])
     // Initialize logger
     log.Initialize();
     // Initialize client socket
+    m_ClientSocket = new ClientSocketQt(nullptr);
     /*ClientSocketQt cs(nullptr);
     QMessageBox conMsg;
     if (cs.Connect("192.168.121.132", (unsigned int)5555))

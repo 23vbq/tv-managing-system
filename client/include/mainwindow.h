@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include "serializer.h"
+#include "clientsocketqt.h"
+
 #include "connectwindow.h"
 
 #include <QMainWindow>
@@ -33,5 +35,9 @@ private:
 
     Ui::MainWindow *ui;
     ConnectWindow *cw;
+signals:
+    void closed();
+protected:
+    void closeEvent(QCloseEvent*);
 };
 #endif // MAINWINDOW_H

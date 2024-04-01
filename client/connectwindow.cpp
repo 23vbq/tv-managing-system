@@ -36,6 +36,7 @@ void ConnectWindow::PortLineEditTextHandler(){
 }
 
 // Protected
+
 void ConnectWindow::closeEvent(QCloseEvent * event)
 {
     QMainWindow::closeEvent(event);
