@@ -10,6 +10,7 @@ private:
     QTcpSocket* m_socket;
 
     QByteArray m_readbuff;
+    QString m_readres;
 public:
     ClientSocketQt(QObject* parent = nullptr);
     ~ClientSocketQt();
@@ -17,7 +18,7 @@ public:
     bool Connect(const std::string&, const unsigned int&);
     void Disconnect();
     bool Send(std::string);
-    void Read(std::string&);
+    qint64 Read(std::string&);
 
     bool IsConnected();
 };

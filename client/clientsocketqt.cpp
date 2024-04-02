@@ -35,6 +35,12 @@ bool ClientSocketQt::Send(std::string message){
     sendlen = m_socket->write(&message[0], n);
     return sendlen == n;
 }
+qint64 ClientSocketQt::Read(std::string& result){
+    m_readbuff = m_socket->readAll();
+    m_readres = QString(m_readbuff);
+    result = m_readres.toStdString();
+    return result.length();
+}
 bool ClientSocketQt::IsConnected(){
     return m_socket->state() == QAbstractSocket::ConnectedState;
 }
