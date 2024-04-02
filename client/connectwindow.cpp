@@ -47,10 +47,6 @@ void ConnectWindow::ConnectBtnHandler(){
         return;
     });*/
     this->close();
-    // FIXME test
-    std::string s;
-    m_ClientSocket->Read(s);
-    return;
 }
 void ConnectWindow::PortLineEditTextHandler(){
     QString text = ui->portLineEdit->text();

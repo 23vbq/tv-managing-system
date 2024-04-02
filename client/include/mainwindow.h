@@ -24,7 +24,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void ReloadEndpointListView(std::string);
+    void ReloadEndpointListView();
     void SetCwPtr(ConnectWindow*);
 private slots:
     void on_actionConnect_to_triggered();
@@ -34,6 +34,8 @@ private slots:
 private:
     void OpenConnectWindow();
     void CloseConnectWindow();
+
+    void LoadEndpointListView(std::string&);
 
     Ui::MainWindow *ui;
     ConnectWindow *cw;

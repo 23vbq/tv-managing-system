@@ -2,6 +2,7 @@
 #define CLIENT_SOCKET_QT_H
 
 #include <QTcpSocket>
+#include <QMessageBox>
 
 #define CONNECTION_TIMEOUT 5000
 

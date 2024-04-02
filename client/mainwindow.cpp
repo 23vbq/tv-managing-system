@@ -9,10 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setFixedSize(QSize(1280, 741));
-    ReloadEndpointListView("\"2\"\"5:Test1\"\"6:Test12\"");
+    ReloadEndpointListView();
 
     connect(ui->pushButton, &QPushButton::clicked, [this](){
-        ReloadEndpointListView("\"2\"\"7:Test123\"\"8:Test1234\"");
+        ReloadEndpointListView();
     });
 
     // cw = new ConnectWindow(this);
@@ -28,16 +28,18 @@ MainWindow::~MainWindow()
 
 // Public functions
 
-void MainWindow::ReloadEndpointListView(std::string serializedEndpointList){
-    std::vector<std::string> names;
-    Serializer sr(serializedEndpointList);
-    size_t n = sr.DeserializeNext<size_t>();
+void MainWindow::ReloadEndpointListView(){
     ui->endpointListWidget->clear();
-    for (size_t i = 0; i < n; i++){
-        std::string name = sr.DeserializeNext();
-        names.push_back(name);
-        ui->endpointListWidget->addItem(QString::fromStdString(name));
+    if (!m_ClientSocket->IsConnected())
+        return;
+    m_ClientSocket->Send("GETEPLS");
+    std::string result;
+    if (!m_ClientSocket->Read(result)){
+        QMessageBox msg;
+        msg.critical(this, "Connection", "Cannot load endpoint list");
+        return;
     }
+    LoadEndpointListView(result);
 }
 
 void MainWindow::SetCwPtr(ConnectWindow* ptr){
@@ -60,6 +62,29 @@ void MainWindow::OpenConnectWindow(){
 }
 void MainWindow::CloseConnectWindow(){
     this->setEnabled(true);
+}
+
+void MainWindow::LoadEndpointListView(std::string& serializedEndpointList){
+    size_t n;
+    std::vector<std::string> names;
+    QMessageBox msg;
+    Serializer sr(serializedEndpointList);
+    try{
+        n = sr.DeserializeNext<size_t>();
+    } catch (const char* e){
+        msg.critical(this, "Serializer", e);
+        return;
+    }
+    for (size_t i = 0; i < n; i++){
+        std::string name;
+        try{
+            name = sr.DeserializeNext();
+        } catch (const char* e){
+            msg.critical(this, "Serializer", e)   ;
+        }
+        names.push_back(name);
+        ui->endpointListWidget->addItem(QString::fromStdString(name));
+    }
 }
 
 // Protected

@@ -82,8 +82,12 @@ TODO about authentication and secure connection
     - [ ] Cleanup, improvements and testing
   - [ ] Getting data
     - [x] List of endpoints
-    - [x] Endpoint settings
+    - [ ] Endpoint settings
     - [ ] Is endpoint connected
+  - [ ] GUI
+    - [x] Connection window
+    - [x] Showing list of endpoints
+    - [ ] Showing endpoint settings
   - [ ] Sending data
 - [ ] Endpoint
 - [ ] Automatic sync
@@ -96,4 +100,4 @@ TODO about authentication and secure connection
   - [ ] #3 ConfigLoader: removes all spaces in string (including in value) *(maybe i make it as feature - you need to set values without spaces)*
 
 
-> **SEGFAULT COUNTER**: 4
+> **SEGFAULT COUNTER**: 5

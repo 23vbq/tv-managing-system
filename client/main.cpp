@@ -27,6 +27,10 @@ int main(int argc, char *argv[])
             break;
         }
     }
+
+    // Initialize client socket
+    m_ClientSocket = new ClientSocketQt(nullptr);
+
     MainWindow mainWindow;
     ConnectWindow connectWindow;
     mainWindow.SetCwPtr(&connectWindow);
@@ -34,8 +38,6 @@ int main(int argc, char *argv[])
     // connectWindow.show();
     // Initialize logger
     log.Initialize();
-    // Initialize client socket
-    m_ClientSocket = new ClientSocketQt(nullptr);
     /*ClientSocketQt cs(nullptr);
     QMessageBox conMsg;
     if (cs.Connect("192.168.121.132", (unsigned int)5555))
