@@ -56,8 +56,8 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
+     <string notr="true">QFrame {background-color: rgb(255, 255, 255);}
+/*color: rgb(0, 0, 0);*/</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
