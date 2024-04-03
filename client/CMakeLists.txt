@@ -25,7 +25,10 @@ set(PROJECT_SOURCES
         include/clientsocketqt.h
         connectwindow.cpp
         include/connectwindow.h
+        endpointmanager.cpp
+        include/endpointmanager.h
         ../shared/src/serializer.cpp
+        ../shared/src/endpointsettings.cpp
         mainwindow.ui
         ${TS_FILES}
 )

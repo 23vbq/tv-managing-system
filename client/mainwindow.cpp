@@ -80,7 +80,8 @@ void MainWindow::LoadEndpointListView(std::string& serializedEndpointList){
         try{
             name = sr.DeserializeNext();
         } catch (const char* e){
-            msg.critical(this, "Serializer", e)   ;
+            msg.critical(this, "Serializer", e);
+            return;
         }
         names.push_back(name);
         ui->endpointListWidget->addItem(QString::fromStdString(name));
