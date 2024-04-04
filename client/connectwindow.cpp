@@ -43,9 +43,6 @@ void ConnectWindow::ConnectBtnHandler(){
         return;
     }
     msg.information(this, "Connection", "Successfully connected");
-    /*connect(msg, &QMessageBox::buttonClicked, this, [this](){
-        return;
-    });*/
     this->close();
 }
 void ConnectWindow::PortLineEditTextHandler(){

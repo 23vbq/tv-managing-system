@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setFixedSize(QSize(1280, 741));
+    ClearEndpointSettings();
     ReloadEndpointListView();
 
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::ReloadEndpointListView);
@@ -97,6 +98,14 @@ void MainWindow::LoadEndpointSettings(){
     ui->epLocalCfgCheckBox->setCheckState((ep.localcfg ? Qt::CheckState::Checked : Qt::CheckState::Unchecked));
     ui->epDirLineEdit->setText(QString::fromStdString(ep.dir));
     ui->epShowtimeSpinBox->setValue(ep.showtime);
+    ui->epSettings->setEnabled(true);
+}
+void MainWindow::ClearEndpointSettings(){
+    ui->epNameLabel->setText("");
+    ui->epLocalCfgCheckBox->setCheckState(Qt::CheckState::Unchecked);
+    ui->epDirLineEdit->setText("");
+    ui->epShowtimeSpinBox->setValue(0);
+    ui->epSettings->setEnabled(false);
 }
 
 // Protected
@@ -113,5 +122,7 @@ void MainWindow::closeEvent(QCloseEvent * event)
 void MainWindow::on_actionDisconnect_triggered()
 {
     m_ClientSocket->Disconnect();
+    ReloadEndpointListView();
+    ClearEndpointSettings();
 }
 

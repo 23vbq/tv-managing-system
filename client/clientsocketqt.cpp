@@ -8,9 +8,7 @@ ClientSocketQt::ClientSocketQt(QObject* parent){
 
 ClientSocketQt::~ClientSocketQt(){
     Disconnect();
-    if (m_socket->state() == QAbstractSocket::UnconnectedState ||
-        m_socket->waitForDisconnected(CONNECTION_TIMEOUT))
-        delete m_socket;
+    delete m_socket;
 }
 
 // Public functions
@@ -28,6 +26,9 @@ void ClientSocketQt::Disconnect(){
         return;
     Send("DISCON");
     m_socket->disconnectFromHost();
+    if (m_socket->state() == QAbstractSocket::UnconnectedState ||
+        m_socket->waitForDisconnected(CONNECTION_TIMEOUT))
+        return;
 }
 bool ClientSocketQt::Send(std::string message){
     qint64 sendlen;

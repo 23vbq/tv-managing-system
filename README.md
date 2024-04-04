@@ -82,8 +82,9 @@ TODO about authentication and secure connection
     - [ ] Cleanup, improvements and testing
   - [ ] Getting data
     - [x] List of endpoints
-    - [ ] Endpoint settings
+    - [x] Endpoint settings
     - [ ] Is endpoint connected
+    - [ ] Auto load endpoints list after connection
   - [ ] GUI
     - [x] Connection window
     - [x] Showing list of endpoints
@@ -98,6 +99,7 @@ TODO about authentication and secure connection
     **It was probably not compiled and installed latest version when testing**
   - [ ] #2 ServerSocket?: if client terminate connection server can occur exception on basic_string.tcc:225
   - [ ] #3 ConfigLoader: removes all spaces in string (including in value) *(maybe i make it as feature - you need to set values without spaces)*
-
+- Client
+  - [ ] #4 MainWindow: after disconnecting throws error
 
 > **SEGFAULT COUNTER**: 5
