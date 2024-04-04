@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 
 extern ClientSocketQt* m_ClientSocket;
+extern EndpointManager* m_EndpointManager;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,9 +12,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFixedSize(QSize(1280, 741));
     ReloadEndpointListView();
 
-    connect(ui->pushButton, &QPushButton::clicked, [this](){
-        ReloadEndpointListView();
-    });
+    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::ReloadEndpointListView);
+
+    connect(ui->endpointListWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::LoadEndpointSettings);
 
     // cw = new ConnectWindow(this);
     // cw->show();
@@ -35,8 +36,7 @@ void MainWindow::ReloadEndpointListView(){
     m_ClientSocket->Send("GETEPLS");
     std::string result;
     if (!m_ClientSocket->Read(result)){
-        QMessageBox msg;
-        msg.critical(this, "Connection", "Cannot load endpoint list");
+        m_msg.critical(this, "Connection", "Cannot load endpoint list");
         return;
     }
     LoadEndpointListView(result);
@@ -67,12 +67,11 @@ void MainWindow::CloseConnectWindow(){
 void MainWindow::LoadEndpointListView(std::string& serializedEndpointList){
     size_t n;
     std::vector<std::string> names;
-    QMessageBox msg;
     Serializer sr(serializedEndpointList);
     try{
         n = sr.DeserializeNext<size_t>();
     } catch (const char* e){
-        msg.critical(this, "Serializer", e);
+        m_msg.critical(this, "Serializer", e);
         return;
     }
     for (size_t i = 0; i < n; i++){
@@ -80,12 +79,24 @@ void MainWindow::LoadEndpointListView(std::string& serializedEndpointList){
         try{
             name = sr.DeserializeNext();
         } catch (const char* e){
-            msg.critical(this, "Serializer", e);
+            m_msg.critical(this, "Serializer", e);
             return;
         }
         names.push_back(name);
         ui->endpointListWidget->addItem(QString::fromStdString(name));
     }
+}
+void MainWindow::LoadEndpointSettings(){
+    EndpointSettings ep; // Pointer?
+    std::string name = ui->endpointListWidget->currentIndex().data().toString().toStdString();
+    if (!m_EndpointManager->GetEndpointSettings(name, ep)){
+        m_msg.critical(this, "Connection", "Cannot load endpoint settings");
+        return;
+    }
+    ui->epNameLabel->setText(QString::fromStdString(ep.name));
+    ui->epLocalCfgCheckBox->setCheckState((ep.localcfg ? Qt::CheckState::Checked : Qt::CheckState::Unchecked));
+    ui->epDirLineEdit->setText(QString::fromStdString(ep.dir));
+    ui->epShowtimeSpinBox->setValue(ep.showtime);
 }
 
 // Protected

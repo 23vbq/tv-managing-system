@@ -178,7 +178,7 @@
        <string>Show time:</string>
       </property>
      </widget>
-     <widget class="QSpinBox" name="spinBox">
+     <widget class="QSpinBox" name="epShowtimeSpinBox">
       <property name="geometry">
        <rect>
         <x>100</x>
@@ -191,6 +191,9 @@
        <font>
         <family>Roboto</family>
        </font>
+      </property>
+      <property name="maximum">
+       <number>2147483647</number>
       </property>
      </widget>
     </widget>

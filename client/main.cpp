@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "serializer.h"
+#include "endpointmanager.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -10,6 +11,7 @@
 #include "clientsocketqt.h"
 
 ClientSocketQt* m_ClientSocket;
+EndpointManager* m_EndpointManager;
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +32,9 @@ int main(int argc, char *argv[])
 
     // Initialize client socket
     m_ClientSocket = new ClientSocketQt(nullptr);
+
+    // Initialize endpoint manager
+    m_EndpointManager = new EndpointManager();
 
     MainWindow mainWindow;
     ConnectWindow connectWindow;

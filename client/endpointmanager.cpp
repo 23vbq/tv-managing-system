@@ -5,10 +5,12 @@ extern ClientSocketQt* m_ClientSocket;
 // Public functions
 
 bool EndpointManager::GetEndpointSettings(std::string& name, EndpointSettings& outEndpoint){
-    if (name == m_settings.name){
+    /*if (name == m_settings.name){
         outEndpoint = m_settings;
         return true;
-    }
+    }*/
+    if (!m_ClientSocket->IsConnected())
+        return false;
     m_ClientSocket->Send("GETEPSET " + name);
     std::string result;
     QMessageBox msg;

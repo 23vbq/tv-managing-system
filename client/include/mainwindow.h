@@ -3,6 +3,7 @@
 
 #include "serializer.h"
 #include "clientsocketqt.h"
+#include "endpointmanager.h"
 
 #include "connectwindow.h"
 
@@ -36,10 +37,11 @@ private:
     void CloseConnectWindow();
 
     void LoadEndpointListView(std::string&);
-    void LoadEndpointSettings(std::string&);
+    void LoadEndpointSettings();
 
     Ui::MainWindow *ui;
     ConnectWindow *cw;
+    QMessageBox m_msg;
 signals:
     void closed();
 protected:
