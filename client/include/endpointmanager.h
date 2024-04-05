@@ -11,6 +11,11 @@ private:
 
 public:
     bool GetEndpointSettings(std::string&, EndpointSettings&);
+    bool SaveEndpointSettings();
+
+    void SetLocalCfg(const bool&);
+    void SetDir(const std::string&);
+    void SetShowtime(const unsigned int&);
 };
 
 #endif

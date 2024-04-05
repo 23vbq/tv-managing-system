@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ReloadEndpointListView();
 
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::ReloadEndpointListView);
+    connect(ui->epSavePushButton, &QPushButton::clicked, this, &MainWindow::SaveEndpointSettings);
 
     connect(ui->endpointListWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::LoadEndpointSettings);
 
@@ -91,7 +92,7 @@ void MainWindow::LoadEndpointSettings(){
     EndpointSettings ep; // Pointer?
     std::string name = ui->endpointListWidget->currentIndex().data().toString().toStdString();
     if (!m_EndpointManager->GetEndpointSettings(name, ep)){
-        m_msg.critical(this, "Connection", "Cannot load endpoint settings");
+        m_msg.critical(this, "Connection", "Cannot load endpoint settings!");
         return;
     }
     ui->epNameLabel->setText(QString::fromStdString(ep.name));
@@ -106,6 +107,16 @@ void MainWindow::ClearEndpointSettings(){
     ui->epDirLineEdit->setText("");
     ui->epShowtimeSpinBox->setValue(0);
     ui->epSettings->setEnabled(false);
+}
+void MainWindow::SaveEndpointSettings(){
+    m_EndpointManager->SetLocalCfg((ui->epLocalCfgCheckBox->checkState() == Qt::CheckState::Checked ? true : false)); // ui->epLocalCfgCheckBox->isChecked()
+    m_EndpointManager->SetDir(ui->epDirLineEdit->text().toStdString());
+    m_EndpointManager->SetShowtime(ui->epShowtimeSpinBox->value());
+    if (!m_EndpointManager->SaveEndpointSettings()){
+        m_msg.critical(this, "Connection", "Cannot save endpoint settings!");
+        return;
+    }
+    m_msg.information(this, "Endpoint", "Successfully saved endpoint settings.");
 }
 
 // Protected

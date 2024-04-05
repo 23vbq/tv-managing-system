@@ -101,5 +101,6 @@ TODO about authentication and secure connection
   - [ ] #3 ConfigLoader: removes all spaces in string (including in value) *(maybe i make it as feature - you need to set values without spaces)*
 - Client
   - [ ] #4 MainWindow: after disconnecting throws error
+  - [ ] #5 EndpointManager: Saving directory fails *(ex. "\004")*
 
 > **SEGFAULT COUNTER**: 5

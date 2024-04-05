@@ -39,6 +39,7 @@ private:
     void LoadEndpointListView(std::string&);
     void LoadEndpointSettings();
     void ClearEndpointSettings();
+    void SaveEndpointSettings();
 
     Ui::MainWindow *ui;
     ConnectWindow *cw;
