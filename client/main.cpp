@@ -6,6 +6,7 @@
 #include <QLocale>
 #include <QTranslator>
 #include <QMessageBox>
+#include <QTemporaryDir>
 
 #include "logger.h"
 #include "clientsocketqt.h"
@@ -16,7 +17,14 @@ EndpointManager* m_EndpointManager;
 int main(int argc, char *argv[])
 {
     // Construct logger class
-    Logger log("E:\\programowanie\\cpp\\tv-managing-system\\client\\test\\syslog");
+    QTemporaryDir tempDir;
+    if (!tempDir.isValid()){
+        QMessageBox msg;
+        msg.critical(nullptr, "Filesystem", "Cannot create temp directory");
+        return 1;
+    }
+
+    Logger log(tempDir.path().toStdString() + "\\syslog");
 
     QApplication a(argc, argv);
 

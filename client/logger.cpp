@@ -2,12 +2,12 @@
 
 // Static variables
 
-const char* Logger::s_path = "";
+std::string Logger::s_path = "";
 QtMessageHandler Logger::s_orginalMessageHandler = nullptr;
 
 // Constructors
 
-Logger::Logger(const char* path){
+Logger::Logger(std::string path){
     s_path = path;
 }
 
@@ -15,7 +15,7 @@ Logger::Logger(const char* path){
 
 void Logger::logToFile(QtMsgType type, const QMessageLogContext& context, const QString& msg){
     QString message = qFormatLogMessage(type, context, msg);
-    static FILE* f = fopen(s_path, "a");
+    static FILE* f = fopen(&s_path[0], "a");
     if (f == nullptr){
         /*QMessageBox msgBox;
         msgBox.setText("Cannot open log file!");

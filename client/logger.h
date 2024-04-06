@@ -11,12 +11,12 @@
 
 class Logger{
 private:
-    static const char* s_path;
+    static std::string s_path;
     static QtMessageHandler s_orginalMessageHandler;
 
     static void logToFile(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 public:
-    Logger(const char*);
+    Logger(std::string);
 
     void Initialize();
 };
