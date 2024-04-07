@@ -5,6 +5,7 @@
 #include "configloader.h"
 
 #include <vector>
+#include <string>
 #include <filesystem>
 
 using namespace std;

@@ -65,24 +65,6 @@ int main(int argc, char* argv[]){
     InitializeCommands();
     // Create ServerSocket
     m_ServerSocket = new ServerSocket(&s_termination, m_ServerSettings.listeningPort);
-    // FIXME test
-    /*EndpointSettings est(m_endpoints[0].settings.name, true, "/mnt/images", 15);
-    m_endpoints[0].settings = est;
-    est = EndpointSettings(m_endpoints[1].settings.name, false, "/mnt/server/obrazki/telewizory/", 32);
-    m_endpoints[1].settings = est;*/
-    /*Serializer s;
-    s.AddValue(est.name);
-    s.AddValue(est.localcfg);
-    s.AddValue(est.dir);
-    s.AddValue(est.showtime);
-    s.Serialize();
-    string hs1 = s.DeserializeNext();
-    bool hb1 = s.DeserializeNext<bool>();
-    string hs2 = s.DeserializeNext();
-    unsigned int hi1 = s.DeserializeNext<unsigned int>();
-    // string h3 = s.DeserializeNext(); // It should throw and it throws
-    syslog(LOG_DEBUG, "%s %b %s %i", &hs1[0], hb1, &hs2[0], hi1);*/
-    // syslog(LOG_DEBUG, "%s", &h2[0]);
     // Main loop
     while (!s_termination)
     {

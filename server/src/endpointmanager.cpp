@@ -2,7 +2,7 @@
 
 // Static variables
 
-const string EndpointManager::SETTINGS_EXTENSION = ".ep";
+const std::string EndpointManager::SETTINGS_EXTENSION = ".ep";
 
 // Private functions
 
