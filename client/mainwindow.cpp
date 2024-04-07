@@ -32,7 +32,9 @@ MainWindow::~MainWindow()
 // Public functions
 
 void MainWindow::ReloadEndpointListView(){
+    ui->endpointListWidget->blockSignals(true);
     ui->endpointListWidget->clear();
+    ui->endpointListWidget->blockSignals(false);
     if (!m_ClientSocket->IsConnected())
         return;
     m_ClientSocket->Send("GETEPLS");
@@ -110,9 +112,7 @@ void MainWindow::ClearEndpointSettings(){
 }
 void MainWindow::SaveEndpointSettings(){
     m_EndpointManager->SetLocalCfg((ui->epLocalCfgCheckBox->checkState() == Qt::CheckState::Checked ? true : false)); // ui->epLocalCfgCheckBox->isChecked()
-    QString d = ui->epDirLineEdit->text();
-    std::string e = d.toStdString();
-    m_EndpointManager->SetDir(e);
+    m_EndpointManager->SetDir(ui->epDirLineEdit->text().toStdString());
     m_EndpointManager->SetShowtime(ui->epShowtimeSpinBox->value());
     if (!m_EndpointManager->SaveEndpointSettings()){
         m_msg.critical(this, "Connection", "Cannot save endpoint settings!");

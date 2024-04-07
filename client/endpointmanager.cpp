@@ -13,7 +13,7 @@ bool EndpointManager::GetEndpointSettings(std::string& name, EndpointSettings& o
         return false;
     m_ClientSocket->Send("GETEPSET " + name);
     std::string result;
-    if (!m_ClientSocket->Read(result)){
+    if (!m_ClientSocket->Read(result) || result.rfind("OK\r\n", 0)){
         return false;
     }
     Serializer sr(result);

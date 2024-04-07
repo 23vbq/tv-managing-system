@@ -100,7 +100,7 @@ TODO about authentication and secure connection
   - [ ] #2 ServerSocket?: if client terminate connection server can occur exception on basic_string.tcc:225
   - [ ] #3 ConfigLoader: removes all spaces in string (including in value) *(maybe i make it as feature - you need to set values without spaces)*
 - Client
-  - [ ] #4 MainWindow: after disconnecting throws error
+  - [x] #4 MainWindow: after disconnecting throws error
   - [x] #5 EndpointManager: Saving directory fails *(ex. "\004")*
 
 > **SEGFAULT COUNTER**: 5
