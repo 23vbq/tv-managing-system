@@ -110,7 +110,9 @@ void MainWindow::ClearEndpointSettings(){
 }
 void MainWindow::SaveEndpointSettings(){
     m_EndpointManager->SetLocalCfg((ui->epLocalCfgCheckBox->checkState() == Qt::CheckState::Checked ? true : false)); // ui->epLocalCfgCheckBox->isChecked()
-    m_EndpointManager->SetDir(ui->epDirLineEdit->text().toStdString());
+    QString d = ui->epDirLineEdit->text();
+    std::string e = d.toStdString();
+    m_EndpointManager->SetDir(e);
     m_EndpointManager->SetShowtime(ui->epShowtimeSpinBox->value());
     if (!m_EndpointManager->SaveEndpointSettings()){
         m_msg.critical(this, "Connection", "Cannot save endpoint settings!");

@@ -51,5 +51,5 @@ void EndpointManager::SetDir(const std::string& value){
     m_settings.dir = value;
 }
 void EndpointManager::SetShowtime(const unsigned int& value){
-    m_settings.dir = value;
+    m_settings.showtime = value;
 }
