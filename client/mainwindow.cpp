@@ -13,9 +13,11 @@ MainWindow::MainWindow(QWidget *parent)
     ClearEndpointSettings();
     ReloadEndpointListView();
 
+    // PushButtons signals
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::ReloadEndpointListView);
     connect(ui->epSavePushButton, &QPushButton::clicked, this, &MainWindow::SaveEndpointSettings);
 
+    // ListWidget signals
     connect(ui->endpointListWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::LoadEndpointSettings);
 
     // cw = new ConnectWindow(this);
@@ -65,7 +67,12 @@ void MainWindow::OpenConnectWindow(){
     cw->show();
 }
 void MainWindow::CloseConnectWindow(){
+    // Enable main window
     this->setEnabled(true);
+    // If is connected, reload list
+    if (!m_ClientSocket->IsConnected())
+        return;
+    ReloadEndpointListView();
 }
 
 void MainWindow::LoadEndpointListView(std::string& serializedEndpointList){
