@@ -16,6 +16,7 @@ ConnectWindow::ConnectWindow(QWidget *parent)
 
     QLineEdit::connect(ui->portLineEdit, &QLineEdit::textEdited, this, &ConnectWindow::PortLineEditTextHandler); // Input mask for port (allow only numbers)
     connect(ui->connectButton, &QPushButton::clicked, this, &ConnectWindow::ConnectBtnHandler); // Connect button action
+    connect(this, &ConnectWindow::enterPressed, this, &ConnectWindow::ConnectBtnHandler); // Connect action on enter pressed
 }
 
 ConnectWindow::~ConnectWindow()
@@ -65,4 +66,8 @@ void ConnectWindow::closeEvent(QCloseEvent * event)
 
     if (event->isAccepted())
         emit closed();
+}
+void ConnectWindow::keyPressEvent(QKeyEvent* event){
+    if (event->key() == Qt::Key_Enter)
+        emit enterPressed();
 }

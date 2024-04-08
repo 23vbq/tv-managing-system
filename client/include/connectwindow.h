@@ -31,8 +31,10 @@ private:
     void PortLineEditTextHandler();
 signals:
     void closed();
+    void enterPressed();
 protected:
     void closeEvent(QCloseEvent*);
+    void keyPressEvent(QKeyEvent*);
 };
 
 #endif
