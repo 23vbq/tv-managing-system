@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>TvManagingSystem Client</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QListWidget" name="endpointListWidget">
