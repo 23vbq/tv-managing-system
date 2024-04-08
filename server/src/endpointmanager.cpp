@@ -4,6 +4,17 @@
 
 const std::string EndpointManager::SETTINGS_EXTENSION = ".ep";
 
+// Constructors
+
+EndpointManager::EndpointManager(){
+    // Create global Endpoint Settings
+    EndpointConnection global;
+    global.ip = "GLOBAL";
+    global.port = 0;
+    global.settings.name = "[GlobalSettings]";
+    m_data.push_back(global);
+}
+
 // Private functions
 
 int EndpointManager::LoadSettingsFile(const string& filePath, EndpointSettings& endpoint){

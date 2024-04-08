@@ -18,6 +18,8 @@ private:
 
     int LoadSettingsFile(const string&, EndpointSettings&);
 public:
+    EndpointManager();
+
     void LoadConnectionData(vector<Config>*);
     void LoadSettingsData(string);
 

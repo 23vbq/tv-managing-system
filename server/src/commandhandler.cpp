@@ -35,7 +35,7 @@ void CommandHandler::AddCommand(string name, const Command& command){
 }
 bool CommandHandler::Handle(string command, int currentSd){
     RemoveNewLineEnd(command);
-    size_t n = SplitCommand(m_cmdbuffer, command);
+    size_t n = SplitCommand(m_cmdbuffer, command); // FIXME cannot handle if argument has spaces
     if (!n)
         return false;
     if (m_commands.count(m_cmdbuffer[0]) == 0)
