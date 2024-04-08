@@ -17,7 +17,6 @@ namespace CommandFunctions{
     void setEndpointSettings(vector<string> x, string& output); // Sets settings for endpoint [endpoint name, serialized settings]
     // TODO Real commands not for testing
     void rtest(vector<string> x, string& output);
-    void cmdtest(vector<string> x, string& output);
 }
 
 #endif

@@ -55,8 +55,4 @@ namespace CommandFunctions{
             output += x[0][i];
         output += '\n';
     }
-    void cmdtest(vector<string> x, string& output){
-        syslog(LOG_ALERT, "Function said: %s %i", &(x[0])[0], stoi(x[1]));
-        output = "fajne";
-    }
 }

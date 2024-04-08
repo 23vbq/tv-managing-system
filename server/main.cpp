@@ -1,7 +1,13 @@
 #ifdef DEBUG
+
 #define _LOGMASK LOG_UPTO (LOG_DEBUG)
+#define _CONFIG_PATH "/home/_vbq/cpp/tv-managing-system/server/test/"
+
 #else
+
 #define _LOGMASK LOG_UPTO (LOG_INFO)
+#define _CONFIG_PATH "/etc/tmsd/"
+
 #endif
 
 #include <syslog.h>
@@ -15,21 +21,30 @@
 #include "serializer.h"
 
 #include "endpointconnection.h"
-// #include "endpointsettings.h"
 #include "endpointmanager.h"
 
 // For testing
 #include <chrono>
 #include <thread>
-#include <iostream>
 
 const int LOGMASK = _LOGMASK;
 const char* DAEMONNAME = "tmsd";
-const char* CONFIG_PATH = "/home/_vbq/cpp/tv-managing-system/server/";
-// const char* CONFIG_PATH = "/home/_vbq/Desktop/cpp/tv-managing-system/server/"; // "/home/_vbq/cpp/tv-managing-system/server/"
 
+/*
+ * Config
+*/
+const char* CONFIG_PATH = _CONFIG_PATH;
+const char* CONFIG_ENDPOINTS_DIR = "epconf/"; // Inside CONFIG_PATH
+const char* CONFIG_SETTINGS_FILE = "settings.cfg"; // Inside CONFIG_PATH
+
+/*
+ * Global loop
+*/
 static bool s_termination = false;
 
+/*
+ * Classes
+*/
 CommandHandler* m_CommandHandler;
 ServerSocket* m_ServerSocket;
 ServerSettings m_ServerSettings;
@@ -54,7 +69,7 @@ int main(int argc, char* argv[]){
     LoadServerConfig();
     // Load endpoints config
     try{
-        m_EndpointManager->LoadSettingsData(CONFIG_PATH + (string)"test/");
+        m_EndpointManager->LoadSettingsData((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
     } catch (const char* ex){
         syslog(LOG_ERR, "[Exception] %s", ex);
         CleanUp();
@@ -75,7 +90,7 @@ int main(int argc, char* argv[]){
             }
             return CommandHandler::CMD_BAD;
         });
-        this_thread::sleep_for(chrono::seconds(1)); // FIXME time to change
+        this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
     }
     CleanUp();
     syslog(LOG_INFO, "Daemon exited successfully");
@@ -83,7 +98,7 @@ int main(int argc, char* argv[]){
 }
 
 void LoadServerConfig(){
-    ConfigLoader cfgl = ConfigLoader(CONFIG_PATH + (string)"example_config.cfg");
+    ConfigLoader cfgl = ConfigLoader((string)CONFIG_PATH + CONFIG_SETTINGS_FILE);
     cfgl.Load();
     // Properties
     cfgl.GetProperty<string>("ListeningIp", m_ServerSettings.listeningIp);
@@ -95,7 +110,6 @@ void LoadServerConfig(){
     delete epList;
 }
 void InitializeCommands(){
-    m_CommandHandler->AddCommand("TEST", Command{2, CommandFunctions::cmdtest});
     m_CommandHandler->AddCommand("REV", Command{1, CommandFunctions::rtest});
     m_CommandHandler->AddCommand("DISCON", Command{0, CommandFunctions::disconnect});
     m_CommandHandler->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName});
