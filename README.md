@@ -71,6 +71,7 @@ TODO about authentication and secure connection
     - [x] Loading from file
     - [ ] Creating default file
     - [x] Sending through socket
+    - [x] Saving settings into file
   - [ ] Endpoint manager
   - [ ] Requests handling
 - [ ] Client

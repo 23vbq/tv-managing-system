@@ -6,7 +6,9 @@ const std::string EndpointManager::SETTINGS_EXTENSION = ".ep";
 
 // Constructors
 
-EndpointManager::EndpointManager(){
+EndpointManager::EndpointManager(string configPath){
+    // Initialize local variables
+    m_configPath = configPath;
     // Create global Endpoint Settings
     EndpointConnection global;
     global.ip = "GLOBAL";
@@ -26,8 +28,35 @@ int EndpointManager::LoadSettingsFile(const string& filePath, EndpointSettings& 
     cfg.GetProperty<unsigned int>("Showtime", endpoint.showtime, code);
     return code;
 }
+void EndpointManager::SaveSettingsFile(size_t& iterator, vector<size_t>& deleteList){
+    EndpointSettings* ep = m_toSave.at(iterator);
+    if (ep == NULL)
+        throw "Cannot save settings of NULL";
+    ofstream out;
+    out.open(m_configPath + ep->name + SETTINGS_EXTENSION, ios::out);
+    out<<"LocalCfg = "<<to_string(ep->localcfg)<<"\n";
+    out<<"Dir = "<<ep->dir<<"\n";
+    out<<"Showtime = "<<to_string(ep->showtime)<<"\n";
+    out.close();
+}
 
 // Public functions
+
+void EndpointManager::Loop(){
+    // Save changed settings to file
+    size_t n = m_toSave.size();
+    vector<size_t> delIters;
+    for (size_t i = 0; i < n; i++){
+        try{
+            SaveSettingsFile(i, delIters);
+        } catch (const char* e){
+            syslog(LOG_ERR, "[EndpointManager] Loop: %s", e);
+        }
+    }
+    // Clear toSave list
+    for (const size_t& i : delIters)
+        m_toSave.erase(m_toSave.begin() + i);
+}
 
 void EndpointManager::LoadConnectionData(vector<Config>* endpoints){
     EndpointConnection buffer;
@@ -46,13 +75,13 @@ void EndpointManager::LoadConnectionData(vector<Config>* endpoints){
         }
     }
 }
-void EndpointManager::LoadSettingsData(string path){
+void EndpointManager::LoadSettingsData(){
     namespace fs = filesystem;
-    if (!fs::exists(path))
+    if (!fs::exists(m_configPath))
         throw "Endpoint settings path doesn't exists";
     for (EndpointConnection& x : m_data){
         syslog(LOG_INFO, "Loading endpoint settings: %s", &x.settings.name[0]);
-        string file = path + x.settings.name + SETTINGS_EXTENSION;
+        string file = m_configPath + x.settings.name + SETTINGS_EXTENSION;
         if (!fs::exists(file)){
             syslog(LOG_WARNING, "Settings file doesn't exists for endpoint: %s", &x.settings.name[0]);
             continue;
@@ -97,5 +126,6 @@ void EndpointManager::SetSettings(EndpointSettings* ptr, EndpointSettings& setti
     ptr->localcfg = settings.localcfg;
     ptr->dir = settings.dir;
     ptr->showtime = settings.showtime;
+    m_toSave.push_back(ptr);
     syslog(LOG_INFO, "Successfully changed settings for endpoint: %s", &ptr->name[0]);
 }

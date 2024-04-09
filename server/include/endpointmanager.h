@@ -15,13 +15,19 @@ public:
     static const string SETTINGS_EXTENSION;
 private:
     vector<EndpointConnection> m_data;
+    vector<EndpointSettings*> m_toSave;
+
+    string m_configPath;
 
     int LoadSettingsFile(const string&, EndpointSettings&);
+    void SaveSettingsFile(size_t&, vector<size_t>&);
 public:
-    EndpointManager();
+    EndpointManager(string configPath);
+
+    void Loop();
 
     void LoadConnectionData(vector<Config>*);
-    void LoadSettingsData(string);
+    void LoadSettingsData();
 
     vector<string>* GetNames();
     EndpointSettings* GetSettings(string&);

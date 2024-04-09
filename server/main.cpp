@@ -64,12 +64,12 @@ int main(int argc, char* argv[]){
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
     // Initialize EndpointManager
-    m_EndpointManager = new EndpointManager();
+    m_EndpointManager = new EndpointManager((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
     // Load config
     LoadServerConfig();
     // Load endpoints config
     try{
-        m_EndpointManager->LoadSettingsData((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
+        m_EndpointManager->LoadSettingsData();
     } catch (const char* ex){
         syslog(LOG_ERR, "[Exception] %s", ex);
         CleanUp();
@@ -90,6 +90,7 @@ int main(int argc, char* argv[]){
             }
             return CommandHandler::CMD_BAD;
         });
+        m_EndpointManager->Loop();
         this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
     }
     CleanUp();
