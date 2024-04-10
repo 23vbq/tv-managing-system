@@ -21,7 +21,6 @@ private:
     string m_output;
     int m_current_sd;
 
-    size_t SplitCommand(vector<string>&, string);
     void RemoveNewLineEnd(string&);
     size_t GetArgs(const string&);
 public:

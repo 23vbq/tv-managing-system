@@ -76,13 +76,13 @@ bool ServerSocket::AcceptConnectionHandle(){
 }
 void ServerSocket::LostConnectionHandle(int connection){
     using namespace std;
-    getpeername(connection, (sockaddr*)&m_address, &m_addrlen); // FIXME when last connection wasn't localhost, and localhost disconnects it return last connection (in my example gateway)
+    // getpeername(connection, (sockaddr*)&m_address, &m_addrlen); // FIXME when last connection wasn't localhost, and localhost disconnects it return last connection (in my example gateway)
     close(connection);
     for (int i = 0; i < MAX_SOCKETS; i++){
         if (m_sockets[i] == connection)
             m_sockets[i] = 0;
     }
-    syslog(LOG_WARNING, "Lost connection [fd: %i, ip: %s, port: %i]", connection, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+    syslog(LOG_WARNING, "Lost connection %s", &GetSocketInfo(connection)[0]);
 }
 
 void ServerSocket::Handle(string (*responseCall)(char[], int, int)){
@@ -128,11 +128,11 @@ void ServerSocket::Handle(string (*responseCall)(char[], int, int)){
                     continue;
                 datalen = data.length();
                 if (send(sd, &data[0], datalen, 0) != datalen){
-                    syslog(LOG_ERR, "Error on sending response message");
+                    syslog(LOG_ERR, "Error on sending response message %s", &GetSocketInfo(sd)[0]);
                     LostConnectionHandle(sd); // Connection closed: Error on sending response message. // Result cannot be sent here
                 } else{
-                    getpeername(sd, (sockaddr*)&m_address, &m_addrlen);
-                    syslog(LOG_DEBUG, "Response sent [fd: %i, ip: %s, port: %i]", sd, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+                    // getpeername(sd, (sockaddr*)&m_address, &m_addrlen);
+                    syslog(LOG_INFO, "Response sent %s", &GetSocketInfo(sd)[0]);
                 }
             }
         }
@@ -142,7 +142,7 @@ void ServerSocket::Disconnect(int connection, string reason){
     if (connection == 0)
         return;
     using namespace std;
-    getpeername(connection, (sockaddr*)&m_address, &m_addrlen);
+    //getpeername(connection, (sockaddr*)&m_address, &m_addrlen);
     if (reason != "")
         send(connection, &reason[0], reason.length(), 0);
     close(connection);
@@ -150,5 +150,10 @@ void ServerSocket::Disconnect(int connection, string reason){
         if (m_sockets[i] == connection)
             m_sockets[i] = 0;
     }
-    syslog(LOG_INFO, "Disconnected [fd: %i, ip: %s, port: %i]", connection, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+    // syslog(LOG_INFO, "Disconnected [fd: %i, ip: %s, port: %i]", connection, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+    syslog(LOG_INFO, "Disconnected %s", &GetSocketInfo(connection)[0]);
+}
+string ServerSocket::GetSocketInfo(int& connection){
+    getpeername(connection, (sockaddr*)&m_address, &m_addrlen);
+    return "[fd: " + to_string(connection) + ", ip: " + inet_ntoa(m_address.sin_addr) + ", port: " + to_string(ntohs(m_address.sin_port)) + "]";
 }

@@ -52,7 +52,7 @@ public:
     ServerSocket(bool*, uint16_t);
     ~ServerSocket();
 
-    /***
+    /**
      * Handles ServerSocket work. Should be run in loop.
      * @param responseCall function returning string to be sent as response
      *      for char[] message with length n from client and sd socket descriptor
@@ -64,6 +64,12 @@ public:
      * @param reason Message to be sent to client, if string is empty message will not be sent
     */
     void Disconnect(int, string);
+    /**
+     * Gets info about connected client
+     * @param connection FD of connection
+     * @return [fd: %i, ip: %s, port: %i]
+    */
+    string GetSocketInfo(int&);
 };
 
 #endif

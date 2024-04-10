@@ -39,8 +39,8 @@ bool CommandHandler::Handle(string command, int currentSd){
     RemoveNewLineEnd(command);
     // Getting command
     size_t eCmdPos = command.find(' ');
-    if (eCmdPos == string::npos)
-        return false;
+    /*if (eCmdPos == string::npos)
+        return false;*/
     string cmdName = command.substr(0, eCmdPos);
     if (m_commands.count(cmdName) == 0)
         return false;
