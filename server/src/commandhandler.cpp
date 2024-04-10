@@ -7,20 +7,6 @@ const string CommandHandler::CMD_BAD = "BAD\r\n";
 
 // Private functions
 
-size_t CommandHandler::SplitCommand(vector<string>& cmdarray, string cmd){
-    cmdarray.clear();
-    // size_t ePos = cmd.find(' ');
-    size_t ePos, fPos = 0;
-    size_t n = 1;
-    while ((ePos = cmd.find(' ', fPos)) != string::npos)
-    {
-        cmdarray.push_back(cmd.substr(fPos, ePos - fPos));
-        fPos = ePos + 1;
-        n++;
-    }
-    cmdarray.push_back(cmd.substr(fPos));
-    return n;
-}
 void CommandHandler::RemoveNewLineEnd(string& command){
     size_t n = command.length();
     if (command.find('\n', n - 1) == string::npos)
@@ -65,11 +51,8 @@ bool CommandHandler::Handle(string command, int currentSd){
     if (cmdPtr->argc != argc)
         return false;
     m_current_sd = currentSd;
-    //m_cmdbuffer.erase(m_cmdbuffer.begin());
     cmdPtr->function(m_cmdbuffer, m_output);
     return true;
-    // Inaczej. Muszę brać tego stringa jako cmd. Rozbić go na string[], a następnie to handlować.
-    // To jest bardzo do przemyślenia, czy jakimś drzewkiem, czy tak?
 }
 string CommandHandler::GetOutput(){
     return m_output;
