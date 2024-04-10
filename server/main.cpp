@@ -86,7 +86,7 @@ int main(int argc, char* argv[]){
         m_ServerSocket->Handle([](char msg[], int n, int sd) -> string {
             string s(msg, n);
             if (m_CommandHandler->Handle(s, sd)){
-                return CommandHandler::CMD_VALID + m_CommandHandler->GetOutput();
+                return CommandHandler::CMD_VALID + m_CommandHandler->GetOutput() + "\r\n";
             }
             return CommandHandler::CMD_BAD;
         });

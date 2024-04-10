@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <syslog.h>
 
 using namespace std;
 
@@ -22,6 +23,7 @@ private:
 
     size_t SplitCommand(vector<string>&, string);
     void RemoveNewLineEnd(string&);
+    size_t GetArgs(const string&);
 public:
 
     void AddCommand(string, const Command&);

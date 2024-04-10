@@ -51,8 +51,7 @@ namespace CommandFunctions{
     void rtest(vector<string> x, string& output){
         size_t n = x[0].length();
         output = "";
-        for (int i = n - 2; i >= 0; i--)
+        for (int i = n - 1; i >= 0; i--)
             output += x[0][i];
-        output += '\n';
     }
 }

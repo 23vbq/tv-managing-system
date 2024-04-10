@@ -28,6 +28,22 @@ void CommandHandler::RemoveNewLineEnd(string& command){
     command = command.substr(0, n - 1);
 }
 
+size_t CommandHandler::GetArgs(const string &command){
+    m_cmdbuffer.clear();
+    size_t sPos = 0, ePos, n = 0;
+    while ((sPos = command.find('"', sPos)) != string::npos){
+        if ((ePos = command.find('"', ++sPos)) == string::npos)
+            break;
+        if (sPos >= ePos)
+            break;
+        m_cmdbuffer.push_back(command.substr(sPos, ePos - sPos));
+        sPos = ePos + 1;
+        n++;
+        syslog(LOG_DEBUG, "Command arg: %s", &(m_cmdbuffer.back())[0]);
+    }
+    return n;
+}
+
 // Public functions
 
 void CommandHandler::AddCommand(string name, const Command& command){
@@ -35,16 +51,21 @@ void CommandHandler::AddCommand(string name, const Command& command){
 }
 bool CommandHandler::Handle(string command, int currentSd){
     RemoveNewLineEnd(command);
-    size_t n = SplitCommand(m_cmdbuffer, command); // FIXME cannot handle if argument has spaces
-    if (!n)
+    // Getting command
+    size_t eCmdPos = command.find(' ');
+    if (eCmdPos == string::npos)
         return false;
-    if (m_commands.count(m_cmdbuffer[0]) == 0)
+    string cmdName = command.substr(0, eCmdPos);
+    if (m_commands.count(cmdName) == 0)
+        return false;
+    Command *cmdPtr = &m_commands[cmdName];
+    syslog(LOG_INFO, "Requested command '%s'", &cmdName[0]);
+    // Getting arguments
+    size_t argc = GetArgs(command.substr(eCmdPos + 1));
+    if (cmdPtr->argc != argc)
         return false;
     m_current_sd = currentSd;
-    Command *cmdPtr = &m_commands[m_cmdbuffer[0]];
-    if (cmdPtr->argc != n - 1)
-        return false;
-    m_cmdbuffer.erase(m_cmdbuffer.begin());
+    //m_cmdbuffer.erase(m_cmdbuffer.begin());
     cmdPtr->function(m_cmdbuffer, m_output);
     return true;
     // Inaczej. Muszę brać tego stringa jako cmd. Rozbić go na string[], a następnie to handlować.
