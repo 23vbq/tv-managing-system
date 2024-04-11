@@ -17,8 +17,8 @@ void CommandHandler::RemoveNewLineEnd(string& command){
 size_t CommandHandler::GetArgs(const string &command){
     m_cmdbuffer.clear();
     size_t sPos = 0, ePos, n = 0;
-    while ((sPos = command.find('"', sPos)) != string::npos){
-        if ((ePos = command.find('"', ++sPos)) == string::npos)
+    while ((sPos = command.find('\2', sPos)) != string::npos){
+        if ((ePos = command.find('\3', ++sPos)) == string::npos)
             break;
         if (sPos >= ePos)
             break;

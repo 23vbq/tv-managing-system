@@ -13,7 +13,7 @@ EndpointManager::EndpointManager(string configPath){
     EndpointConnection global;
     global.ip = "GLOBAL";
     global.port = 0;
-    global.settings.name = "[GlobalSettings]";
+    global.settings.name = "[Global Settings]";
     m_data.push_back(global);
 }
 
