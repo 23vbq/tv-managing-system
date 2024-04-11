@@ -11,7 +11,7 @@ bool EndpointManager::GetEndpointSettings(std::string& name, EndpointSettings& o
     }*/
     if (!m_ClientSocket->IsConnected())
         return false;
-    m_ClientSocket->Send("GETEPSET " + name);
+    m_ClientSocket->Send("GETEPSET \2" + name + "\3");
     std::string result;
     if (!m_ClientSocket->Read(result) || result.rfind("OK\r\n", 0)){
         return false;
@@ -38,9 +38,9 @@ bool EndpointManager::SaveEndpointSettings(){
     sr.AddValue<bool>(m_settings.localcfg);
     sr.AddValue(m_settings.dir);
     sr.AddValue<unsigned int>(m_settings.showtime);
-    m_ClientSocket->Send("SETEPSET " + m_settings.name + ' ' + sr.Serialize());
+    m_ClientSocket->Send("SETEPSET \2" + m_settings.name + "\3 \2" + sr.Serialize() + "\3");
     std::string result;
-    if (!m_ClientSocket->Read(result) || result != "OK\r\n")
+    if (!m_ClientSocket->Read(result) || result.rfind("OK\r\n", 0))
         return false;
     return true;
 }
