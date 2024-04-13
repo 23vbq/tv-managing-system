@@ -1,5 +1,7 @@
 #include "endpointmanager.h"
 
+extern ActionQueue* m_ActionQueue;
+
 // Static variables
 
 const std::string EndpointManager::SETTINGS_EXTENSION = ".ep";
@@ -42,7 +44,7 @@ void EndpointManager::SaveSettingsFile(size_t& iterator, vector<size_t>& deleteL
 
 // Public functions
 
-void EndpointManager::Loop(){
+void EndpointManager::SaveSettings(){
     // Save changed settings to file
     size_t n = m_toSave.size();
     vector<size_t> delIters;
@@ -50,7 +52,7 @@ void EndpointManager::Loop(){
         try{
             SaveSettingsFile(i, delIters);
         } catch (const char* e){
-            syslog(LOG_ERR, "[EndpointManager] Loop: %s", e);
+            syslog(LOG_ERR, "[EndpointManager] SaveSettings: %s", e);
         }
     }
     // Clear toSave list
@@ -127,5 +129,6 @@ void EndpointManager::SetSettings(EndpointSettings* ptr, EndpointSettings& setti
     ptr->dir = settings.dir;
     ptr->showtime = settings.showtime;
     m_toSave.push_back(ptr);
+    // m_ActionQueue->Add(this, &EndpointManager::SaveSettings, false);
     syslog(LOG_INFO, "Successfully changed settings for endpoint: %s", &ptr->name[0]);
 }

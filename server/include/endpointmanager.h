@@ -3,6 +3,7 @@
 
 #include "endpointconnection.h"
 #include "configloader.h"
+#include "actionqueue.h"
 
 #include <vector>
 #include <string>
@@ -24,7 +25,7 @@ private:
 public:
     EndpointManager(string configPath);
 
-    void Loop();
+    void SaveSettings();
 
     void LoadConnectionData(vector<Config>*);
     void LoadSettingsData();
