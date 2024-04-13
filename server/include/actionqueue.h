@@ -1,13 +1,13 @@
 #ifndef ACTION_QUEUE_H
 #define ACTION_QUEUE_H
 
-#include <vector>
+#include <deque>
 
 using namespace std;
 
 class ActionQueue{
 private:
-    vector<void(*)()> m_queue;
+    deque<void(*)()> m_queue;
     size_t m_queueSize;
 public:
     ActionQueue();
