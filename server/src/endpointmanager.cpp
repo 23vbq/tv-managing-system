@@ -1,6 +1,6 @@
 #include "endpointmanager.h"
 
-extern ActionQueue* m_ActionQueue;
+// extern ActionQueue* m_ActionQueue;
 
 // Static variables
 

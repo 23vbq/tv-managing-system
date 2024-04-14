@@ -18,7 +18,7 @@
 #include "serversocket.h"
 #include "commandhandler.h"
 #include "commandfunctions.h"
-#include "actionqueue.h"
+// #include "actionqueue.h"
 
 #include "serializer.h"
 #include "endpointconnection.h"
@@ -50,7 +50,7 @@ CommandHandler* m_CommandHandler;
 ServerSocket* m_ServerSocket;
 ServerSettings m_ServerSettings;
 EndpointManager* m_EndpointManager;
-ActionQueue* m_ActionQueue;
+// ActionQueue* m_ActionQueue;
 
 using namespace std;
 
@@ -68,11 +68,11 @@ int main(int argc, char* argv[]){
     // Initialize EndpointManager
     m_EndpointManager = new EndpointManager((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
     // Initialize ActionQueue
-    m_ActionQueue = new ActionQueue();
     // FIXME test of actionqueue
+    /*m_ActionQueue = new ActionQueue();
     int* a = new int(7);
     m_ActionQueue->Add(a, false);
-    m_ActionQueue->Handle();
+    m_ActionQueue->Handle();*/
     // Load config
     LoadServerConfig();
     // Load endpoints config
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]){
     // Main loop
     while (!s_termination)
     {
-        m_ActionQueue->Handle();
+        //m_ActionQueue->Handle();
         m_ServerSocket->Handle([](char msg[], int n, int sd) -> string {
             string s(msg, n);
             if (m_CommandHandler->Handle(s, sd)){
@@ -99,6 +99,7 @@ int main(int argc, char* argv[]){
             }
             return CommandHandler::CMD_BAD;
         });
+        m_EndpointManager->SaveSettings();
         this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
     }
     CleanUp();
