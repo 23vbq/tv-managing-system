@@ -10,6 +10,7 @@ struct ServerSettings
     string listeningIp;
     unsigned short listeningPort;
     string passwordHash; // FIXME is this good? maybe store in some keyrings
+    int maxConnections;
 };
 
 #endif

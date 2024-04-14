@@ -16,7 +16,6 @@ using namespace std;
 class ServerSocket
 {
 public:
-    static const int MAX_SOCKETS = 2; // Number of max connected clients
     static const string SMSG_HELLO; // Hello message
     static const string SMSG_REFNRE; // Connection refused w/o reason
     static const string SMSG_CLSD; // Connection closed
@@ -24,6 +23,7 @@ public:
 
 private:
     bool* s_termination;
+    int MAX_SOCKETS; // Number of max connected clients
 
     int m_server_fd;
     sockaddr_in m_address;
@@ -31,7 +31,7 @@ private:
     int m_opt = 1;
 
     fd_set m_readfds;
-    int m_sockets[MAX_SOCKETS];
+    int* m_sockets;
     char m_readbuff[_READBUFF_LEN];
 
     /**
@@ -48,8 +48,9 @@ public:
     /**
      * @param termination bool* to variable indicating termination of program
      * @param port number of port to listen
+     * @param maxConnections number of max simultaneously connections
     */
-    ServerSocket(bool*, uint16_t);
+    ServerSocket(bool*, uint16_t, int);
     ~ServerSocket();
 
     /**

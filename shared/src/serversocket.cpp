@@ -9,8 +9,10 @@ const string ServerSocket::SOCKET_LOOP_IGNORE_SIG = "SOCKLOOPIGN";
 
 // Constructors
 
-ServerSocket::ServerSocket(bool* termination, uint16_t port){
+ServerSocket::ServerSocket(bool* termination, uint16_t port, int maxConnections){
     s_termination = termination;
+    MAX_SOCKETS = maxConnections;
+    m_sockets = new int[MAX_SOCKETS];
     // Initialize client sockets
     for (int i = 0; i < MAX_SOCKETS; i++){
         m_sockets[i] = 0;
@@ -42,6 +44,7 @@ ServerSocket::~ServerSocket(){
     for (int i = 0; i < MAX_SOCKETS; i++){ // TODO check is valid to new connection handling
         Disconnect(m_sockets[i], SMSG_CLSD);
     }
+    delete [] m_sockets;
     close(m_server_fd);
     syslog(LOG_INFO, "Closed ServerSocket successfully");
 }

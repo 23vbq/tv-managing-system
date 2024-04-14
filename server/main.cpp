@@ -87,7 +87,7 @@ int main(int argc, char* argv[]){
     m_CommandHandler = new CommandHandler;
     InitializeCommands();
     // Create ServerSocket
-    m_ServerSocket = new ServerSocket(&s_termination, m_ServerSettings.listeningPort);
+    m_ServerSocket = new ServerSocket(&s_termination, m_ServerSettings.listeningPort, m_ServerSettings.maxConnections);
     // Main loop
     while (!s_termination)
     {
@@ -114,6 +114,7 @@ void LoadServerConfig(){
     cfgl.GetProperty<string>("ListeningIp", m_ServerSettings.listeningIp);
     cfgl.GetProperty<unsigned short>("ListeningPort", m_ServerSettings.listeningPort);
     cfgl.GetProperty<string>("PasswordHash", m_ServerSettings.passwordHash);
+    cfgl.GetProperty<int>("MaxConnections", m_ServerSettings.maxConnections);
     // Endpoint list
     vector<Config>* epList = cfgl.GetList("Endpoints");
     m_EndpointManager->LoadConnectionData(epList);
