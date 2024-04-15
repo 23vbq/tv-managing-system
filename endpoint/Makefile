@@ -4,7 +4,7 @@ CC = g++
 
 MAIN := main.cpp
 SRCS := src/signalcallbacks.cpp
-SHAREDSRC := ../shared/src/serializer.cpp ../shared/src/endpointsettings.cpp
+SHAREDSRC := ../shared/src/serializer.cpp ../shared/src/endpointsettings.cpp ../shared/src/configloader.cpp ../shared/src/config.cpp
 OUT := build/tmse
 INCLUDES := -Iinclude -I../shared/include
 

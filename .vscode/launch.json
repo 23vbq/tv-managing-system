@@ -29,10 +29,10 @@
             ]
         },
         {
-            "name": "Client (gdb) Launch",
+            "name": "Endpoint (gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/client/build/tmsc",
+            "program": "${workspaceFolder}/endpoint/build/tmse",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

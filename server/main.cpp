@@ -48,9 +48,13 @@ static bool s_termination = false;
 */
 CommandHandler* m_CommandHandler;
 ServerSocket* m_ServerSocket;
-ServerSettings m_ServerSettings;
 EndpointManager* m_EndpointManager;
 // ActionQueue* m_ActionQueue;
+
+/*
+ * Structs
+*/
+ServerSettings m_serversettings;
 
 using namespace std;
 
@@ -87,7 +91,7 @@ int main(int argc, char* argv[]){
     m_CommandHandler = new CommandHandler;
     InitializeCommands();
     // Create ServerSocket
-    m_ServerSocket = new ServerSocket(&s_termination, m_ServerSettings.listeningPort, m_ServerSettings.maxConnections);
+    m_ServerSocket = new ServerSocket(&s_termination, m_serversettings.listeningPort, m_serversettings.maxConnections);
     // Main loop
     while (!s_termination)
     {
@@ -111,10 +115,10 @@ void LoadServerConfig(){
     ConfigLoader cfgl = ConfigLoader((string)CONFIG_PATH + CONFIG_SETTINGS_FILE);
     cfgl.Load();
     // Properties
-    cfgl.GetProperty<string>("ListeningIp", m_ServerSettings.listeningIp);
-    cfgl.GetProperty<unsigned short>("ListeningPort", m_ServerSettings.listeningPort);
-    cfgl.GetProperty<string>("PasswordHash", m_ServerSettings.passwordHash);
-    cfgl.GetProperty<int>("MaxConnections", m_ServerSettings.maxConnections);
+    cfgl.GetProperty<string>("ListeningIp", m_serversettings.listeningIp);
+    cfgl.GetProperty<unsigned short>("ListeningPort", m_serversettings.listeningPort);
+    cfgl.GetProperty<string>("PasswordHash", m_serversettings.passwordHash);
+    cfgl.GetProperty<int>("MaxConnections", m_serversettings.maxConnections);
     // Endpoint list
     vector<Config>* epList = cfgl.GetList("Endpoints");
     m_EndpointManager->LoadConnectionData(epList);
