@@ -48,6 +48,9 @@ namespace CommandFunctions{
         EndpointSettings newSettings{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
         m_EndpointManager->SetSettings(ep, newSettings);
     }
+    void hello(vector<string> x, string& output){
+        output = ServerSocket::SMSG_HELLO;
+    }
     void rtest(vector<string> x, string& output){
         size_t n = x[0].length();
         output = "";

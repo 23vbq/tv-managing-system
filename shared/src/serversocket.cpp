@@ -2,7 +2,7 @@
 
 // Static variables
 
-const string ServerSocket::SMSG_HELLO = "Hello TMSD\r\n";
+const string ServerSocket::SMSG_HELLO = "Hello TMS\r\n";
 const string ServerSocket::SMSG_REFNRE = "Connection refused: ";
 const string ServerSocket::SMSG_CLSD = "Connection closed by server\r\n";
 const string ServerSocket::SOCKET_LOOP_IGNORE_SIG = "SOCKLOOPIGN";

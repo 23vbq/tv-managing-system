@@ -121,6 +121,7 @@ void LoadServerConfig(){
     delete epList;
 }
 void InitializeCommands(){
+    m_CommandHandler->AddCommand("HELLO", Command{0, CommandFunctions::hello});
     m_CommandHandler->AddCommand("REV", Command{1, CommandFunctions::rtest});
     m_CommandHandler->AddCommand("DISCON", Command{0, CommandFunctions::disconnect});
     m_CommandHandler->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName});
