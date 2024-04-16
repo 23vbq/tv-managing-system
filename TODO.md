@@ -23,6 +23,9 @@
     - [x] Saving settings into file
   - [ ] Endpoint manager
   - [ ] Requests handling
+  - [ ] Makefile
+    - [ ] Create config path
+    - [ ] Copy default config to config path
 - [ ] Client
   - [ ] **Rewrite to Qt**
   - [ ] Socket
