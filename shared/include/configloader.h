@@ -13,20 +13,39 @@
 using namespace std;
 
 class ConfigLoader : public Config{
-    private:
-        string m_path;
+private:
+    string m_path;
 
-        ifstream* OpenFile();
-        void ClearWhitespaces(string&);
-        // void LoadList(string&, string&, bool&, int&);
-    public:
-        // ConfigLoader();
-        ConfigLoader(string);
+    /**
+     * Opens file from m_path
+    */
+    ifstream* OpenFile();
+    /**
+     * Removes whitespaces from string
+    */
+    void ClearWhitespaces(string&);
+    // void LoadList(string&, string&, bool&, int&);
+public:
+    // ConfigLoader();
+    /**
+     * Constructor for ConfigLoader
+     * @param path file path to load
+    */
+    ConfigLoader(string);
 
-        string GetPath();
-        bool isEmpty();
+    /**
+     * Returns provided path
+    */
+    string GetPath();
+    /**
+     * Check if config loaded from file is empty
+     * // FIXME should i move it to config.h
+    */
+    bool isEmpty();
 
-        void Load(); // musi rzucać exepszyn
-        // void Load(string); // może się tego pozbyć i filenae jako const?
+    /**
+     * Loads file from path provided in constructor
+    */
+    void Load(); // FIXME musi rzucać exepszyn
 };
 #endif

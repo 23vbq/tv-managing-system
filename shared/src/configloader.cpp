@@ -10,6 +10,7 @@ ifstream* ConfigLoader::OpenFile(){
     return in;
 }
 void ConfigLoader::ClearWhitespaces(string& line){
+    // FIXME do not remove normal spaces if inside of value
     int n = line.length();
     for (int i = 0; i < n; i++){
         if (line[i] == ' ' || line[i] == '\t'){

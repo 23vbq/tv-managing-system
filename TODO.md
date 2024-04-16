@@ -1,4 +1,5 @@
 # ToDo
+## Main
 - [ ] Description (Readme)
 - [ ] Documentation
 - [ ] Server
@@ -21,7 +22,7 @@
     - [ ] Creating default file
     - [x] Sending through socket
     - [x] Saving settings into file
-  - [ ] Endpoint manager
+  - [ ] Endpoint manager - in progress
   - [ ] Requests handling
   - [ ] Makefile
     - [ ] Create config path
@@ -37,7 +38,8 @@
     - [x] List of endpoints
     - [x] Endpoint settings
     - [ ] Is endpoint connected
-    - [ ] Auto load endpoints list after connection
+    - [x] Auto load endpoints list after connection
+    - [ ] Move reload button to top menu
   - [ ] GUI
     - [x] Connection window
     - [x] Showing list of endpoints
@@ -45,3 +47,10 @@
   - [ ] Sending data
 - [ ] Endpoint
 - [ ] Automatic sync
+
+## Authentication
+- [ ] Basic auth for clients to server
+- [ ] Basic auth for server to endpoints
+- [ ] SSL for encrypting traffic
+- [ ] More secure way to store client password on server side
+- [ ] More secure way for connection server-endpoint
