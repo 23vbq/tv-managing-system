@@ -8,10 +8,14 @@ const string CommandHandler::CMD_BAD = "BAD\r\n";
 // Private functions
 
 void CommandHandler::RemoveNewLineEnd(string& command){
-    size_t n = command.length();
-    if (command.find('\n', n - 1) == string::npos)
+    size_t n = command.length(), k = n;
+    if (command.find('\n', n - 1) != string::npos)
+        n--;
+    if (command.find('\r', n - 1) != string::npos)
+        n--;
+    if (n == k)
         return;
-    command = command.substr(0, n - 1);
+    command = command.substr(0, n);
 }
 
 size_t CommandHandler::GetArgs(const string &command){
