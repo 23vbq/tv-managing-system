@@ -40,3 +40,6 @@ string Config::ToString(){
     result += "}";
     return result;
 }
+bool Config::isEmpty(){
+    return m_properties.size() == 0;
+}

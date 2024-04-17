@@ -37,11 +37,6 @@ public:
      * Returns provided path
     */
     string GetPath();
-    /**
-     * Check if config loaded from file is empty
-     * // FIXME should i move it to config.h
-    */
-    bool isEmpty();
 
     /**
      * Loads file from path provided in constructor

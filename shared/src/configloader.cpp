@@ -30,9 +30,6 @@ ConfigLoader::ConfigLoader(string path){
 string ConfigLoader::GetPath(){
     return m_path;
 }
-bool ConfigLoader::isEmpty(){
-    return m_properties.size() == 0;
-}
 
 void ConfigLoader::Load(){
     if (m_path == ""){

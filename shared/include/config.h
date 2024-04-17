@@ -62,6 +62,10 @@ public:
      * Combines whole config to string, so can be written to user.
     */
     string ToString();
+    /**
+     * Check if config is empty
+    */
+    bool isEmpty();
 };
 
 #endif
