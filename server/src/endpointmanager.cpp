@@ -36,10 +36,13 @@ void EndpointManager::SaveSettingsFile(size_t& iterator, vector<size_t>& deleteL
         throw "Cannot save settings of NULL";
     ofstream out;
     out.open(m_configPath + ep->name + SETTINGS_EXTENSION, ios::out);
+    if (!out.is_open())
+        throw "Cannot open file";
     out<<"LocalCfg = "<<to_string(ep->localcfg)<<"\n";
     out<<"Dir = "<<ep->dir<<"\n";
     out<<"Showtime = "<<to_string(ep->showtime)<<"\n";
     out.close();
+    deleteList.push_back(iterator);
 }
 
 // Public functions
