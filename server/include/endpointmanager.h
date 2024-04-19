@@ -47,13 +47,39 @@ public:
     */
     void SaveSettings();
 
+    /**
+     * Loads Endpoints from config list
+     * @param endpoints list of configs
+    */
     void LoadConnectionData(vector<Config>*);
+    /**
+     * Loads settings for all loaded endpoints
+     * @throw `const char*` if config path not exists
+    */
     void LoadSettingsData();
 
+    /**
+     * Returns names of all loaded endpoints
+    */
     vector<string>* GetNames();
+    /**
+     * Returns settings of endpoint
+     * @param name name of endpoint
+    */
     EndpointSettings* GetSettings(string&);
-    EndpointSettings* GetSettings(string&, unsigned short&);
+    /**
+     * Returns settings of endpoint
+     * @param ip address of endpoint
+     * @param port listening port of endpoint
+     * @deprecated Use `GetSettings(string& name)`
+    */
+    __attribute__ ((deprecated)) EndpointSettings* GetSettings(string&, unsigned short&);
 
+    /**
+     * Changes settings of endpoint. Marks endpoint to save.
+     * @param ptr pointer to endpoint to update
+     * @param settings new settings
+    */
     void SetSettings(EndpointSettings*, EndpointSettings&);
 };
 
