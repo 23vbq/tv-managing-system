@@ -37,7 +37,7 @@ bool ClientSocketQt::Send(std::string message){
     if (!m_socket->waitForBytesWritten(CONNECTION_TIMEOUT)){
         QMessageBox msg;
         msg.critical(nullptr, "Connection", "Error on sending data!");
-        return 0;
+        return false;
     }
     return sendlen == n;
 }

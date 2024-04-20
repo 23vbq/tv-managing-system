@@ -16,8 +16,15 @@ private:
 
     static void logToFile(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 public:
+    /**
+     * Constructor
+     * @param path path to file to log out
+     */
     Logger(std::string);
 
+    /**
+     * Initialize
+     */
     void Initialize();
 };
     
