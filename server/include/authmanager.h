@@ -5,14 +5,19 @@
 
 #include <map>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
 class AuthManager{
 private:
     map<int, AuthSock> m_auth;
+    string m_keyFile;
+    // const time_t AUTH_LOCK = 60;
+
+    string GetKey();
 public:
-    AuthManager();
+    AuthManager(string);
 
     void Handle();
 

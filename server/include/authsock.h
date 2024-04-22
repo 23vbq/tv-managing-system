@@ -6,6 +6,7 @@
 struct AuthSock{
     int fd;
     time_t timestamp;
+    bool access;
 };
 
 #endif
