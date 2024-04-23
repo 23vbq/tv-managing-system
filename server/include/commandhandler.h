@@ -1,7 +1,14 @@
 #ifndef COMMAND_HANDLER_H
 #define COMMAND_HANDLER_H
 
+#define CMD_H_VALID 1
+#define CMD_H_CMDNOTFOUND 0
+#define CMD_H_ARGC (-1)
+#define CMD_H_AUTHERR (-2)
+
 #include "command.h"
+#include "authmanager.h"
+#include "serversocket.h"
 
 #include <string>
 #include <unordered_map>
@@ -41,8 +48,9 @@ public:
      * Handles provided command. Finds command by name and executes with arguments
      * @param command Command string
      * @param currentSd Socket descriptor that requested command
+     * @return Return code (CMD_H_)
     */
-    bool Handle(string, int);
+    int Handle(string, int);
     /**
      * @return Output of last handled command
     */

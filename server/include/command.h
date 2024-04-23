@@ -13,6 +13,7 @@ struct Command
      * @param output reference to output
     */
     void (*function)(std::vector<std::string>, std::string& output);
+    bool requireAuth;
 };
 
 #endif

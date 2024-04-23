@@ -19,7 +19,8 @@ public:
     static const string SMSG_HELLO; // Hello message
     static const string SMSG_REFNRE; // Connection refused w/o reason
     static const string SMSG_CLSD; // Connection closed
-    static const string SOCKET_LOOP_IGNORE_SIG;
+    static const string SMSG_AUTH_REQ; // Require auth
+    static const string SOCKET_LOOP_IGNORE_SIG; // Signal to ignore sending data
 
 private:
     bool* s_termination;
@@ -70,7 +71,12 @@ public:
      * @param connection FD of connection
      * @return [fd: %i, ip: %s, port: %i]
     */
-    string GetSocketInfo(int&);
+    string GetSocketInfo(const int&);
+    /**
+     * Checks if connection exists
+     * @param connection FD of connection
+    */
+    bool IsSocketExists(const int&);
 };
 
 #endif

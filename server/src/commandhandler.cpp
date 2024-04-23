@@ -1,5 +1,8 @@
 #include "commandhandler.h"
 
+extern ServerSocket* m_ServerSocket;
+extern AuthManager* m_AuthManager;
+
 // Static variables
 
 const string CommandHandler::CMD_VALID = "OK\r\n";
@@ -39,7 +42,7 @@ size_t CommandHandler::GetArgs(const string &command){
 void CommandHandler::AddCommand(string name, const Command& command){
     m_commands[name] = command;
 }
-bool CommandHandler::Handle(string command, int currentSd){
+int CommandHandler::Handle(string command, int currentSd){
     RemoveNewLineEnd(command);
     // Getting command
     size_t eCmdPos = command.find(' ');
@@ -47,16 +50,20 @@ bool CommandHandler::Handle(string command, int currentSd){
         return false;*/
     string cmdName = command.substr(0, eCmdPos);
     if (m_commands.count(cmdName) == 0)
-        return false;
+        return CMD_H_CMDNOTFOUND;
     Command *cmdPtr = &m_commands[cmdName];
     syslog(LOG_INFO, "Requested command '%s'", &cmdName[0]);
     // Getting arguments
     size_t argc = GetArgs(command.substr(eCmdPos + 1));
     if (cmdPtr->argc != argc)
-        return false;
+        return CMD_H_ARGC;
     m_current_sd = currentSd;
+    if (cmdPtr->requireAuth && !m_AuthManager->IsAuthenticated(m_current_sd)){
+        syslog(LOG_WARNING, "Connection not authenticated %s", &(m_ServerSocket->GetSocketInfo(m_current_sd))[0]);
+        return CMD_H_AUTHERR;
+    }
     cmdPtr->function(m_cmdbuffer, m_output);
-    return true;
+    return CMD_H_VALID;
 }
 string CommandHandler::GetOutput(){
     return m_output;

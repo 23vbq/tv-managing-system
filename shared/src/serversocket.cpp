@@ -5,6 +5,7 @@
 const string ServerSocket::SMSG_HELLO = "Hello TMS\r\n";
 const string ServerSocket::SMSG_REFNRE = "Connection refused: ";
 const string ServerSocket::SMSG_CLSD = "Connection closed by server\r\n";
+const string ServerSocket::SMSG_AUTH_REQ = "AUTH_REQ";
 const string ServerSocket::SOCKET_LOOP_IGNORE_SIG = "SOCKLOOPIGN";
 
 // Constructors
@@ -79,13 +80,14 @@ bool ServerSocket::AcceptConnectionHandle(){
 }
 void ServerSocket::LostConnectionHandle(int connection){
     using namespace std;
-    // getpeername(connection, (sockaddr*)&m_address, &m_addrlen); // FIXME when last connection wasn't localhost, and localhost disconnects it return last connection (in my example gateway)
+    // FIXME when last connection wasn't localhost, and localhost disconnects it return last connection (in my example gateway)
+    string sock_info = GetSocketInfo(connection);
     close(connection);
     for (int i = 0; i < MAX_SOCKETS; i++){
         if (m_sockets[i] == connection)
             m_sockets[i] = 0;
     }
-    syslog(LOG_WARNING, "Lost connection %s", &GetSocketInfo(connection)[0]);
+    syslog(LOG_WARNING, "Lost connection %s", &sock_info[0]);
 }
 
 void ServerSocket::Handle(string (*responseCall)(char[], int, int)){
@@ -156,7 +158,16 @@ void ServerSocket::Disconnect(int connection, string reason){
     // syslog(LOG_INFO, "Disconnected [fd: %i, ip: %s, port: %i]", connection, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
     syslog(LOG_INFO, "Disconnected %s", &GetSocketInfo(connection)[0]);
 }
-string ServerSocket::GetSocketInfo(int& connection){
+string ServerSocket::GetSocketInfo(const int& connection){
+    if (!IsSocketExists(connection))
+        return "[SOCKET_ERROR]";
     getpeername(connection, (sockaddr*)&m_address, &m_addrlen);
     return "[fd: " + to_string(connection) + ", ip: " + inet_ntoa(m_address.sin_addr) + ", port: " + to_string(ntohs(m_address.sin_port)) + "]";
+}
+bool ServerSocket::IsSocketExists(const int& connection){
+    for (int i = 0; i < MAX_SOCKETS; i++){
+        if (m_sockets[i] == connection)
+            return true;
+    }
+    return false;
 }

@@ -18,6 +18,7 @@
 #include "serversocket.h"
 #include "commandhandler.h"
 #include "commandfunctions.h"
+#include "authmanager.h"
 // #include "actionqueue.h"
 
 #include "serializer.h"
@@ -37,6 +38,7 @@ const char* DAEMONNAME = "tmsd";
 const char* CONFIG_PATH = _CONFIG_PATH;
 const char* CONFIG_ENDPOINTS_DIR = "epconf/"; // Inside CONFIG_PATH
 const char* CONFIG_SETTINGS_FILE = "settings.cfg"; // Inside CONFIG_PATH
+const char* CONFIG_AUTHKEY_FILE = "authkey"; // Inside CONFIG_PATH
 
 /*
  * Global loop
@@ -49,6 +51,7 @@ static bool s_termination = false;
 CommandHandler* m_CommandHandler;
 ServerSocket* m_ServerSocket;
 EndpointManager* m_EndpointManager;
+AuthManager* m_AuthManager;
 // ActionQueue* m_ActionQueue;
 
 /*
@@ -71,6 +74,8 @@ int main(int argc, char* argv[]){
     SignalCallbacks::SetupCallbacks(&s_termination);
     // Initialize EndpointManager
     m_EndpointManager = new EndpointManager((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
+    //Initialize AuthManager
+    m_AuthManager = new AuthManager((string)CONFIG_PATH + CONFIG_AUTHKEY_FILE);
     // Initialize ActionQueue
     // FIXME test of actionqueue
     /*m_ActionQueue = new ActionQueue();
@@ -98,12 +103,17 @@ int main(int argc, char* argv[]){
         //m_ActionQueue->Handle();
         m_ServerSocket->Handle([](char msg[], int n, int sd) -> string {
             string s(msg, n);
-            if (m_CommandHandler->Handle(s, sd)){
+            int h = m_CommandHandler->Handle(s, sd);
+            if (h == CMD_H_VALID){
                 return CommandHandler::CMD_VALID + m_CommandHandler->GetOutput() + "\r\n";
+            }
+            else if (h == CMD_H_AUTHERR){
+                return ServerSocket::SMSG_AUTH_REQ;
             }
             return CommandHandler::CMD_BAD;
         });
         m_EndpointManager->SaveSettings();
+        m_AuthManager->Handle();
         this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
     }
     CleanUp();
@@ -125,12 +135,12 @@ void LoadServerConfig(){
     delete epList;
 }
 void InitializeCommands(){
-    m_CommandHandler->AddCommand("HELLO", Command{0, CommandFunctions::hello});
-    m_CommandHandler->AddCommand("REV", Command{1, CommandFunctions::rtest});
-    m_CommandHandler->AddCommand("DISCON", Command{0, CommandFunctions::disconnect});
-    m_CommandHandler->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName});
-    m_CommandHandler->AddCommand("GETEPLS", Command{0, CommandFunctions::getEndpointList});
-    m_CommandHandler->AddCommand("SETEPSET", Command{2, CommandFunctions::setEndpointSettings});
+    m_CommandHandler->AddCommand("HELLO", Command{0, CommandFunctions::hello, false});
+    m_CommandHandler->AddCommand("REV", Command{1, CommandFunctions::rtest, true});
+    m_CommandHandler->AddCommand("DISCON", Command{0, CommandFunctions::disconnect, true});
+    m_CommandHandler->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName, true});
+    m_CommandHandler->AddCommand("GETEPLS", Command{0, CommandFunctions::getEndpointList, true});
+    m_CommandHandler->AddCommand("SETEPSET", Command{2, CommandFunctions::setEndpointSettings, true});
 }
 void CleanUp(){
     SignalCallbacks::RevertCallbacks();

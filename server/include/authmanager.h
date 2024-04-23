@@ -2,10 +2,12 @@
 #define AUTH_MANAGER_H
 
 #include "authsock.h"
+#include "serversocket.h"
 
 #include <map>
 #include <string>
 #include <fstream>
+#include <syslog.h>
 
 using namespace std;
 
