@@ -64,4 +64,4 @@ TODO about authentication and secure connection
   - [x] #4 MainWindow: after disconnecting throws error
   - [x] #5 EndpointManager: Saving directory fails *(ex. "\004")*
 
-> **SEGFAULT COUNTER**: 5
+> **SEGFAULT COUNTER**: 6

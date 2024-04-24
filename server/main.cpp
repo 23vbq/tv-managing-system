@@ -75,7 +75,13 @@ int main(int argc, char* argv[]){
     // Initialize EndpointManager
     m_EndpointManager = new EndpointManager((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
     //Initialize AuthManager
-    m_AuthManager = new AuthManager((string)CONFIG_PATH + CONFIG_AUTHKEY_FILE);
+    try{
+        m_AuthManager = new AuthManager((string)CONFIG_PATH + CONFIG_AUTHKEY_FILE);
+    } catch (const char * e){
+        syslog(LOG_ERR, "[AuthManager] %s", e);
+        CleanUp();
+        exit(1);
+    }
     // Initialize ActionQueue
     // FIXME test of actionqueue
     /*m_ActionQueue = new ActionQueue();
@@ -141,6 +147,7 @@ void InitializeCommands(){
     m_CommandHandler->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName, true});
     m_CommandHandler->AddCommand("GETEPLS", Command{0, CommandFunctions::getEndpointList, true});
     m_CommandHandler->AddCommand("SETEPSET", Command{2, CommandFunctions::setEndpointSettings, true});
+    m_CommandHandler->AddCommand("AUTHK", Command{1, CommandFunctions::authKey, false});
 }
 void CleanUp(){
     SignalCallbacks::RevertCallbacks();

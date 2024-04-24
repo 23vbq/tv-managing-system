@@ -7,7 +7,9 @@ extern ServerSocket* m_ServerSocket;
 AuthManager::AuthManager(string keyFile) : 
     m_keyFile(keyFile)
 {
-
+    string key = GetKey();
+    if (key == "")
+        throw "Key is empty";
 }
 
 // private functions
@@ -34,11 +36,11 @@ void AuthManager::Handle(){
     }
 }
 
-void AuthManager::Auth(const int& sd, const string& key){
+bool AuthManager::Auth(const int& sd, const string& key){
     time_t now = time(NULL);
     if (m_auth.count(sd) != 0){
         if (m_auth[sd].access)
-            return;
+            return false;
         // FIXME blokada czasu per IP
     }
     AuthSock as{sd, now, false};
@@ -46,6 +48,7 @@ void AuthManager::Auth(const int& sd, const string& key){
         as.access = true;
     m_auth[sd] = as;
     syslog(LOG_INFO, "Successfully authenticated %s", &(m_ServerSocket->GetSocketInfo(sd))[0]);
+    return as.access;
 }
 void AuthManager::Unauth(const int& sd){
     if (m_auth.count(sd) == 0)

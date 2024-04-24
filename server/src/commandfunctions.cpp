@@ -6,6 +6,7 @@
 extern CommandHandler* m_CommandHandler;
 extern ServerSocket* m_ServerSocket;
 extern EndpointManager* m_EndpointManager;
+extern AuthManager* m_AuthManager;
 
 namespace CommandFunctions{
     void disconnect(vector<string> x, string& output){
@@ -47,6 +48,18 @@ namespace CommandFunctions{
         Serializer sr(x[1]);
         EndpointSettings newSettings{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
         m_EndpointManager->SetSettings(ep, newSettings);
+    }
+    void authKey(vector<string> x, string& output){
+        int sd = m_CommandHandler->GetCurrentSd();
+        string sock_info = m_ServerSocket->GetSocketInfo(sd);
+        syslog(LOG_AUTH, "Client auth %s", &sock_info[0]);
+        if (m_AuthManager->Auth(sd, x[0])){
+            output = "SUCCESS";
+            syslog(LOG_AUTH, "Successfully authenticated %s", &sock_info[0]);
+        } else{
+            output = "FAIL";
+            syslog(LOG_AUTH, "Failure authentication %s", &sock_info[0]);
+        }
     }
     void hello(vector<string> x, string& output){
         output = ServerSocket::SMSG_HELLO;

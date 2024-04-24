@@ -23,7 +23,7 @@ public:
 
     void Handle();
 
-    void Auth(const int&, const string&);
+    bool Auth(const int&, const string&);
     void Unauth(const int&);
     bool IsAuthenticated(const int&);
 };
