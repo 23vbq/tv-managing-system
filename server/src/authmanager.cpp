@@ -28,11 +28,14 @@ string AuthManager::GetKey(){
 // public functions
 
 void AuthManager::Handle(){
+    vector<map<int, AuthSock>::iterator> del;
     for (auto it = m_auth.begin(); it != m_auth.end(); it++){
         if (m_ServerSocket->IsSocketExists(it->first))
             continue;
-        m_auth.erase(it);
-        it--;
+        del.push_back(it);
+    }
+    for (const auto& x : del){
+        m_auth.erase(x);
     }
 }
 
