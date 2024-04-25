@@ -25,6 +25,8 @@ set(PROJECT_SOURCES
         include/clientsocketqt.h
         connectwindow.cpp
         include/connectwindow.h
+        authwindow.cpp
+        include/authwindow.h
         endpointmanager.cpp
         include/endpointmanager.h
         ../shared/src/serializer.cpp
@@ -42,6 +44,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         connectwindow.ui
+        authwindow.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET client APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
