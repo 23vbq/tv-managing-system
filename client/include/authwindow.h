@@ -5,8 +5,6 @@
 #include <QCloseEvent>
 #include <QKeyEvent>
 
-#include "clientsocketqt.h"
-
 namespace Ui {
 class AuthWindow;
 }
@@ -19,8 +17,12 @@ public:
     AuthWindow(QWidget *parent = nullptr);
     ~AuthWindow();
 
+    void SetOtherWindowsList(size_t, QMainWindow **);
+
 private:
     Ui::AuthWindow *ui;
+    QMainWindow** otherWindowsList;
+    size_t otherWindowsList_size;
 
     void LoginBtnHandler();
 signals:

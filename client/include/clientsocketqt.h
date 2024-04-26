@@ -4,6 +4,8 @@
 #include <QTcpSocket>
 #include <QMessageBox>
 
+#include "authwindow.h"
+
 #define CONNECTION_TIMEOUT 5000
 
 class ClientSocketQt{
@@ -12,6 +14,8 @@ private:
 
     QByteArray m_readbuff; // Buffer to store read byte output
     QString m_readres; // Buffer to store read output (converted from bytes)
+
+    AuthWindow* aw;
 public:
     /**
      * Constructor of client socket
@@ -51,6 +55,8 @@ public:
      * Checks for is connected to server
      */
     bool IsConnected();
+
+    void SetAwPtr(AuthWindow*);
 };
 
 #endif

@@ -1,4 +1,6 @@
 #include "mainwindow.h"
+#include "connectwindow.h"
+#include "authwindow.h"
 #include "serializer.h"
 #include "endpointmanager.h"
 
@@ -44,20 +46,19 @@ int main(int argc, char *argv[])
     // Initialize endpoint manager
     m_EndpointManager = new EndpointManager();
 
+    // Create windows
     MainWindow mainWindow;
     ConnectWindow connectWindow;
+    AuthWindow authWindow;
+    // Pass data to windows
     mainWindow.SetCwPtr(&connectWindow);
+    QMainWindow* authWndOtherList[] = {&mainWindow, &connectWindow};
+    authWindow.SetOtherWindowsList(2, authWndOtherList);
+    m_ClientSocket->SetAwPtr(&authWindow);
+    // Show main window
     mainWindow.show();
-    // connectWindow.show();
     // Initialize logger
     log.Initialize();
-    /*ClientSocketQt cs(nullptr);
-    QMessageBox conMsg;
-    if (cs.Connect("192.168.121.132", (unsigned int)5555))
-        conMsg.information(nullptr, "Client Socket", "Successfully connected!");
-    else
-        conMsg.critical(nullptr, "Client Socket", "Unable to connect!");*/
-    //w.ReloadEndpointListView("\"2\"\"4:Test\"\"5:kotek\"");
-    // w.ReloadEndpointListView("2\"3:kot\"\"6:piesek\"");
+
     return a.exec();
 }

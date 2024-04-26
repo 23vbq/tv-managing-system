@@ -51,3 +51,7 @@ qint64 ClientSocketQt::Read(std::string& result){
 bool ClientSocketQt::IsConnected(){
     return m_socket->state() == QAbstractSocket::ConnectedState;
 }
+
+void ClientSocketQt::SetAwPtr(AuthWindow* ptr){
+    this->aw = ptr;
+}
