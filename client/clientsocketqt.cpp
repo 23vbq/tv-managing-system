@@ -46,6 +46,10 @@ qint64 ClientSocketQt::Read(std::string& result){
     m_readbuff = m_socket->readAll();
     m_readres = QString(m_readbuff);
     result = m_readres.toStdString();
+    if (result.find("AUTH_REQ") != std::string::npos) { // FIXME change this messages to defined in file
+        aw->show();
+        return CS_AUTH_REQ;
+    }
     return result.length();
 }
 bool ClientSocketQt::IsConnected(){

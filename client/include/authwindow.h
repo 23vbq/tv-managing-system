@@ -25,12 +25,16 @@ private:
     size_t otherWindowsList_size;
 
     void LoginBtnHandler();
+    void ShowPassBtnHandler();
+    void SetDisabledOtherWindows(const bool&);
 signals:
+    void showed();
     void closed();
     void enterPressed();
 protected:
     void closeEvent(QCloseEvent*);
     void keyPressEvent(QKeyEvent*);
+    void showEvent(QShowEvent*);
 };
 
 #endif // AUTHWINDOW_H

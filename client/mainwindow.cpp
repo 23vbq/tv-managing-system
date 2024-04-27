@@ -41,7 +41,10 @@ void MainWindow::ReloadEndpointListView(){
         return;
     m_ClientSocket->Send("GETEPLS");
     std::string result;
-    if (!m_ClientSocket->Read(result)){
+    qint64 res_size = m_ClientSocket->Read(result);
+    if (res_size == CS_AUTH_REQ)
+        return;
+    if (!res_size){
         m_msg.critical(this, "Connection", "Cannot load endpoint list");
         return;
     }
@@ -51,6 +54,10 @@ void MainWindow::ReloadEndpointListView(){
 void MainWindow::SetCwPtr(ConnectWindow* ptr){
     cw = ptr;
     connect(cw, &ConnectWindow::closed, this, &MainWindow::CloseConnectWindow);
+}
+void MainWindow::SetAwPtr(AuthWindow *ptr){
+    aw = ptr;
+    connect(aw, &AuthWindow::closed, this, &MainWindow::CloseConnectWindow);
 }
 
 // Private slots functions

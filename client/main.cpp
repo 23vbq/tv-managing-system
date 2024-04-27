@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     AuthWindow authWindow;
     // Pass data to windows
     mainWindow.SetCwPtr(&connectWindow);
+    mainWindow.SetAwPtr(&authWindow);
     QMainWindow* authWndOtherList[] = {&mainWindow, &connectWindow};
     authWindow.SetOtherWindowsList(2, authWndOtherList);
     m_ClientSocket->SetAwPtr(&authWindow);

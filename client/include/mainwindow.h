@@ -6,6 +6,7 @@
 #include "endpointmanager.h"
 
 #include "connectwindow.h"
+#include "authwindow.h"
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -27,6 +28,7 @@ public:
 
     void ReloadEndpointListView();
     void SetCwPtr(ConnectWindow*);
+    void SetAwPtr(AuthWindow*);
 private slots:
     void on_actionConnect_to_triggered();
 
@@ -43,6 +45,7 @@ private:
 
     Ui::MainWindow *ui;
     ConnectWindow *cw;
+    AuthWindow *aw;
     QMessageBox m_msg;
 signals:
     void closed();

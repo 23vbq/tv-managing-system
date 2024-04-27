@@ -7,6 +7,7 @@
 #include "authwindow.h"
 
 #define CONNECTION_TIMEOUT 5000
+#define CS_AUTH_REQ (-2)
 
 class ClientSocketQt{
 private:

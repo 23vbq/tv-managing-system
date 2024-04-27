@@ -7,10 +7,6 @@ ConnectWindow::ConnectWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ConnectWindow)
 {
-    /*this->parent = parent;
-    if (parent != nullptr){
-        parent->setEnabled(false);
-    }*/
     ui->setupUi(this);
     this->setFixedSize(QSize(400,120));
 
