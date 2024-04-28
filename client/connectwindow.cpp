@@ -64,6 +64,7 @@ void ConnectWindow::closeEvent(QCloseEvent * event)
         emit closed();
 }
 void ConnectWindow::keyPressEvent(QKeyEvent* event){
-    if (event->key() == Qt::Key_Enter)
+    int key = event->key();
+    if (key == Qt::Key_Enter || key == Qt::Key_Return)
         emit enterPressed();
 }

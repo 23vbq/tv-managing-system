@@ -12,8 +12,12 @@ AuthWindow::AuthWindow(QWidget *parent)
     ui->setupUi(this);
     this->setFixedSize(QSize(400,120));
 
+    // Buttons
     connect(ui->loginButton, &QPushButton::clicked, this, &AuthWindow::LoginBtnHandler);
     connect(ui->showPassPushButton, &QPushButton::clicked, this, &AuthWindow::ShowPassBtnHandler);
+
+    // Key
+    connect(this, &AuthWindow::enterPressed, this, &AuthWindow::LoginBtnHandler);
 }
 
 AuthWindow::~AuthWindow()
@@ -32,6 +36,10 @@ void AuthWindow::SetOtherWindowsList(size_t n, QMainWindow**arr){
 
 void AuthWindow::LoginBtnHandler(){
     QString qkey = ui->passwdLineEdit->text();
+    // Reset form
+    ui->passwdLineEdit->setText("");
+    ui->passwdLineEdit->setEchoMode(QLineEdit::Password);
+    // Send and handle response
     m_ClientSocket->Send("AUTHK \2" + qkey.toStdString() + "\3");
     std::string result;
     qint64 res_size = m_ClientSocket->Read(result);
@@ -71,7 +79,8 @@ void AuthWindow::closeEvent(QCloseEvent * event)
         emit closed();
 }
 void AuthWindow::keyPressEvent(QKeyEvent* event){
-    if (event->key() == Qt::Key_Enter)
+    int key = event->key();
+    if (key == Qt::Key_Enter || key == Qt::Key_Return)
         emit enterPressed();
 }
 void AuthWindow::showEvent(QShowEvent* event){
