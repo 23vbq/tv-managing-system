@@ -21,26 +21,34 @@ ConnectWindow::~ConnectWindow()
     delete ui;
 }
 
+// Public functions
+
+bool ConnectWindow::Connect(std::string addr, unsigned int port){
+    QMessageBox msg;
+    if (!m_ClientSocket->Connect(addr, port)){
+        msg.critical(this, "Connection", "Cannot connect to: " + QString::fromStdString(addr) + ':' + QString::number(port));
+        return false;
+    }
+    msg.information(this, "Connection", "Successfully connected");
+    return true;
+}
+
 // Private functions
 
 void ConnectWindow::ConnectBtnHandler(){
     bool ok = true;
-    QMessageBox msg;
     // Get input
     QString sAddr = ui->ipLineEdit->text();
     QString sPort = ui->portLineEdit->text();
     unsigned int port = sPort.toUInt(&ok);
     if (!ok){
+        QMessageBox msg;
         msg.critical(this, "Connection", "Invalid address or port!");
         return;
     }
     // Try to connect
-    if (!m_ClientSocket->Connect(sAddr.toStdString(), port)){
-        msg.critical(this, "Connection", "Cannot connect to: " + sAddr + ':' + sPort);
-        return;
-    }
-    msg.information(this, "Connection", "Successfully connected");
-    this->close();
+    if (Connect(sAddr.toStdString(), port))
+        this->close();
 }
 void ConnectWindow::PortLineEditTextHandler(){
     QString text = ui->portLineEdit->text();

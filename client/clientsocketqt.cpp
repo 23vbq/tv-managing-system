@@ -55,6 +55,11 @@ qint64 ClientSocketQt::Read(std::string& result){
 bool ClientSocketQt::IsConnected(){
     return m_socket->state() == QAbstractSocket::ConnectedState;
 }
+std::pair<std::string, unsigned int> ClientSocketQt::GetConnectionInfo(){
+    std::string addr = m_socket->peerName().toStdString();
+    unsigned int port = m_socket->peerPort();
+    return {addr, port};
+}
 
 void ClientSocketQt::SetAwPtr(AuthWindow* ptr){
     this->aw = ptr;

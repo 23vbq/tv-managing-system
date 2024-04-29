@@ -153,3 +153,14 @@ void MainWindow::on_actionDisconnect_triggered()
     ClearEndpointSettings();
 }
 
+
+void MainWindow::on_actionReconnect_triggered()
+{
+    if (!m_ClientSocket->IsConnected())
+        return;
+    std::pair<std::string, unsigned int> connection_info = m_ClientSocket->GetConnectionInfo();
+    on_actionDisconnect_triggered();
+    cw->Connect(connection_info.first, connection_info.second);
+    CloseConnectWindow();
+}
+

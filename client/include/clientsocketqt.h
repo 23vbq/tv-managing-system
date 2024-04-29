@@ -56,7 +56,14 @@ public:
      * Checks for is connected to server
      */
     bool IsConnected();
+    /**
+     * Returns Hostname (can be IP) and Port of existing connection
+     */
+    std::pair<std::string, unsigned int> GetConnectionInfo();
 
+    /**
+     * Sets pointer to AuthWindow class
+     */
     void SetAwPtr(AuthWindow*);
 };
 

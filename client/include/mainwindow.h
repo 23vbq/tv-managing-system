@@ -34,6 +34,8 @@ private slots:
 
     void on_actionDisconnect_triggered();
 
+    void on_actionReconnect_triggered();
+
 private:
     void OpenConnectWindow();
     void CloseConnectWindow();

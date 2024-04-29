@@ -23,6 +23,8 @@ public:
     ConnectWindow(QWidget *parent = nullptr);
     ~ConnectWindow();
 
+    bool Connect(std::string, unsigned int);
+
 private:
     QWidget* parent;
     Ui::ConnectWindow *ui;
