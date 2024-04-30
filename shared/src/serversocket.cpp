@@ -38,6 +38,7 @@ ServerSocket::ServerSocket(bool* termination, uint16_t port, int maxConnections)
     if (listen(m_server_fd, 3) < 0){
         throw "listen";
     }
+    syslog(LOG_INFO, "Successfully created ServerSocket");
 }
 ServerSocket::~ServerSocket(){
     using namespace std;
