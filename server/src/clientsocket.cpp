@@ -43,3 +43,13 @@ bool ClientSocket::Send(const string& message){
     syslog(LOG_DEBUG, "Message sent to [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
     return true;
 }
+bool ClientSocket::Read(string &result){
+    if ((m_readsize = read(m_client_fd, m_readbuff, _READBUFF_LEN -1)) < 1){
+        syslog(LOG_ERR, "Error on reading from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+        result = "";
+        return false;
+    }
+    result = string(m_readbuff, m_readsize);
+    syslog(LOG_DEBUG, "Successfully read from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+    return true;
+}

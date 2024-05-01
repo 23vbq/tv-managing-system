@@ -19,7 +19,7 @@ private:
     socklen_t m_addrlen;
 
     char m_readbuff[_READBUFF_LEN];
-
+    size_t m_readsize;
 public:
     ClientSocket();
     ~ClientSocket();
