@@ -34,3 +34,12 @@ bool ClientSocket::Connect(const string &address, const uint16_t &port){
     syslog(LOG_INFO, "Successfully connected to %s at port %i", &address[0], port);
     return true;
 }
+bool ClientSocket::Send(const string& message){
+    size_t message_len = message.length();
+    if (send(m_client_fd, &message[0], message_len, 0) != message_len){
+        syslog(LOG_ERR, "Error on sending message to [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+        return false;
+    }
+    syslog(LOG_DEBUG, "Message sent to [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+    return true;
+}
