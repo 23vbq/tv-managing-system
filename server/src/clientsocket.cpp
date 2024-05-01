@@ -47,16 +47,21 @@ bool ClientSocket::Connect(const string &address, const uint16_t &port){
     m_address.sin_port = htons(port);
     if (inet_pton(AF_INET, &address[0], &m_address.sin_addr) <= 0){
         syslog(LOG_ERR, "Invalid address %s with port %i", &address[0], port);
+        CloseSocket();
         return false;
     }
     if (connect(m_client_fd, (sockaddr*)&m_address, m_addrlen) < 0){
-        syslog(LOG_NOTICE, "Connection failed to %s at port %i", &address[0], port);
+        syslog(LOG_NOTICE, "Connection failed to %s at port %i [%i]", &address[0], port, errno);
+        CloseSocket();
         return false;
     }
     syslog(LOG_INFO, "Successfully connected to %s at port %i", &address[0], port);
     return true;
 }
 bool ClientSocket::Send(const string& message){
+    // Check if socket exists
+    if (m_client_fd < 0)
+        return false;
     size_t message_len = message.length();
     if (send(m_client_fd, &message[0], message_len, 0) != message_len){
         CloseSocket();

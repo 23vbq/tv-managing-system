@@ -25,9 +25,12 @@
 #include "endpointconnection.h"
 #include "endpointmanager.h"
 
-// For testing
+// FIXME is this needed
 #include <chrono>
 #include <thread>
+
+// FIXME test
+#include "clientsocket.h"
 
 const int LOGMASK = _LOGMASK;
 const char* DAEMONNAME = "tmsd";
@@ -70,8 +73,20 @@ int main(int argc, char* argv[]){
     openlog(DAEMONNAME, LOG_CONS | LOG_PID, LOG_USER);
     setlogmask(LOGMASK);
     syslog(LOG_INFO, "Starting server daemon");
+
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
+
+    // FIXME test
+    ClientSocket *cst = new ClientSocket();
+    if(cst->Connect("127.0.0.1", 24321)){
+        cst->Send("TESTING OF CONNECTION");
+        string res;
+        cst->Read(res);
+        printf("%s", &res[0]);
+    }
+    delete cst;
+
     // Initialize EndpointManager
     m_EndpointManager = new EndpointManager((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
     //Initialize AuthManager
@@ -103,6 +118,7 @@ int main(int argc, char* argv[]){
     InitializeCommands();
     // Create ServerSocket
     m_ServerSocket = new ServerSocket(&s_termination, m_serversettings.listeningPort, m_serversettings.maxConnections);
+
     // Main loop
     while (!s_termination)
     {
@@ -122,8 +138,11 @@ int main(int argc, char* argv[]){
         m_AuthManager->Handle();
         this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
     }
+
+    // Program end
     CleanUp();
     syslog(LOG_INFO, "Daemon exited successfully");
+
     return 0;
 }
 
