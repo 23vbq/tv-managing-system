@@ -3,25 +3,47 @@
 // Constructors
 
 ClientSocket::ClientSocket(){
-    // Create client fd
-    if ((m_client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
-        throw "Creating client socket fd failed";
-    }
+    m_client_fd = -2;
     m_address.sin_family = AF_INET;
     m_addrlen = sizeof(m_address);
-    syslog(LOG_INFO, "Successfully created ClientSocket");
 }
 
 ClientSocket::~ClientSocket(){
     syslog(LOG_INFO, "Closing ClientSocket");
-    if (IsConnected())
+    if (m_client_fd > 0)
         Disconnect();
     close(m_client_fd);
+}
+
+// Private functions
+
+void ClientSocket::CreateSocket(){
+    // Create client fd
+    if ((m_client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        throw "Creating client socket fd failed";
+    }
+    syslog(LOG_INFO, "Successfully created ClientSocket socket");
+}
+void ClientSocket::CloseSocket(){
+    close(m_client_fd);
+    m_client_fd = -2;
 }
 
 // Public functions
 
 bool ClientSocket::Connect(const string &address, const uint16_t &port){
+    // Create socket
+    if (m_client_fd < 0){
+        try {
+            CreateSocket();
+        } catch (const char* e){
+            syslog(LOG_ERR, "[ClientSocket] %s", e);
+            syslog(LOG_DEBUG, "Error while connecting to %s at %i", &address[0], port);
+            return false;
+        }
+    }
+    // FIXME handle if already connected
+    // Create connection
     m_address.sin_port = htons(port);
     if (inet_pton(AF_INET, &address[0], &m_address.sin_addr) <= 0){
         syslog(LOG_ERR, "Invalid address %s with port %i", &address[0], port);
@@ -37,6 +59,7 @@ bool ClientSocket::Connect(const string &address, const uint16_t &port){
 bool ClientSocket::Send(const string& message){
     size_t message_len = message.length();
     if (send(m_client_fd, &message[0], message_len, 0) != message_len){
+        CloseSocket();
         syslog(LOG_ERR, "Error on sending message to [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
         return false;
     }
@@ -45,11 +68,21 @@ bool ClientSocket::Send(const string& message){
 }
 bool ClientSocket::Read(string &result){
     if ((m_readsize = read(m_client_fd, m_readbuff, _READBUFF_LEN -1)) < 1){
-        syslog(LOG_ERR, "Error on reading from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
         result = "";
+        CloseSocket();
+        syslog(LOG_ERR, "Error on reading from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
         return false;
     }
     result = string(m_readbuff, m_readsize);
     syslog(LOG_DEBUG, "Successfully read from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
     return true;
 }
+void ClientSocket::Disconnect(){
+    Send("DISCON");
+    CloseSocket();
+}
+/*bool ClientSocket::IsConnected(){
+    int error;
+    getsockopt(m_client_fd, SOL_SOCKET, SO_ERROR, &error, sizeof(int));
+
+}*/

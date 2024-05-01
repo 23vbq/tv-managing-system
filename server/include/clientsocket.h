@@ -20,6 +20,9 @@ private:
 
     char m_readbuff[_READBUFF_LEN];
     size_t m_readsize;
+
+    void CreateSocket();
+    void CloseSocket();
 public:
     ClientSocket();
     ~ClientSocket();
@@ -28,7 +31,7 @@ public:
     bool Send(const string&);
     bool Read(string&);
     void Disconnect();
-    bool IsConnected();
+    //bool IsConnected();
 };
 
 #endif
