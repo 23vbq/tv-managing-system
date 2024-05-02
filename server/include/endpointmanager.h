@@ -35,6 +35,7 @@ private:
      * @throw `const char*` - message [ep == NULL, !out.is_open()]
     */
     void SaveSettingsFile(size_t&, vector<size_t>&);
+    bool ConnectSocket(EndpointConnection*);
 public:
     /**
      * Constructor of endpoint manager
@@ -81,6 +82,9 @@ public:
      * @param settings new settings
     */
     void SetSettings(EndpointSettings*, EndpointSettings&);
+
+    void InitializeEndpointSockets();
+    void SendToAll(const string&);
 };
 
 #endif

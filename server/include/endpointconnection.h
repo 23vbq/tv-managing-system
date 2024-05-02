@@ -2,6 +2,7 @@
 #define ENDPOINT_CONNECTION_H
 
 #include "endpointsettings.h"
+#include "clientsocket.h"
 
 #include <string>
 
@@ -12,6 +13,7 @@ struct EndpointConnection
     string ip;
     unsigned short port;
     EndpointSettings settings;
+    ClientSocket* socket;
 };
 
 #endif

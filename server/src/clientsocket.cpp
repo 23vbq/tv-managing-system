@@ -62,6 +62,8 @@ bool ClientSocket::Send(const string& message){
     // Check if socket exists
     if (m_client_fd < 0)
         return false;
+    // FIXME do not send if is not connected
+    // Send message
     size_t message_len = message.length();
     if (send(m_client_fd, &message[0], message_len, 0) != message_len){
         CloseSocket();

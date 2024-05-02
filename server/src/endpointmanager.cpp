@@ -44,6 +44,9 @@ void EndpointManager::SaveSettingsFile(size_t& iterator, vector<size_t>& deleteL
     out.close();
     deleteList.push_back(iterator);
 }
+bool EndpointManager::ConnectSocket(EndpointConnection *ptr){
+    return ptr->socket->Connect(ptr->ip, ptr->port);
+}
 
 // Public functions
 
@@ -134,4 +137,17 @@ void EndpointManager::SetSettings(EndpointSettings* ptr, EndpointSettings& setti
     m_toSave.push_back(ptr);
     // m_ActionQueue->Add(this, &EndpointManager::SaveSettings, false);
     syslog(LOG_INFO, "Successfully changed settings for endpoint: %s", &ptr->name[0]);
+}
+void EndpointManager::InitializeEndpointSockets(){
+    size_t n = m_data.size();
+    syslog(LOG_DEBUG, "Initializing sockets for endpoints");
+    for (size_t i = 0; i < n; i++){
+        m_data[i].socket = new ClientSocket();
+        ConnectSocket(&m_data[i]);
+    }
+}
+void EndpointManager::SendToAll(const string &message){
+    for (const EndpointConnection& x : m_data){
+        x.socket->Send(message);
+    }
 }

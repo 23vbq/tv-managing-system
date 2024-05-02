@@ -78,14 +78,14 @@ int main(int argc, char* argv[]){
     SignalCallbacks::SetupCallbacks(&s_termination);
 
     // FIXME test
-    ClientSocket *cst = new ClientSocket();
+    /*ClientSocket *cst = new ClientSocket();
     if(cst->Connect("127.0.0.1", 24321)){
         cst->Send("TESTING OF CONNECTION");
         string res;
         cst->Read(res);
         printf("%s", &res[0]);
     }
-    delete cst;
+    delete cst;*/
 
     // Initialize EndpointManager
     m_EndpointManager = new EndpointManager((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
@@ -108,8 +108,10 @@ int main(int argc, char* argv[]){
     // Load endpoints config
     try{
         m_EndpointManager->LoadSettingsData();
+        m_EndpointManager->InitializeEndpointSockets();
+        m_EndpointManager->SendToAll("TEST MESSAGE");
     } catch (const char* ex){
-        syslog(LOG_ERR, "[Exception] %s", ex);
+        syslog(LOG_ERR, "[EndpointManager] %s", ex);
         CleanUp();
         return 1;
     }
