@@ -36,6 +36,7 @@ private:
     */
     void SaveSettingsFile(size_t&, vector<size_t>&);
     bool ConnectSocket(EndpointConnection*);
+    ClientSocket* GetSocket(const string&);
 public:
     /**
      * Constructor of endpoint manager
@@ -85,6 +86,7 @@ public:
 
     void InitializeEndpointSockets();
     void SendToAll(const string&);
+    bool SendToOne(const string&, const string&);
 };
 
 #endif

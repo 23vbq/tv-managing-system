@@ -47,6 +47,13 @@ void EndpointManager::SaveSettingsFile(size_t& iterator, vector<size_t>& deleteL
 bool EndpointManager::ConnectSocket(EndpointConnection *ptr){
     return ptr->socket->Connect(ptr->ip, ptr->port);
 }
+ClientSocket* EndpointManager::GetSocket(const string &name){
+    for (EndpointConnection& x : m_data){
+        if (x.settings.name == name)
+            return x.socket;
+    }
+    return NULL;
+}
 
 // Public functions
 
@@ -150,4 +157,12 @@ void EndpointManager::SendToAll(const string &message){
     for (const EndpointConnection& x : m_data){
         x.socket->Send(message);
     }
+}
+bool EndpointManager::SendToOne(const string &name, const string &message){
+    ClientSocket *ptr = GetSocket(name);
+    if (!ptr) {
+        syslog(LOG_WARNING, "Cannot find socket for endpoint name %s", &name[0]);
+        return false;
+    }
+    return ptr->Send(message);
 }

@@ -109,7 +109,9 @@ int main(int argc, char* argv[]){
     try{
         m_EndpointManager->LoadSettingsData();
         m_EndpointManager->InitializeEndpointSockets();
+        // FIXME test
         m_EndpointManager->SendToAll("TEST MESSAGE");
+        m_EndpointManager->SendToOne("Drugitv", "Drugi tv test");
     } catch (const char* ex){
         syslog(LOG_ERR, "[EndpointManager] %s", ex);
         CleanUp();
