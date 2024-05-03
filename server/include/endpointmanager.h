@@ -35,7 +35,17 @@ private:
      * @throw `const char*` - message [ep == NULL, !out.is_open()]
     */
     void SaveSettingsFile(size_t&, vector<size_t>&);
+
+    /**
+     * Connects EndpointConnection instance socket to
+     * IP and port stored in EndpointConnection
+    */
     bool ConnectSocket(EndpointConnection*);
+    /**
+     * Returns pointer to socket of endpoint
+     * @param name name of endpoint
+     * @return NULL if endpoint not found
+    */
     ClientSocket* GetSocket(const string&);
 public:
     /**
@@ -67,6 +77,7 @@ public:
     /**
      * Returns settings of endpoint
      * @param name name of endpoint
+     * @return NULL if endpoint not found
     */
     EndpointSettings* GetSettings(string&);
     /**
@@ -74,6 +85,7 @@ public:
      * @param ip address of endpoint
      * @param port listening port of endpoint
      * @deprecated Use `GetSettings(string& name)`
+     * @return NULL if endpoint not found
     */
     __attribute__ ((deprecated)) EndpointSettings* GetSettings(string&, unsigned short&);
 
@@ -84,8 +96,21 @@ public:
     */
     void SetSettings(EndpointSettings*, EndpointSettings&);
 
+    /**
+     * Initializes sockets to all endpoints
+    */
     void InitializeEndpointSockets();
+    /**
+     * Sends provided message to all endpoints
+     * @param message data to send
+    */
     void SendToAll(const string&);
+    /**
+     * Sends provided message to one endpoint specified by name
+     * @param name endpoint name to send to
+     * @param message data to send
+     * @return True if message was sent, False if error on sending or can't find socket with name
+    */
     bool SendToOne(const string&, const string&);
 };
 
