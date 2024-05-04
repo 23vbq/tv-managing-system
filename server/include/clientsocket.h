@@ -17,6 +17,7 @@ private:
     int m_client_fd;
     sockaddr_in m_address;
     socklen_t m_addrlen;
+    bool isConnected;
 
     char m_readbuff[_READBUFF_LEN];
     size_t m_readsize;
@@ -31,7 +32,7 @@ public:
     bool Send(const string&);
     bool Read(string&);
     void Disconnect();
-    //bool IsConnected();
+    bool IsConnected();
 };
 
 #endif

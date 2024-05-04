@@ -164,5 +164,9 @@ bool EndpointManager::SendToOne(const string &name, const string &message){
         syslog(LOG_WARNING, "Cannot find socket for endpoint name %s", &name[0]);
         return false;
     }
+    // FIXME test
+    /*int b = -1;
+    b = ptr->IsConnected();
+    b = ptr->IsConnected();*/
     return ptr->Send(message);
 }
