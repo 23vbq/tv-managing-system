@@ -53,7 +53,7 @@ bool ClientSocket::Connect(const string &address, const uint16_t &port){
         return false;
     }
     if (connect(m_client_fd, (sockaddr*)&m_address, m_addrlen) < 0){
-        syslog(LOG_NOTICE, "Connection failed to %s at port %i [%i]", &address[0], port, errno);
+        syslog(LOG_NOTICE, "Connection failed to %s at port %i [Error: %i]", &address[0], port, errno);
         CloseSocket();
         isConnected = false;
         return false;
