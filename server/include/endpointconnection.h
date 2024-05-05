@@ -13,7 +13,7 @@ struct EndpointConnection
     string ip;
     unsigned short port;
     EndpointSettings settings;
-    ClientSocket* socket;
+    ClientSocket* socket = nullptr;
 };
 
 #endif

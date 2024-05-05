@@ -64,24 +64,21 @@ bool ClientSocket::Connect(const string &address, const uint16_t &port){
 }
 bool ClientSocket::Send(const string& message){
     // Check if socket exists
-    if (m_client_fd < 0)
-        return false;
-    // FIXME do not send if is not connected
-    // Send message
-    size_t message_len = message.length();
-    size_t sent_len = 0;
-    try{
-        sent_len = send(m_client_fd, &message[0], message_len, 0);
-    } catch(...){
-        CloseSocket();
-        isConnected = false;
-        syslog(LOG_ERR, "Lost connection with [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+    if (m_client_fd < 0){
+        syslog(LOG_DEBUG, "Cannot send message becouse socket not exists [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
         return false;
     }
-    if (sent_len != message_len){
+    // Handle not connected
+    if (!isConnected){
+        syslog(LOG_DEBUG, "Cannot send message becouse socket is not connected [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+        return false;
+    }
+    // Send message
+    size_t message_len = message.length();
+    if (send(m_client_fd, &message[0], message_len, MSG_NOSIGNAL) != message_len){
         CloseSocket();
         isConnected = false;
-        syslog(LOG_ERR, "Error on sending message to [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
+        syslog(LOG_ERR, "Error %i on sending message to [%s:%i]", errno, inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
         return false;
     }
     syslog(LOG_DEBUG, "Message sent to [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));

@@ -1,6 +1,9 @@
 #ifndef ENDPOINT_MANAGER_H
 #define ENDPOINT_MANAGER_H
 
+#define EP_GLOBAL_IP "GLOBAL"
+#define EP_GLOBAL_PORT 0
+
 #include "endpointconnection.h"
 #include "configloader.h"
 // #include "actionqueue.h"

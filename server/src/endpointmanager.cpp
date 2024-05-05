@@ -13,8 +13,8 @@ EndpointManager::EndpointManager(string configPath){
     m_configPath = configPath;
     // Create global Endpoint Settings
     EndpointConnection global;
-    global.ip = "GLOBAL";
-    global.port = 0;
+    global.ip = EP_GLOBAL_IP;
+    global.port = EP_GLOBAL_PORT;
     global.settings.name = "[Global Settings]";
     m_data.push_back(global);
 }
@@ -149,13 +149,16 @@ void EndpointManager::InitializeEndpointSockets(){
     size_t n = m_data.size();
     syslog(LOG_DEBUG, "Initializing sockets for endpoints");
     for (size_t i = 0; i < n; i++){
+        if (m_data[i].ip == EP_GLOBAL_IP)
+            continue;
         m_data[i].socket = new ClientSocket();
         ConnectSocket(&m_data[i]);
     }
 }
 void EndpointManager::SendToAll(const string &message){
     for (const EndpointConnection& x : m_data){
-        x.socket->Send(message);
+        if (x.socket)
+            x.socket->Send(message);
     }
 }
 bool EndpointManager::SendToOne(const string &name, const string &message){
@@ -164,9 +167,5 @@ bool EndpointManager::SendToOne(const string &name, const string &message){
         syslog(LOG_WARNING, "Cannot find socket for endpoint name %s", &name[0]);
         return false;
     }
-    // FIXME test
-    /*int b = -1;
-    b = ptr->IsConnected();
-    b = ptr->IsConnected();*/
     return ptr->Send(message);
 }
