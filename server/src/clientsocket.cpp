@@ -43,7 +43,12 @@ bool ClientSocket::Connect(const string &address, const uint16_t &port){
             return false;
         }
     }
-    // FIXME handle if already connected
+    // Handle already connected
+    if (isConnected){
+        syslog(LOG_WARNING, "Trying to connect while connected [%s:%i] => [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port) &address[0], port);
+        // FIXME validate connection with send and response
+        return false;
+    }
     // Create connection
     m_address.sin_port = htons(port);
     if (inet_pton(AF_INET, &address[0], &m_address.sin_addr) <= 0){
