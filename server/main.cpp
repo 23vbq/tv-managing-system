@@ -13,17 +13,17 @@
 #include <syslog.h>
 
 #include "signalcallbacks.h"
-#include "configloader.h"
 #include "serversettings.h"
-#include "serversocket.h"
-#include "commandhandler.h"
 #include "commandfunctions.h"
 #include "authmanager.h"
+#include "endpointmanager.h"
 // #include "actionqueue.h"
 
 #include "serializer.h"
+#include "serversocket.h"
+#include "commandhandler.h"
+#include "configloader.h"
 #include "endpointconnection.h"
-#include "endpointmanager.h"
 
 // FIXME is this needed
 #include <chrono>
