@@ -12,7 +12,7 @@ public:
     SettingsManager();
     ~SettingsManager();
 
-    void SetSettings();
+    void SetSettings(const EndpointSettings&);
 };
 
 #endif
