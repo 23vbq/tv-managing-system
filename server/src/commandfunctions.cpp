@@ -9,13 +9,13 @@ extern EndpointManager* m_EndpointManager;
 extern AuthManager* m_AuthManager;
 
 namespace CommandFunctions{
-    void disconnect(vector<string> x, string& output){
+    void disconnect(CF_ARGS){
         syslog(LOG_INFO, "Client requested disconnection");
         int sd = m_CommandHandler->GetCurrentSd();
         m_ServerSocket->Disconnect(sd, "");
         output = ServerSocket::SOCKET_LOOP_IGNORE_SIG;
     }
-    void getEndpointSettingsByName(vector<string> x, string& output){
+    void getEndpointSettingsByName(CF_ARGS){
         output = "";
         string* name = &x[0];
         EndpointSettings* ep = m_EndpointManager->GetSettings(*name);
@@ -29,7 +29,7 @@ namespace CommandFunctions{
         output = sr.Serialize();
         // delete ep;
     }
-    void getEndpointList(vector<string> x, string& output){
+    void getEndpointList(CF_ARGS){
         output = "";
         Serializer sr;
         vector<string>* names = m_EndpointManager->GetNames();
@@ -37,7 +37,7 @@ namespace CommandFunctions{
         output = sr.Serialize();
         delete names;
     }
-    void setEndpointSettings(vector<string> x, string& output){
+    void setEndpointSettings(CF_ARGS){
         output = "";
         EndpointSettings* ep = m_EndpointManager->GetSettings(x[0]);
         if (ep == NULL){
@@ -49,7 +49,7 @@ namespace CommandFunctions{
         EndpointSettings newSettings{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
         m_EndpointManager->SetSettings(ep, newSettings);
     }
-    void authKey(vector<string> x, string& output){
+    void authKey(CF_ARGS){
         int sd = m_CommandHandler->GetCurrentSd();
         string sock_info = m_ServerSocket->GetSocketInfo(sd);
         syslog(LOG_AUTH, "Client auth %s", &sock_info[0]);
@@ -61,10 +61,10 @@ namespace CommandFunctions{
             syslog(LOG_AUTH, "Failure authentication %s", &sock_info[0]);
         }
     }
-    void hello(vector<string> x, string& output){
+    void hello(CF_ARGS){
         output = ServerSocket::SMSG_HELLO;
     }
-    void rtest(vector<string> x, string& output){
+    void rtest(CF_ARGS){
         size_t n = x[0].length();
         output = "";
         for (int i = n - 1; i >= 0; i--)

@@ -1,6 +1,8 @@
 #ifndef COMMAND_FUNCTIONS_H
 #define COMMAND_FUNCTIONS_H
 
+#define CF_ARGS vector<string> x, string& output
+
 #include "serversocket.h"
 #include "commandhandler.h"
 #include "authmanager.h"
@@ -12,14 +14,14 @@
 using namespace std;
 
 namespace CommandFunctions{
-    void disconnect(vector<string> x, string& output); // Disconnect client [no args]
-    void getEndpointSettingsByName(vector<string> x, string& output); // Returns endpoint settings [endpoint name]
-    void getEndpointList(vector<string> x, string& output); // Returns list of endpoints [no args]
-    void setEndpointSettings(vector<string> x, string& output); // Sets settings for endpoint [endpoint name, serialized settings]
-    void authKey(vector<string> x, string& output); // Authenticate user with key
-    void hello(vector<string> x, string& output); // Returns hello message
+    void disconnect(CF_ARGS); // Disconnect client [no args]
+    void getEndpointSettingsByName(CF_ARGS); // Returns endpoint settings [endpoint name]
+    void getEndpointList(CF_ARGS); // Returns list of endpoints [no args]
+    void setEndpointSettings(CF_ARGS); // Sets settings for endpoint [endpoint name, serialized settings]
+    void authKey(CF_ARGS); // Authenticate user with key
+    void hello(CF_ARGS); // Returns hello message
     // TODO Real commands not for testing
-    void rtest(vector<string> x, string& output);
+    void rtest(CF_ARGS);
 }
 
 #endif
