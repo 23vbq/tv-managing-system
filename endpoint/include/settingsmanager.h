@@ -10,7 +10,7 @@ private:
     EndpointSettings m_settings;
 public:
     SettingsManager();
-    ~SettingsManager();
+    //~SettingsManager();
 
     void SetSettings(const EndpointSettings&);
 };
