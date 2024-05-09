@@ -9,6 +9,7 @@ const std::string EndpointManager::SETTINGS_EXTENSION = ".ep";
 // Constructors
 
 EndpointManager::EndpointManager(string configPath){
+    syslog(LOG_INFO, "[EndpointManager] Initializing");
     // Initialize local variables
     m_configPath = configPath;
     // Create global Endpoint Settings
@@ -17,6 +18,13 @@ EndpointManager::EndpointManager(string configPath){
     global.port = EP_GLOBAL_PORT;
     global.settings.name = "[Global Settings]";
     m_data.push_back(global);
+}
+EndpointManager::~EndpointManager(){
+    syslog(LOG_INFO, "[EndpointManager] Closing");
+    for (const EndpointConnection& x : m_data){
+        if (x.socket)
+            delete x.socket;
+    }
 }
 
 // Private functions
@@ -51,6 +59,13 @@ ClientSocket* EndpointManager::GetSocket(const string &name){
     for (EndpointConnection& x : m_data){
         if (x.settings.name == name)
             return x.socket;
+    }
+    return NULL;
+}
+EndpointConnection* EndpointManager::GetEndpoint(const string& name){
+    for (EndpointConnection& x : m_data){
+        if (x.settings.name == name)
+            return &x;
     }
     return NULL;
 }
@@ -142,17 +157,30 @@ void EndpointManager::SetSettings(EndpointSettings* ptr, EndpointSettings& setti
     ptr->dir = settings.dir;
     ptr->showtime = settings.showtime;
     m_toSave.push_back(ptr);
+    m_toUpdate.push_back(GetEndpoint(ptr->name));
     // m_ActionQueue->Add(this, &EndpointManager::SaveSettings, false);
     syslog(LOG_INFO, "Successfully changed settings for endpoint: %s", &ptr->name[0]);
 }
 void EndpointManager::InitializeEndpointSockets(){
+    EndpointConnection* ptr;
     size_t n = m_data.size();
     syslog(LOG_DEBUG, "Initializing sockets for endpoints");
     for (size_t i = 0; i < n; i++){
-        if (m_data[i].ip == EP_GLOBAL_IP)
+        ptr = &(m_data[i]);
+        // Ignore if it is GLOBAL endpoint
+        if (ptr->ip == EP_GLOBAL_IP)
             continue;
-        m_data[i].socket = new ClientSocket();
+        ptr->socket = new ClientSocket();
         ConnectSocket(&m_data[i]);
+        // To do if connected
+        if (ptr->socket && ptr->socket->IsConnected()){
+            // Authenticate // FIXME need to handle if not authenticated (maybe save this information)
+            ptr->socket->Send("AUTHK \2kotki145\3");
+            string r; // FIXME needed to not receive all data in one message
+            ptr->socket->Read(r);
+            // Add endpoint to update
+            m_toUpdate.push_back(ptr);
+        }  
     }
 }
 void EndpointManager::SendToAll(const string &message){
@@ -168,4 +196,25 @@ bool EndpointManager::SendToOne(const string &name, const string &message){
         return false;
     }
     return ptr->Send(message);
+}
+void EndpointManager::SendUpdate(){
+    size_t n = m_toUpdate.size();
+    vector<size_t> delIters;
+    EndpointSettings* settings;
+    for (size_t i = 0; i < n; i++){
+        Serializer sr;
+        settings = &(m_toUpdate[i]->settings);
+        sr.AddValue(settings->name);
+        sr.AddValue<bool>(settings->localcfg);
+        sr.AddValue(settings->dir);
+        sr.AddValue<unsigned int>(settings->showtime);
+        if (m_toUpdate[i]->socket->Send("SETEPSET \2" + sr.Serialize() + "\3")){
+            delIters.push_back(i);
+            string r; // FIXME needed to not receive all data in one message
+            m_toUpdate[i]->socket->Read(r);
+        }
+    }
+    // Clear toUpdate list
+    for (const size_t& i : delIters)
+        m_toUpdate.erase(m_toUpdate.begin() + i);
 }

@@ -6,6 +6,7 @@
 
 #include "endpointconnection.h"
 #include "configloader.h"
+#include "serializer.h"
 // #include "actionqueue.h"
 
 #include <vector>
@@ -20,6 +21,7 @@ public:
 private:
     vector<EndpointConnection> m_data; // Stores loaded endpoints
     vector<EndpointSettings*> m_toSave; // List of pointers to endpoint settings that need to be saved
+    vector<EndpointConnection*> m_toUpdate; // List of pointers to endpoint connection that update need to be sent
 
     string m_configPath; // Path to directory of config files
 
@@ -50,12 +52,19 @@ private:
      * @return NULL if endpoint not found
     */
     ClientSocket* GetSocket(const string&);
+    /**
+     * Returns pointer to endpoint
+     * @param name name of endpoint
+     * @return NULL if endpoint not found
+    */
+    EndpointConnection* GetEndpoint(const string&);
 public:
     /**
      * Constructor of endpoint manager
      * @param configPath path to directory of config files
     */
     EndpointManager(string configPath);
+    ~EndpointManager();
 
     /**
      * Starts saving endpoints settings that was updated, and need to be saved.
@@ -93,14 +102,15 @@ public:
     __attribute__ ((deprecated)) EndpointSettings* GetSettings(string&, unsigned short&);
 
     /**
-     * Changes settings of endpoint. Marks endpoint to save.
+     * Changes settings of endpoint. Marks endpoint to save and update.
      * @param ptr pointer to endpoint to update
      * @param settings new settings
     */
     void SetSettings(EndpointSettings*, EndpointSettings&);
 
     /**
-     * Initializes sockets to all endpoints
+     * Initializes sockets to all endpoints.
+     * Marks all initialized and connected sockets to update.
     */
     void InitializeEndpointSockets();
     /**
@@ -115,6 +125,10 @@ public:
      * @return True if message was sent, False if error on sending or can't find socket with name
     */
     bool SendToOne(const string&, const string&);
+    /**
+     * Sends update to endpoints that are marked to update.
+    */
+    void SendUpdate();
 };
 
 #endif
