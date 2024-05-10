@@ -3,8 +3,8 @@
 CC = g++
 
 MAIN := main.cpp
-SRCS := src/signalcallbacks.cpp src/commandfunctions.cpp src/settingsmanager.cpp
-SHAREDSRC := ../shared/src/serializer.cpp ../shared/src/endpointsettings.cpp ../shared/src/configloader.cpp ../shared/src/config.cpp ../shared/src/serversocket.cpp ../shared/src/authmanager.cpp ../shared/src/commandhandler.cpp
+SRCS := src/commandfunctions.cpp src/settingsmanager.cpp
+SHAREDSRC := ../shared/src/serializer.cpp ../shared/src/endpointsettings.cpp ../shared/src/configloader.cpp ../shared/src/config.cpp ../shared/src/serversocket.cpp ../shared/src/authmanager.cpp ../shared/src/commandhandler.cpp ../shared/src/signalcallbacks.cpp
 OUT := build/tmse
 INCLUDES := -Iinclude -I../shared/include
 
