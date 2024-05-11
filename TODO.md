@@ -46,6 +46,8 @@
     - [ ] Showing endpoint settings
   - [ ] Sending data
 - [ ] Endpoint
+  - [ ] X11
+  - [ ] Wait mode on no connection
 - [ ] Automatic sync
 
 ## Authentication

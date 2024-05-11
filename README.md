@@ -24,12 +24,23 @@ TODO
 
 ## Installation
 TODO
+### Server
+`sudo make clean install`
+
+### Client
+IDK - TODO
+
+### Endpoint
+`sudo make clean install`
+
 
 ## Description
 ### Server
 *Linux*
 
-Server is responsible for managing whole system. It communicates with endpoint to distribute configuration. 
+Server is responsible for managing the entire system. It's main function is to communicate with endpoint to distribute configuration and manage them. The server doesn't hosts any resources (like images). It can be obtained with external solutions (e.g. Samba). Server performs various functions including: processing change requests, providing responses to queries, checking the connection with the endpoints, and ensuring that client is always updated with latest configuration.
+
+Server also provides interface to manage configurations, endpoints and server it self with Client application.
 
 TODO
 
@@ -47,7 +58,9 @@ Endpoint allows to display images on TV (any display connected to machine), usin
 TODO
 
 ## Security
-TODO about authentication and secure connection
+At this point of developement all connections are not secured (in plain text). Also passwords are stored in plain text.
+
+It is planned to implement hashed passwords and SSL secured connections.
 
 ## Contribution
 **ToDo:** [here](TODO.md)
