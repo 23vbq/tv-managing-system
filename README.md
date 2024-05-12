@@ -38,11 +38,13 @@ IDK - TODO
 ### Server
 *Linux*
 
-Server is responsible for managing the entire system. It's main function is to communicate with endpoint to distribute configuration and manage them. The server doesn't hosts any resources (like images). It can be obtained with external solutions (e.g. Samba). Server performs various functions including: processing change requests, providing responses to queries, checking the connection with the endpoints, and ensuring that client is always updated with latest configuration.
+Server is responsible for managing the entire system. It's primary role is to communicate with endpoint to distribute configuration and manage them. The server doesn't hosts any resources (e.g. images, files). These can be obtained with external solutions like Samba. Server performs various functions including: processing change requests, providing responses to queries, checking the connection with the endpoints, and ensuring that client is always updated with latest configuration.
 
 Server also provides interface to manage configurations, endpoints and server it self with Client application.
 
-TODO
+Network functions:
+- Accepts connection from clients and response to their queries
+- Connects to endpoints and sends data to them
 
 ### Client
 *Windows*
