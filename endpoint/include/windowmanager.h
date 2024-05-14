@@ -9,20 +9,22 @@
 
 #include <X11/Xlib.h>
 #include <stdio.h>
-#include <err.h>
+// #include <err.h>
 
 class WindowManager{
 private:
-    Display* dpy;
-    int src;
+    Display* m_display;
+    int m_src;
     
-    Window root;
-    Window win;
+    Window m_rootWnd;
+    Window m_wnd;
+
+    XEvent m_event;
 public:
     WindowManager();
     ~WindowManager();
 
-    void Create();
+    void CreateWindow();
     void Run();
 };
 

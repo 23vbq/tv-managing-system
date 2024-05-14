@@ -11,11 +11,13 @@
 #endif
 
 #include <syslog.h>
+#include <stdio.h>
 
 #include "signalcallbacks.h"
 #include "endpointserversettings.h"
 #include "commandfunctions.h"
 #include "settingsmanager.h"
+#include "windowmanager.h"
 
 #include "configloader.h"
 #include "serversocket.h"
@@ -48,6 +50,8 @@ CommandHandler* m_CommandHandler;
 SettingsManager* m_SettingsManager;
 AuthManager* m_AuthManager;
 
+WindowManager* m_WindowManager;
+
 /*
  * Structs
 */
@@ -63,6 +67,18 @@ int main(int argc, char* argv[]){
     openlog(PROCNAME, LOG_CONS | LOG_PID, LOG_USER);
     setlogmask(LOGMASK);
     syslog(LOG_INFO, "Starting endpoint");
+
+    // FIXME windowmanager test
+    try{
+        m_WindowManager = new WindowManager();
+    } catch(const char *e){
+        syslog(LOG_ERR, "[WindowManager] %s", e);
+        printf("[WindowManager] %s\n", e);
+        CleanUp();
+        exit(1);
+    }
+    m_WindowManager->CreateWindow();
+    m_WindowManager->Run();
 
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
