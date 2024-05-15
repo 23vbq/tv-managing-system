@@ -1,5 +1,8 @@
 #include "windowmanager.h"
 
+// Static members
+bool WindowManager::s_wm_detected = false;
+
 // Constructor
 
 WindowManager::WindowManager(){
@@ -46,8 +49,39 @@ void WindowManager::CreateWindow(){
     XPutImage(m_display, m_wnd, DefaultGC(m_display, m_src), t_img, 0, 0, 0, 0, m_width, m_height);
 }
 void WindowManager::Run(){
-    for (;;){
-        if (XNextEvent(m_display, &m_event) == 0)
-            break;
+    // Initialization
+    s_wm_detected = false;
+    XSetErrorHandler(&WindowManager::OnWMDetected);
+    XSelectInput(m_display,
+        m_rootWnd,
+        SubstructureRedirectMask | SubstructureNotifyMask
+    );
+    XSync(m_display, false);
+    if (s_wm_detected){
+        return;
     }
+    XSetErrorHandler(&WindowManager::OnXError);
+
+    // Main loop
+    for (;;){
+        XNextEvent(m_display, &m_event);
+        
+        switch (m_event.type)
+        {
+        default:
+            break;
+        }
+        /*if (XNextEvent(m_display, &m_event) == 0)
+            break;*/
+    }
+}
+
+// Static functions
+int WindowManager::OnWMDetected(Display *display, XErrorEvent *e){
+    if (e->error_code == BadAccess)
+        WindowManager::s_wm_detected = true;
+    return 0;
+}
+int WindowManager::OnXError(Display *display, XErrorEvent *e){
+    return 0;
 }

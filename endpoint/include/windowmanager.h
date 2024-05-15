@@ -14,6 +14,8 @@
 
 class WindowManager{
 private:
+    static bool s_wm_detected;
+
     Display* m_display;
     int m_src;
     
@@ -27,6 +29,9 @@ private:
     // FIXME test
     unsigned char *t_image32;
     XImage *t_img;
+
+    static int OnXError(Display*, XErrorEvent*);
+    static int OnWMDetected(Display*, XErrorEvent*);
 public:
     WindowManager();
     ~WindowManager();

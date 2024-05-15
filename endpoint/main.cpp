@@ -77,7 +77,7 @@ int main(int argc, char* argv[]){
         CleanUp();
         exit(1);
     }
-    m_WindowManager->CreateWindow();
+    // m_WindowManager->CreateWindow();
     m_WindowManager->Run();
 
     // Create signal handles
