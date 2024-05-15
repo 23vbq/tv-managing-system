@@ -9,6 +9,7 @@
 
 #include <X11/Xlib.h>
 #include <stdio.h>
+#include <cstdlib>
 // #include <err.h>
 
 class WindowManager{
@@ -23,6 +24,9 @@ private:
 
     unsigned int m_width;
     unsigned int m_height;
+    // FIXME test
+    unsigned char *t_image32;
+    XImage *t_img;
 public:
     WindowManager();
     ~WindowManager();
