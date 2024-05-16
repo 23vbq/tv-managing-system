@@ -14,29 +14,38 @@
 
 class WindowManager{
 private:
-    static bool s_wm_detected;
+    static bool s_wm_detected; // Is other WM detected
 
     Display* m_display;
-    int m_src;
+    int m_src;  // Main screen
     
     Window m_rootWnd;
-    Window m_wnd;
+    Window m_wnd; // FIXME for testing probably won't be in use
 
-    XEvent m_event;
+    XEvent m_event; // Buffer for event
 
-    unsigned int m_width;
-    unsigned int m_height;
+    unsigned int m_width; // Width of main screen
+    unsigned int m_height; // Height of main screen
     // FIXME test
     unsigned char *t_image32;
     XImage *t_img;
 
+    /**
+     * Handler for XErrorEvent - all
+    */
     static int OnXError(Display*, XErrorEvent*);
+    /**
+     * Handler for XErrorEvent - detected other WM
+    */
     static int OnWMDetected(Display*, XErrorEvent*);
 public:
     WindowManager();
     ~WindowManager();
 
     void CreateWindow();
+    /**
+     * Start handler for WindowManager
+    */
     void Run();
 };
 
