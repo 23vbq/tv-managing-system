@@ -8,6 +8,7 @@
 #define WM_BORDER 0
 
 #include <X11/Xlib.h>
+#include <unordered_map>
 #include <stdio.h>
 #include <cstdlib>
 // #include <err.h>
@@ -20,6 +21,7 @@ private:
     int m_src;  // Main screen
     
     Window m_rootWnd;
+    std::unordered_map<Window, Window> m_clients;
     Window m_wnd; // FIXME for testing probably won't be in use
 
     XEvent m_event; // Buffer for event
@@ -29,6 +31,14 @@ private:
     // FIXME test
     unsigned char *t_image32;
     XImage *t_img;
+
+    void Frame(Window);
+
+    void OnCreateNotify(const XCreateWindowEvent&);
+    void OnConfigureRequest(const XConfigureRequestEvent&);
+    void OnMapRequest(const XMapRequestEvent&);
+
+    // Static functions
 
     /**
      * Handler for XErrorEvent - all

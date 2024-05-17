@@ -68,6 +68,15 @@ void WindowManager::Run(){
         
         switch (m_event.type)
         {
+        case CreateNotify:
+            OnCreateNotify(m_event.xcreatewindow);
+            break;
+        case ConfigureRequest:
+            OnConfigureRequest(m_event.xconfigurerequest);
+            break;
+        case MapRequest:
+            OnMapRequest(m_event.xmaprequest);
+            break;
         default:
             break;
         }
@@ -76,7 +85,48 @@ void WindowManager::Run(){
     }
 }
 
-// Static functions
+// Private functions
+
+void WindowManager::Frame(Window w){
+    const unsigned int BORDER_WIDTH = 3;
+    const unsigned long BORDER_COLOR = 0xFF0000;
+    const unsigned long BG_COLOR = 0x0000FF;
+    // Get attributes of window
+    XWindowAttributes x_wnd_attr;
+    XGetWindowAttributes(m_display, w, &x_wnd_attr);
+    
+    // Create frame window
+    const Window frame = XCreateSimpleWindow(
+        m_display, m_rootWnd,
+        x_wnd_attr.x, x_wnd_attr.y, x_wnd_attr.width, x_wnd_attr.height,
+        BORDER_WIDTH, BORDER_COLOR, BG_COLOR
+    );
+    XSelectInput(m_display, frame, SubstructureRedirectMask | SubstructureNotifyMask);
+    XAddToSaveSet(m_display, frame);
+    XReparentWindow(m_display, w, frame, 0, 0);
+    XMapWindow(m_display, frame);
+    m_clients[w] = frame;
+}
+
+void WindowManager::OnCreateNotify(const XCreateWindowEvent &e) {}
+void WindowManager::OnConfigureRequest(const XConfigureRequestEvent &e){
+    XWindowChanges changes;
+    changes.x = e.x;
+    changes.y = e.y;
+    changes.width = e.width;
+    changes.height = e.height;
+    changes.border_width = e.border_width;
+    changes.sibling = e.above;
+    changes.stack_mode = e.detail;
+    XConfigureWindow(m_display, e.window, e.value_mask, &changes);
+}
+void WindowManager::OnMapRequest(const XMapRequestEvent &e){
+    Frame(e.window);
+    XMapWindow(m_display, e.window);
+}
+
+// Static private functions
+
 int WindowManager::OnWMDetected(Display *display, XErrorEvent *e){
     if (e->error_code == BadAccess)
         WindowManager::s_wm_detected = true;
