@@ -64,20 +64,28 @@ void WindowManager::Run(){
 
     // Main loop
     for (;;){
+        syslog(LOG_DEBUG, "LOOP");
         XNextEvent(m_display, &m_event);
         
         switch (m_event.type)
         {
         case CreateNotify:
+            syslog(LOG_DEBUG, "CreateNotify");
             OnCreateNotify(m_event.xcreatewindow);
             break;
         case ConfigureRequest:
+            syslog(LOG_DEBUG, "ConfigureRequest");
             OnConfigureRequest(m_event.xconfigurerequest);
             break;
         case MapRequest:
+            syslog(LOG_DEBUG, "MapRequest");
             OnMapRequest(m_event.xmaprequest);
             break;
+        case UnmapNotify:
+            syslog(LOG_DEBUG, "UnmapNotify");
+            OnUnmapNotify(m_event.xunmap);
         default:
+            syslog(LOG_DEBUG, "Ignore");
             break;
         }
         /*if (XNextEvent(m_display, &m_event) == 0)
@@ -107,6 +115,17 @@ void WindowManager::Frame(Window w){
     XMapWindow(m_display, frame);
     m_clients[w] = frame;
 }
+void WindowManager::Unframe(Window w){
+    if (!m_clients.count(w)){
+        syslog(LOG_WARNING, "Window to unframe not found");
+        return;
+    }
+    const Window frame = m_clients[w];
+    XReparentWindow(m_display, w, m_rootWnd, 0, 0);
+    XRemoveFromSaveSet(m_display, frame);
+    XUnmapWindow(m_display, frame);
+    m_clients.erase(w);
+}
 
 void WindowManager::OnCreateNotify(const XCreateWindowEvent &e) {}
 void WindowManager::OnConfigureRequest(const XConfigureRequestEvent &e){
@@ -123,6 +142,13 @@ void WindowManager::OnConfigureRequest(const XConfigureRequestEvent &e){
 void WindowManager::OnMapRequest(const XMapRequestEvent &e){
     Frame(e.window);
     XMapWindow(m_display, e.window);
+}
+void WindowManager::OnUnmapNotify(const XUnmapEvent &e){
+    if (e.event == m_rootWnd){
+        syslog(LOG_INFO, "Ignoring unmapping of root");
+        return;
+    }
+    Unframe(e.window);
 }
 
 // Static private functions

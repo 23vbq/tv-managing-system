@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <stdio.h>
 #include <cstdlib>
+#include <syslog.h>
 // #include <err.h>
 
 class WindowManager{
@@ -33,10 +34,12 @@ private:
     XImage *t_img;
 
     void Frame(Window);
+    void Unframe(Window);
 
     void OnCreateNotify(const XCreateWindowEvent&);
     void OnConfigureRequest(const XConfigureRequestEvent&);
     void OnMapRequest(const XMapRequestEvent&);
+    void OnUnmapNotify(const XUnmapEvent&);
 
     // Static functions
 
