@@ -79,7 +79,9 @@ int main(int argc, char* argv[]){
     }
     // m_WindowManager->CreateWindow();
     m_WindowManager->Run();
-
+    delete m_WindowManager;
+    syslog(LOG_ERR, "Dobrze");
+    exit(1);
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
 

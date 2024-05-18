@@ -1,4 +1,5 @@
 #include "windowmanager.h"
+#include <X11/Xutil.h>
 
 // Static members
 bool WindowManager::s_wm_detected = false;
@@ -32,8 +33,13 @@ WindowManager::WindowManager(){
     t_img = XCreateImage(m_display, DefaultVisual(m_display, m_src), DefaultDepth(m_display, m_src), ZPixmap, 0, (char*)t_image32, m_width, m_height, 32, 0);
 }
 WindowManager::~WindowManager(){
-    XUnmapWindow(m_display, m_wnd);
-    XDestroyWindow(m_display, m_wnd);
+    auto clients = m_clients;
+    for (auto it = clients.begin(); it != clients.end(); it++){
+        XUnmapWindow(m_display, it->first);
+        Unframe(it->first);
+        XDestroyWindow(m_display, it->first);
+        // TODO bezpieczne zamknięcie okienka
+    }
     XCloseDisplay(m_display);
 }
 
@@ -62,8 +68,9 @@ void WindowManager::Run(){
     }
     XSetErrorHandler(&WindowManager::OnXError);
 
+    m_eventloop = true;
     // Main loop
-    for (;;){
+    while (m_eventloop){
         syslog(LOG_DEBUG, "LOOP");
         XNextEvent(m_display, &m_event);
         
@@ -84,12 +91,13 @@ void WindowManager::Run(){
         case UnmapNotify:
             syslog(LOG_DEBUG, "UnmapNotify");
             OnUnmapNotify(m_event.xunmap);
+        case KeyPress:
+            syslog(LOG_DEBUG, "KeyPress");
+            OnKeyPress(m_event.xkey);
         default:
             syslog(LOG_DEBUG, "Ignore");
             break;
         }
-        /*if (XNextEvent(m_display, &m_event) == 0)
-            break;*/
     }
 }
 
@@ -114,6 +122,15 @@ void WindowManager::Frame(Window w){
     XReparentWindow(m_display, w, frame, 0, 0);
     XMapWindow(m_display, frame);
     m_clients[w] = frame;
+    XGrabKey(
+        m_display,
+        XKeysymToKeycode(m_display, XK_Q),
+        Mod1Mask,
+        w,
+        false,
+        GrabModeAsync,
+        GrabModeAsync
+    );
 }
 void WindowManager::Unframe(Window w){
     if (!m_clients.count(w)){
@@ -149,6 +166,13 @@ void WindowManager::OnUnmapNotify(const XUnmapEvent &e){
         return;
     }
     Unframe(e.window);
+}
+void WindowManager::OnKeyPress(const XKeyEvent &e){
+    // Exit if ALT+Q
+    if (e.state == Mod1Mask &&
+        e.keycode == XKeysymToKeycode(m_display, XK_Q)){
+            m_eventloop = false;
+        }
 }
 
 // Static private functions

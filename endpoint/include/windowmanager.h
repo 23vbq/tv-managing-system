@@ -25,6 +25,7 @@ private:
     std::unordered_map<Window, Window> m_clients;
     Window m_wnd; // FIXME for testing probably won't be in use
 
+    bool m_eventloop;
     XEvent m_event; // Buffer for event
 
     unsigned int m_width; // Width of main screen
@@ -40,6 +41,7 @@ private:
     void OnConfigureRequest(const XConfigureRequestEvent&);
     void OnMapRequest(const XMapRequestEvent&);
     void OnUnmapNotify(const XUnmapEvent&);
+    void OnKeyPress(const XKeyEvent&);
 
     // Static functions
 
