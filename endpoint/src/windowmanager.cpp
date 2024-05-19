@@ -125,7 +125,7 @@ void WindowManager::Frame(Window w){
         BORDER_WIDTH, BORDER_COLOR, BG_COLOR
     );
     XSelectInput(m_display, frame, SubstructureRedirectMask | SubstructureNotifyMask);
-    XAddToSaveSet(m_display, frame);
+    XAddToSaveSet(m_display, w);
     XReparentWindow(m_display, w, frame, 0, 0);
     XMapWindow(m_display, frame);
     m_clients[w] = frame;
@@ -155,7 +155,7 @@ void WindowManager::Unframe(Window w){
     }
     const Window frame = m_clients[w];
     XReparentWindow(m_display, w, m_rootWnd, 0, 0);
-    XRemoveFromSaveSet(m_display, frame);
+    XRemoveFromSaveSet(m_display, w);
     XUnmapWindow(m_display, frame);
     m_clients.erase(w);
 }
@@ -195,6 +195,7 @@ void WindowManager::OnConfigureRequest(const XConfigureRequestEvent &e){
 void WindowManager::OnMapRequest(const XMapRequestEvent &e){
     Frame(e.window);
     XMapWindow(m_display, e.window);
+    XSetInputFocus(m_display, e.window, RevertToPointerRoot, CurrentTime);
 }
 void WindowManager::OnUnmapNotify(const XUnmapEvent &e){
     if (e.event == m_rootWnd){
@@ -209,11 +210,14 @@ void WindowManager::OnKeyPress(const XKeyEvent &e){
         // Exit WM on ALT + Q
         if (e.keycode == XKeysymToKeycode(m_display, XK_Q)){
             m_eventloop = false;
+            return;
         }
         // Close window on ALT + F4
         if (e.keycode == XKeysymToKeycode(m_display, XK_F4)){
             Close(e.window);
+            return;
         }
+        return;
     }  
 }
 
