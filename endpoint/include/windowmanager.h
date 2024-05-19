@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <stdio.h>
 #include <cstdlib>
+#include <algorithm>
+#include <cstring>
 #include <syslog.h>
 // #include <err.h>
 
@@ -34,8 +36,13 @@ private:
     unsigned char *t_image32;
     XImage *t_img;
 
+    // Construct
+
+    Display* OpenDisplay();
+
     void Frame(Window);
     void Unframe(Window);
+    void Close(Window);
 
     void OnCreateNotify(const XCreateWindowEvent&);
     void OnConfigureRequest(const XConfigureRequestEvent&);
@@ -53,6 +60,10 @@ private:
      * Handler for XErrorEvent - detected other WM
     */
     static int OnWMDetected(Display*, XErrorEvent*);
+
+    // Atom const
+    const Atom WM_PROTOCOLS;
+    const Atom WM_DELETE_WINDOW;
 public:
     WindowManager();
     ~WindowManager();

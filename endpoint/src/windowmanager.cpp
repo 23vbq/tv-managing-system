@@ -6,14 +6,13 @@ bool WindowManager::s_wm_detected = false;
 
 // Constructor
 
-WindowManager::WindowManager(){
-    // Open display
-    m_display = XOpenDisplay(NULL);
-    if (m_display == NULL)
-        throw "Cannot open display";
-    // Get default screen and root window
-    m_src = DefaultScreen(m_display);
-    m_rootWnd = RootWindow(m_display, m_src);
+WindowManager::WindowManager()
+    : m_display(OpenDisplay()),
+      m_src(DefaultScreen(m_display)),
+      m_rootWnd(RootWindow(m_display, m_src)),
+      WM_PROTOCOLS(XInternAtom(m_display, "WM_PROTOCOLS", false)),
+      WM_DELETE_WINDOW(XInternAtom(m_display, "WM_DELETE_WINDOW", false))
+{
     // Initialize width, height
     m_width = WidthOfScreen(ScreenOfDisplay(m_display, m_src));
     m_height = HeightOfScreen(ScreenOfDisplay(m_display, m_src));
@@ -37,10 +36,18 @@ WindowManager::~WindowManager(){
     for (auto it = clients.begin(); it != clients.end(); it++){
         XUnmapWindow(m_display, it->first);
         Unframe(it->first);
-        XDestroyWindow(m_display, it->first);
+        Close(it->first);
+        // XDestroyWindow(m_display, it->first);
         // TODO bezpieczne zamknięcie okienka
     }
     XCloseDisplay(m_display);
+}
+
+Display* WindowManager::OpenDisplay(){
+    Display* dpy = XOpenDisplay(NULL);
+    if (dpy == NULL)
+        throw "Cannot open display";
+    return dpy;
 }
 
 // Public functions
@@ -131,6 +138,15 @@ void WindowManager::Frame(Window w){
         GrabModeAsync,
         GrabModeAsync
     );
+    XGrabKey(
+        m_display,
+        XKeysymToKeycode(m_display, XK_F4),
+        Mod1Mask,
+        w,
+        false,
+        GrabModeAsync,
+        GrabModeAsync
+    );
 }
 void WindowManager::Unframe(Window w){
     if (!m_clients.count(w)){
@@ -142,6 +158,26 @@ void WindowManager::Unframe(Window w){
     XRemoveFromSaveSet(m_display, frame);
     XUnmapWindow(m_display, frame);
     m_clients.erase(w);
+}
+void WindowManager::Close(Window w){
+    Atom* supported_prot;
+    int n_supported_prot;
+    if (XGetWMProtocols(m_display, w, &supported_prot, &n_supported_prot) &&
+        std::find(supported_prot, supported_prot + n_supported_prot, WM_DELETE_WINDOW) != supported_prot + n_supported_prot){
+            syslog(LOG_INFO, "Deleting window %i", w);
+            // Constructing message
+            XEvent msg;
+            memset(&msg, 0, sizeof(msg));
+            msg.xclient.type = ClientMessage;
+            msg.xclient.message_type = WM_PROTOCOLS;
+            msg.xclient.window = w;
+            msg.xclient.format = 32;
+            msg.xclient.data.l[0] = WM_DELETE_WINDOW;
+            XSendEvent(m_display, w, false, 0, &msg);
+    } else {
+        syslog(LOG_INFO, "Killing window %i", w);
+        XKillClient(m_display, w);
+    }
 }
 
 void WindowManager::OnCreateNotify(const XCreateWindowEvent &e) {}
@@ -168,11 +204,17 @@ void WindowManager::OnUnmapNotify(const XUnmapEvent &e){
     Unframe(e.window);
 }
 void WindowManager::OnKeyPress(const XKeyEvent &e){
-    // Exit if ALT+Q
-    if (e.state == Mod1Mask &&
-        e.keycode == XKeysymToKeycode(m_display, XK_Q)){
+    // Alt handler
+    if (e.state == Mod1Mask){
+        // Exit WM on ALT + Q
+        if (e.keycode == XKeysymToKeycode(m_display, XK_Q)){
             m_eventloop = false;
         }
+        // Close window on ALT + F4
+        if (e.keycode == XKeysymToKeycode(m_display, XK_F4)){
+            Close(e.window);
+        }
+    }  
 }
 
 // Static private functions
