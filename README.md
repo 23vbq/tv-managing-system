@@ -67,4 +67,4 @@ It is planned to implement hashed passwords and SSL secured connections.
 ## Contribution
 **ToDo:** [here](TODO.md)
 
-> **SEGFAULT COUNTER**: 6
+> **SEGFAULT COUNTER**: 7

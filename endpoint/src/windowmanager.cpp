@@ -50,17 +50,8 @@ Display* WindowManager::OpenDisplay(){
     return dpy;
 }
 
-// Public functions
+// Main loop (Run) function
 
-void WindowManager::CreateWindow(){
-    m_wnd = XCreateSimpleWindow(m_display, m_rootWnd,
-        WM_POSX, WM_POSY, m_width, m_height, WM_BORDER,
-        BlackPixel(m_display, m_src), WhitePixel(m_display, m_src)
-    );
-    XMapWindow(m_display, m_wnd);
-    // FIXME test
-    XPutImage(m_display, m_wnd, DefaultGC(m_display, m_src), t_img, 0, 0, 0, 0, m_width, m_height);
-}
 void WindowManager::Run(){
     // Initialization
     s_wm_detected = false;
@@ -129,6 +120,8 @@ void WindowManager::Frame(Window w){
     XReparentWindow(m_display, w, frame, 0, 0);
     XMapWindow(m_display, frame);
     m_clients[w] = frame;
+    m_wnds.push_back(w);
+    m_currentWnd = m_wnds.end();
     XGrabKey(
         m_display,
         XKeysymToKeycode(m_display, XK_Q),
@@ -147,6 +140,15 @@ void WindowManager::Frame(Window w){
         GrabModeAsync,
         GrabModeAsync
     );
+    XGrabKey(
+        m_display,
+        XKeysymToKeycode(m_display, XK_Tab),
+        Mod1Mask,
+        w,
+        false,
+        GrabModeAsync,
+        GrabModeAsync
+    );
 }
 void WindowManager::Unframe(Window w){
     if (!m_clients.count(w)){
@@ -159,6 +161,7 @@ void WindowManager::Unframe(Window w){
     XUnmapWindow(m_display, frame);
     XDestroyWindow(m_display, frame);
     m_clients.erase(w);
+    m_wnds.erase(w);
 }
 void WindowManager::Close(Window w){
     Atom* supported_prot;
@@ -218,8 +221,33 @@ void WindowManager::OnKeyPress(const XKeyEvent &e){
             Close(e.window);
             return;
         }
+        // FIXME For testing
+        if (e.keycode == XKeysymToKeycode(m_display, XK_Tab)){
+            NextWindow();
+            return;
+        }
         return;
     }  
+}
+
+// Public functions
+
+void WindowManager::CreateWindow(){
+    m_wnd = XCreateSimpleWindow(m_display, m_rootWnd,
+        WM_POSX, WM_POSY, m_width, m_height, WM_BORDER,
+        BlackPixel(m_display, m_src), WhitePixel(m_display, m_src)
+    );
+    XMapWindow(m_display, m_wnd);
+    // FIXME test
+    XPutImage(m_display, m_wnd, DefaultGC(m_display, m_src), t_img, 0, 0, 0, 0, m_width, m_height);
+}
+void WindowManager::NextWindow(){
+    if (m_currentWnd != m_wnds.end())
+        m_currentWnd++;
+    else
+        m_currentWnd = m_wnds.begin();
+    XRaiseWindow(m_display, m_clients[*m_currentWnd]);
+    XSetInputFocus(m_display, *m_currentWnd, RevertToPointerRoot, CurrentTime);
 }
 
 // Static private functions

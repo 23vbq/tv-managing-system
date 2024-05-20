@@ -9,6 +9,7 @@
 
 #include <X11/Xlib.h>
 #include <unordered_map>
+#include <vector>
 #include <stdio.h>
 #include <cstdlib>
 #include <algorithm>
@@ -25,6 +26,8 @@ private:
     
     Window m_rootWnd;
     std::unordered_map<Window, Window> m_clients;
+    std::vector<Window> m_wnds;
+    std::vector<Window>::iterator m_currentWnd;
     Window m_wnd; // FIXME for testing probably won't be in use
 
     bool m_eventloop;
@@ -62,17 +65,20 @@ private:
     static int OnWMDetected(Display*, XErrorEvent*);
 
     // Atom const
+
     const Atom WM_PROTOCOLS;
     const Atom WM_DELETE_WINDOW;
 public:
     WindowManager();
     ~WindowManager();
 
+    // FIXME TEST
     void CreateWindow();
     /**
-     * Start handler for WindowManager
+     * Start handler for WindowManager. Main event loop.
     */
     void Run();
+    void NextWindow();
 };
 
 #endif
