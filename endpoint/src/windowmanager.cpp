@@ -157,6 +157,7 @@ void WindowManager::Unframe(Window w){
     XReparentWindow(m_display, w, m_rootWnd, 0, 0);
     XRemoveFromSaveSet(m_display, w);
     XUnmapWindow(m_display, frame);
+    XDestroyWindow(m_display, frame);
     m_clients.erase(w);
 }
 void WindowManager::Close(Window w){
