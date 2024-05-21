@@ -89,8 +89,6 @@ void WindowManager::Run(){
 // Private functions
 
 void WindowManager::Frame(Window w){
-    const unsigned int BORDER_WIDTH = 3;
-    const unsigned long BORDER_COLOR = 0xFF0000;
     const unsigned long BG_COLOR = 0x0000FF;
     // Get attributes of window
     XWindowAttributes x_wnd_attr;
@@ -100,7 +98,7 @@ void WindowManager::Frame(Window w){
     const Window frame = XCreateSimpleWindow(
         m_display, m_rootWnd,
         x_wnd_attr.x, x_wnd_attr.y, x_wnd_attr.width, x_wnd_attr.height,
-        BORDER_WIDTH, BORDER_COLOR, BG_COLOR
+        WM_BORDER, 0, BG_COLOR
     );
     XSelectInput(m_display, frame, SubstructureRedirectMask | SubstructureNotifyMask);
     XAddToSaveSet(m_display, w);
@@ -181,11 +179,11 @@ void WindowManager::Close(Window w){
 void WindowManager::OnCreateNotify(const XCreateWindowEvent &e) {}
 void WindowManager::OnConfigureRequest(const XConfigureRequestEvent &e){
     XWindowChanges changes;
-    changes.x = e.x;
-    changes.y = e.y;
-    changes.width = e.width;
-    changes.height = e.height;
-    changes.border_width = e.border_width;
+    changes.x = WM_POSX;
+    changes.y = WM_POSY;
+    changes.width = m_width;
+    changes.height = m_height;
+    changes.border_width = WM_BORDER;
     changes.sibling = e.above;
     changes.stack_mode = e.detail;
     XConfigureWindow(m_display, e.window, e.value_mask, &changes);

@@ -136,6 +136,7 @@ void InitializeCommands(){
 }
 void CleanUp(){
     SignalCallbacks::RevertCallbacks();
+    delete m_WindowManager;
     delete m_ServerSocket;
     delete m_CommandHandler;
     delete m_SettingsManager;
