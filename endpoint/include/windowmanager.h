@@ -28,7 +28,7 @@ private:
     std::unordered_map<Window, Window> m_clients;
     std::vector<Window> m_wnds;
     std::vector<Window>::iterator m_currentWnd;
-    Window m_wnd; // FIXME for testing probably won't be in use
+    // Window m_wnd; // FIXME for testing probably won't be in use
 
     bool m_eventloop;
     XEvent m_event; // Buffer for event
@@ -73,7 +73,7 @@ public:
     ~WindowManager();
 
     // FIXME TEST
-    void CreateWindow();
+    // void CreateWindow();
     /**
      * Start handler for WindowManager. Main event loop.
     */

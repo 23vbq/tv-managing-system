@@ -17,7 +17,7 @@ WindowManager::WindowManager()
     m_width = WidthOfScreen(ScreenOfDisplay(m_display, m_src));
     m_height = HeightOfScreen(ScreenOfDisplay(m_display, m_src));
     // FIXME test
-    t_image32 = (unsigned char*)calloc(m_width*m_height, sizeof(char) * 4);
+    /*t_image32 = (unsigned char*)calloc(m_width*m_height, sizeof(char) * 4);
     unsigned char *p = t_image32;
     double hw = m_height / 0xFF;
     double ww = m_width / 0xFF;
@@ -28,8 +28,11 @@ WindowManager::WindowManager()
             *p++ = j / ww;
             *p++ = 0;
         }
-    }
-    t_img = XCreateImage(m_display, DefaultVisual(m_display, m_src), DefaultDepth(m_display, m_src), ZPixmap, 0, (char*)t_image32, m_width, m_height, 32, 0);
+    }*/
+    m_wnds.clear();
+    syslog(LOG_INFO, "Created [Display: %i, Src: %i, Root: %i]", m_display, m_src, m_rootWnd);
+    syslog(LOG_INFO, "Determined resolution [W: %i, H: %i]", m_width, m_height);
+    // t_img = XCreateImage(m_display, DefaultVisual(m_display, m_src), DefaultDepth(m_display, m_src), ZPixmap, 0, (char*)t_image32, m_width, m_height, 32, 0);
 }
 WindowManager::~WindowManager(){
     auto clients = m_clients;
@@ -121,7 +124,8 @@ void WindowManager::Frame(Window w){
     XMapWindow(m_display, frame);
     m_clients[w] = frame;
     m_wnds.push_back(w);
-    m_currentWnd = m_wnds.end();
+    m_currentWnd = m_wnds.end() - 1;
+    syslog(LOG_DEBUG, "Framed: %i", w);
     XGrabKey(
         m_display,
         XKeysymToKeycode(m_display, XK_Q),
@@ -161,7 +165,13 @@ void WindowManager::Unframe(Window w){
     XUnmapWindow(m_display, frame);
     XDestroyWindow(m_display, frame);
     m_clients.erase(w);
-    m_wnds.erase(w);
+    size_t n = m_wnds.size();
+    for (size_t i = 0; i < n; i++){
+        if (m_wnds[i] == w){
+            m_wnds.erase(m_wnds.begin() + i);
+            break;
+        }
+    }
 }
 void WindowManager::Close(Window w){
     Atom* supported_prot;
@@ -232,7 +242,7 @@ void WindowManager::OnKeyPress(const XKeyEvent &e){
 
 // Public functions
 
-void WindowManager::CreateWindow(){
+/*void WindowManager::CreateWindow(){
     m_wnd = XCreateSimpleWindow(m_display, m_rootWnd,
         WM_POSX, WM_POSY, m_width, m_height, WM_BORDER,
         BlackPixel(m_display, m_src), WhitePixel(m_display, m_src)
@@ -240,14 +250,16 @@ void WindowManager::CreateWindow(){
     XMapWindow(m_display, m_wnd);
     // FIXME test
     XPutImage(m_display, m_wnd, DefaultGC(m_display, m_src), t_img, 0, 0, 0, 0, m_width, m_height);
-}
+}*/
 void WindowManager::NextWindow(){
-    if (m_currentWnd != m_wnds.end())
-        m_currentWnd++;
-    else
+    if (++m_currentWnd == m_wnds.end())
         m_currentWnd = m_wnds.begin();
+    /*for (auto it = m_wnds.begin(); it != m_wnds.end(); it++){
+
+    }*/
     XRaiseWindow(m_display, m_clients[*m_currentWnd]);
     XSetInputFocus(m_display, *m_currentWnd, RevertToPointerRoot, CurrentTime);
+    syslog(LOG_INFO, "Raised %i", *m_currentWnd);
 }
 
 // Static private functions
