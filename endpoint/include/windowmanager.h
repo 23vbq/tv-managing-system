@@ -28,16 +28,12 @@ private:
     std::unordered_map<Window, Window> m_clients;
     std::vector<Window> m_wnds;
     std::vector<Window>::iterator m_currentWnd;
-    // Window m_wnd; // FIXME for testing probably won't be in use
 
     bool m_eventloop;
     XEvent m_event; // Buffer for event
 
     unsigned int m_width; // Width of main screen
     unsigned int m_height; // Height of main screen
-    // FIXME test
-    unsigned char *t_image32;
-    XImage *t_img;
 
     // Construct
 
@@ -72,12 +68,13 @@ public:
     WindowManager();
     ~WindowManager();
 
-    // FIXME TEST
-    // void CreateWindow();
     /**
      * Start handler for WindowManager. Main event loop.
     */
     void Run();
+    /**
+     * Switches to next window (raises next window)
+    */
     void NextWindow();
 };
 
