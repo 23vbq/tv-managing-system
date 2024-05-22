@@ -17,6 +17,16 @@ WindowManager::WindowManager()
     m_width = WidthOfScreen(ScreenOfDisplay(m_display, m_src));
     m_height = HeightOfScreen(ScreenOfDisplay(m_display, m_src));
 
+    XGrabKey(
+        m_display,
+        XKeysymToKeycode(m_display, XK_Q),
+        Mod1Mask,
+        m_rootWnd,
+        false,
+        GrabModeAsync,
+        GrabModeAsync
+    );
+
     syslog(LOG_INFO, "Created [Display: %i, Src: %i, Root: %i]", m_display, m_src, m_rootWnd);
     syslog(LOG_INFO, "Determined resolution [W: %i, H: %i]", m_width, m_height);
 }
