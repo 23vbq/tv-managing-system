@@ -60,6 +60,7 @@ EndpointServerSettings m_endpointserversettings;
 using namespace std;
 
 void LoadServerConfig();
+void ServerLoopThread();
 void InitializeCommands();
 void CleanUp();
 
@@ -67,6 +68,9 @@ int main(int argc, char* argv[]){
     openlog(PROCNAME, LOG_CONS | LOG_PID, LOG_USER);
     setlogmask(LOGMASK);
     syslog(LOG_INFO, "Starting endpoint");
+
+    // Create signal handles
+    SignalCallbacks::SetupCallbacks(&s_termination);
 
     // Initialize WM
     try{
@@ -81,12 +85,6 @@ int main(int argc, char* argv[]){
         m_WindowManager->Run();
     });
     wm_thread.detach();
-    // FIXME WM test
-    /*delete m_WindowManager;
-    syslog(LOG_ERR, "Dobrze");
-    exit(1);*/
-    // Create signal handles
-    SignalCallbacks::SetupCallbacks(&s_termination);
 
     // Load config
     LoadServerConfig();
@@ -100,12 +98,35 @@ int main(int argc, char* argv[]){
     }
     // Initialize settings manager
     m_SettingsManager = new SettingsManager();
+
     // Initialize commands
     m_CommandHandler = new CommandHandler;
     InitializeCommands();
     // Initialize server socket
     m_ServerSocket = new ServerSocket(&s_termination, m_endpointserversettings.listeningPort, 1);
+    thread srv_thread(ServerLoopThread);
+    srv_thread.detach();
 
+    while(!s_termination){
+        this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
+    }
+
+    // Stop WM
+    m_WindowManager->StopEventLoop();
+    wm_thread.join();
+
+    // Wait for server loop stop
+    srv_thread.join();
+
+    CleanUp();
+    return 0;
+}
+void LoadServerConfig(){
+    ConfigLoader cfgl = ConfigLoader((string) CONFIG_PATH + CONFIG_SETTINGS_FILE);
+    cfgl.Load();
+    cfgl.GetProperty<unsigned short>("ListeningPort", m_endpointserversettings.listeningPort);
+}
+void ServerLoopThread(){
     // Main loop
     while(!s_termination){
          m_ServerSocket->Handle([](char msg[], int n, int sd) -> string {
@@ -121,18 +142,6 @@ int main(int argc, char* argv[]){
         });
         this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
     }
-
-    // Stop WM
-    m_WindowManager->StopEventLoop();
-    wm_thread.join();
-
-    CleanUp();
-    return 0;
-}
-void LoadServerConfig(){
-    ConfigLoader cfgl = ConfigLoader((string) CONFIG_PATH + CONFIG_SETTINGS_FILE);
-    cfgl.Load();
-    cfgl.GetProperty<unsigned short>("ListeningPort", m_endpointserversettings.listeningPort);
 }
 void InitializeCommands(){
     m_CommandHandler->AddCommand("HELLO", Command{0, CommandFunctions::hello, false});
