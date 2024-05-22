@@ -244,6 +244,9 @@ void WindowManager::NextWindow(){
     XSetInputFocus(m_display, *m_currentWnd, RevertToPointerRoot, CurrentTime);
     syslog(LOG_INFO, "Raised %i", *m_currentWnd);
 }
+void WindowManager::StopEventLoop(){
+    m_eventloop = false;
+}
 
 // Static private functions
 

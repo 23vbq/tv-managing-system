@@ -76,6 +76,7 @@ public:
      * Switches to next window (raises next window)
     */
     void NextWindow();
+    void StopEventLoop();
 };
 
 #endif

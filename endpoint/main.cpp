@@ -68,7 +68,7 @@ int main(int argc, char* argv[]){
     setlogmask(LOGMASK);
     syslog(LOG_INFO, "Starting endpoint");
 
-    // FIXME windowmanager test
+    // Initialize WM
     try{
         m_WindowManager = new WindowManager();
     } catch(const char *e){
@@ -77,11 +77,14 @@ int main(int argc, char* argv[]){
         CleanUp();
         exit(1);
     }
-    // m_WindowManager->CreateWindow();
-    m_WindowManager->Run();
-    delete m_WindowManager;
+    thread wm_thread([](){
+        m_WindowManager->Run();
+    });
+    wm_thread.detach();
+    // FIXME WM test
+    /*delete m_WindowManager;
     syslog(LOG_ERR, "Dobrze");
-    exit(1);
+    exit(1);*/
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
 
@@ -118,6 +121,10 @@ int main(int argc, char* argv[]){
         });
         this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
     }
+
+    // Stop WM
+    m_WindowManager->StopEventLoop();
+    wm_thread.join();
 
     CleanUp();
     return 0;
