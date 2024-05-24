@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 #include <filesystem>
 #include <syslog.h>
 
@@ -11,11 +12,14 @@ namespace fs = std::filesystem;
 class SlideshowManager{
 private:
     static const std::string s_openProg;
+    static const std::set<std::string> s_extensions;
 
     std::vector<std::string> m_paths;
+    
 public:
-    void GetFilesInPath(const std::string&);
-    void OpenImage(const int&);
+    bool GetFilesInPath(const std::string&);
+    // void OpenImage(const int&);
+    void OpenAllImages();
 };
 
 #endif

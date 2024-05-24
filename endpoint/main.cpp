@@ -17,6 +17,7 @@
 #include "endpointserversettings.h"
 #include "commandfunctions.h"
 #include "settingsmanager.h"
+#include "slideshowmanager.h"
 #include "windowmanager.h"
 
 #include "configloader.h"
@@ -47,10 +48,12 @@ static bool s_termination = false;
 */
 ServerSocket* m_ServerSocket;
 CommandHandler* m_CommandHandler;
-SettingsManager* m_SettingsManager;
 AuthManager* m_AuthManager;
 
+SettingsManager* m_SettingsManager;
+
 WindowManager* m_WindowManager;
+SlideshowManager* m_SlideshowManager;
 
 /*
  * Structs
@@ -71,6 +74,12 @@ int main(int argc, char* argv[]){
 
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
+
+    // FIXME slideshow test
+    m_SlideshowManager = new SlideshowManager();
+    m_SlideshowManager->GetFilesInPath("/home/_vbq");
+    delete m_SlideshowManager;
+    exit(1);
 
     // Initialize WM
     try{
