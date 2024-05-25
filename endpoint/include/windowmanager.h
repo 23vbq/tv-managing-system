@@ -21,27 +21,45 @@ class WindowManager{
 private:
     static bool s_wm_detected; // Is other WM detected
 
-    Display* m_display;
+    Display* m_display; // Display
     int m_src;  // Main screen
     
-    Window m_rootWnd;
-    std::unordered_map<Window, Window> m_clients;
-    std::vector<Window> m_wnds;
-    std::vector<Window>::iterator m_currentWnd;
+    Window m_rootWnd; // Root window
+    std::unordered_map<Window, Window> m_clients; // Map of: window -> frame
+    std::vector<Window> m_wnds; // List of windows to cycle with NextWindow
+    std::vector<Window>::iterator m_currentWnd; // Current selected window from windows list
 
-    bool m_eventloop;
+    bool m_eventloop; // Event loop - while based
     XEvent m_event; // Buffer for event
 
     unsigned int m_width; // Width of main screen
     unsigned int m_height; // Height of main screen
 
-    // Construct
-
+    /**
+     * Opens x11 display.
+     * Function required for constructor.
+    */
     Display* OpenDisplay();
 
+    /**
+     * Frames window, maps keys handling and sets required variables
+     * @param w window to frame
+    */
     void Frame(Window);
+    /**
+     * Unframes window and removes from m_clients and m_wnds
+     * @param w window to unframe
+    */
     void Unframe(Window);
+    /**
+     * Closes window. Sents request to close if is supported, else kills window
+     * @param w window to close
+    */
     void Close(Window);
+
+    /**
+     * Events
+    */
 
     void OnCreateNotify(const XCreateWindowEvent&);
     void OnConfigureRequest(const XConfigureRequestEvent&);
@@ -60,7 +78,9 @@ private:
     */
     static int OnWMDetected(Display*, XErrorEvent*);
 
-    // Atom const
+    /**
+     * Atom const
+    */
 
     const Atom WM_PROTOCOLS;
     const Atom WM_DELETE_WINDOW;
@@ -73,9 +93,12 @@ public:
     */
     void Run();
     /**
-     * Switches to next window (raises next window)
+     * Switches to next window (raises next window to top)
     */
     void NextWindow();
+    /**
+     * Stops event loop
+    */
     void StopEventLoop();
 };
 
