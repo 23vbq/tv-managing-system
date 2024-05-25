@@ -2,7 +2,9 @@
 #include <X11/Xutil.h>
 
 // Static members
+
 bool WindowManager::s_wm_detected = false;
+const unsigned long WindowManager::BG_COLOR = 0x0000FF;
 
 // Constructor
 
@@ -99,7 +101,6 @@ void WindowManager::Run(){
 // Private functions
 
 void WindowManager::Frame(Window w){
-    const unsigned long BG_COLOR = 0x0000FF;
     // Get attributes of window
     XWindowAttributes x_wnd_attr;
     XGetWindowAttributes(m_display, w, &x_wnd_attr);
@@ -151,11 +152,17 @@ void WindowManager::Unframe(Window w){
         syslog(LOG_WARNING, "Window to unframe not found");
         return;
     }
+    // FIXME need to be tested
+    // Switch to next window
+    if (w == *m_currentWnd)
+        NextWindow();
+    // Unframing
     const Window frame = m_clients[w];
     XReparentWindow(m_display, w, m_rootWnd, 0, 0);
     XRemoveFromSaveSet(m_display, w);
     XUnmapWindow(m_display, frame);
     XDestroyWindow(m_display, frame);
+    // Remove from lists / maps
     m_clients.erase(w);
     size_t n = m_wnds.size();
     for (size_t i = 0; i < n; i++){

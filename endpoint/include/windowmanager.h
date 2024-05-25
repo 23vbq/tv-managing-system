@@ -20,6 +20,7 @@
 class WindowManager{
 private:
     static bool s_wm_detected; // Is other WM detected
+    static const unsigned long BG_COLOR;
 
     Display* m_display; // Display
     int m_src;  // Main screen
