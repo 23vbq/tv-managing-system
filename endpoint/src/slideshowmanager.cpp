@@ -6,6 +6,16 @@ const std::set<std::string> SlideshowManager::s_extensions = {
     ".png"
 };
 
+// Private functions
+
+void SlideshowManager::ExtensionToLower(std::string &extension){
+    int n = extension.length();
+    for (int i = 0; i < n; i++){
+        if (extension[i] >= 'A' && extension[i] <= 'Z')
+            extension[i] += 32; 
+    }
+}
+
 // Public functions
 
 bool SlideshowManager::GetFilesInPath(const std::string &path){
@@ -17,6 +27,7 @@ bool SlideshowManager::GetFilesInPath(const std::string &path){
         if (x.is_directory())
             continue;
         std::string extenstion = x.path().extension();
+        ExtensionToLower(extenstion);
         if (s_extensions.find(extenstion) == s_extensions.end())
             continue;
         m_paths.push_back(x.path());

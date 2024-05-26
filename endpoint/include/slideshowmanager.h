@@ -15,6 +15,8 @@ private:
     static const std::set<std::string> s_extensions;
 
     std::vector<std::string> m_paths;
+
+    void ExtensionToLower(std::string&);
     
 public:
     bool GetFilesInPath(const std::string&);
