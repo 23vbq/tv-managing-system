@@ -15,6 +15,8 @@ WindowManager::WindowManager()
       WM_PROTOCOLS(XInternAtom(m_display, "WM_PROTOCOLS", false)),
       WM_DELETE_WINDOW(XInternAtom(m_display, "WM_DELETE_WINDOW", false))
 {
+    ptr_s_termination = nullptr;
+
     // Initialize width, height
     m_width = WidthOfScreen(ScreenOfDisplay(m_display, m_src));
     m_height = HeightOfScreen(ScreenOfDisplay(m_display, m_src));
@@ -223,6 +225,8 @@ void WindowManager::OnKeyPress(const XKeyEvent &e){
         // Exit WM on ALT + Q
         if (e.keycode == XKeysymToKeycode(m_display, XK_Q)){
             m_eventloop = false;
+            if (ptr_s_termination != nullptr)
+                *ptr_s_termination = true;
             return;
         }
         // Close window on ALT + F4
@@ -240,6 +244,10 @@ void WindowManager::OnKeyPress(const XKeyEvent &e){
 }
 
 // Public functions
+
+void WindowManager::SetPtrSTermination(bool *termination){
+    ptr_s_termination = termination;
+}
 
 void WindowManager::NextWindow(){
     if (++m_currentWnd == m_wnds.end())

@@ -22,6 +22,8 @@ private:
     static bool s_wm_detected; // Is other WM detected
     static const unsigned long BG_COLOR;
 
+    bool *ptr_s_termination;
+
     Display* m_display; // Display
     int m_src;  // Main screen
     
@@ -88,6 +90,8 @@ private:
 public:
     WindowManager();
     ~WindowManager();
+
+    void SetPtrSTermination(bool*);
 
     /**
      * Start handler for WindowManager. Main event loop.

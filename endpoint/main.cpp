@@ -75,15 +75,10 @@ int main(int argc, char* argv[]){
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
 
-    // FIXME slideshow test
-    m_SlideshowManager = new SlideshowManager();
-    m_SlideshowManager->GetFilesInPath("/home/_vbq");
-    delete m_SlideshowManager;
-    exit(1);
-
     // Initialize WM
     try{
         m_WindowManager = new WindowManager();
+        m_WindowManager->SetPtrSTermination(&s_termination);
     } catch(const char *e){
         syslog(LOG_ERR, "[WindowManager] %s", e);
         printf("[WindowManager] %s\n", e);
@@ -94,6 +89,11 @@ int main(int argc, char* argv[]){
         m_WindowManager->Run();
     });
     wm_thread.detach();
+
+    // FIXME slideshow test
+    m_SlideshowManager = new SlideshowManager();
+    m_SlideshowManager->GetFilesInPath("/home/_vbq");
+    m_SlideshowManager->OpenAllImages();
 
     // Load config
     LoadServerConfig();
@@ -161,7 +161,9 @@ void InitializeCommands(){
 }
 void CleanUp(){
     SignalCallbacks::RevertCallbacks();
+    delete m_SlideshowManager;
     delete m_WindowManager;
+
     delete m_ServerSocket;
     delete m_CommandHandler;
     delete m_SettingsManager;
