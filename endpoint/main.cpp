@@ -85,11 +85,12 @@ int main(int argc, char* argv[]){
         CleanUp();
         exit(1);
     }
-    thread wm_thread([](){
-        m_WindowManager->Run();
-    });
+
+    // Setup WM thread
+    thread wm_thread(&WindowManager::Run, m_WindowManager);
     wm_thread.detach();
 
+    // Timer
     time_t timer_now;
     time_t timer_last;
     time_t timer_delta;
@@ -121,15 +122,14 @@ int main(int argc, char* argv[]){
     thread srv_thread(ServerLoopThread);
     srv_thread.detach();
     
+    // Timer loop
     timer_last = time(NULL);
     while(!s_termination){
         timer_now = time(NULL);
         timer_delta = timer_now - timer_last;
         timer_next_window -= timer_delta;
-        // syslog(LOG_DEBUG, "%i", timer_next_window);
         if (timer_next_window <= 0){
             m_WindowManager->NextWindow();
-            // m_WindowManager->Update();
             timer_next_window = 10;
         }
         timer_last = timer_now;
@@ -138,10 +138,12 @@ int main(int argc, char* argv[]){
 
     // Stop WM
     m_WindowManager->StopEventLoop();
-    wm_thread.join();
+    if (wm_thread.joinable())
+        wm_thread.join();
 
     // Wait for server loop stop
-    srv_thread.join();
+    if (srv_thread.joinable())
+        srv_thread.join();
 
     CleanUp();
     return 0;

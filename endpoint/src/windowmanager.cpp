@@ -42,6 +42,7 @@ WindowManager::~WindowManager(){
         Close(it->first);
     }
     XCloseDisplay(m_display);
+    syslog(LOG_INFO, "Closed WindowManager successfully");
 }
 
 Display* WindowManager::OpenDisplay(){
