@@ -90,6 +90,11 @@ int main(int argc, char* argv[]){
     });
     wm_thread.detach();
 
+    time_t timer_now;
+    time_t timer_last;
+    time_t timer_delta;
+    time_t timer_next_window = 10;
+
     // FIXME slideshow test
     m_SlideshowManager = new SlideshowManager();
     m_SlideshowManager->GetFilesInPath("/home/_vbq");
@@ -115,8 +120,19 @@ int main(int argc, char* argv[]){
     m_ServerSocket = new ServerSocket(&s_termination, m_endpointserversettings.listeningPort, 1);
     thread srv_thread(ServerLoopThread);
     srv_thread.detach();
-
+    
+    timer_last = time(NULL);
     while(!s_termination){
+        timer_now = time(NULL);
+        timer_delta = timer_now - timer_last;
+        timer_next_window -= timer_delta;
+        // syslog(LOG_DEBUG, "%i", timer_next_window);
+        if (timer_next_window <= 0){
+            m_WindowManager->NextWindow();
+            // m_WindowManager->Update();
+            timer_next_window = 10;
+        }
+        timer_last = timer_now;
         this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
     }
 
