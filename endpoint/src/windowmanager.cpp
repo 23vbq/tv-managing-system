@@ -263,12 +263,6 @@ void WindowManager::NextWindow(){
 void WindowManager::StopEventLoop(){
     m_eventloop = false;
 }
-void WindowManager::Update(){
-    /*XEvent event;
-    memset(&event, 0, sizeof(XKeyEvent));
-    XSendEvent(m_display, m_rootWnd, false, 0, &event);*/
-    XSync(m_display, 0);
-}
 
 // Static private functions
 
