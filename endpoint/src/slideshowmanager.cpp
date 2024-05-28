@@ -23,9 +23,9 @@ void SlideshowManager::ExtensionToLower(std::string &extension){
 
 bool SlideshowManager::GetFilesInPath(const std::string &path){
     int n = 0;
+    m_paths.clear();
     if (!fs::exists(path))
         return false;
-    m_paths.clear();
     for (const auto &x : fs::directory_iterator(path)){
         if (x.is_directory())
             continue;
