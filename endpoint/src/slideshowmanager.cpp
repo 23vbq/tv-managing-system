@@ -1,4 +1,7 @@
 #include "slideshowmanager.h"
+#include "windowmanager.h"
+
+extern WindowManager* m_WindowManager;
 
 const std::string SlideshowManager::s_openProg = "feh -Y -Z";
 const std::set<std::string> SlideshowManager::s_extensions = {
@@ -40,4 +43,9 @@ void SlideshowManager::OpenAllImages(){
     for (const auto &path : m_paths){
         system(&(s_openProg + ' ' + path + " &")[0]);
     }
+}
+void SlideshowManager::ReloadImages(const std::string &path){
+    GetFilesInPath(path);
+    m_WindowManager->CloseAllWindows();
+    OpenAllImages();
 }

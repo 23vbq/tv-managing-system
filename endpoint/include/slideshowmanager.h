@@ -22,6 +22,7 @@ public:
     bool GetFilesInPath(const std::string&);
     // void OpenImage(const int&);
     void OpenAllImages();
+    void ReloadImages(const std::string &);
 };
 
 #endif

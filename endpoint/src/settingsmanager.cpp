@@ -8,6 +8,9 @@ SettingsManager::SettingsManager(){
 
 // Public functions
 
+EndpointSettings SettingsManager::GetSettings(){
+    return m_settings;
+}
 void SettingsManager::SetSettings(const EndpointSettings &settings){
     m_settings = settings;
 }
