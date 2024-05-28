@@ -105,6 +105,7 @@ public:
      * Stops event loop
     */
     void StopEventLoop();
+    void CloseAllWindows();
 };
 
 #endif

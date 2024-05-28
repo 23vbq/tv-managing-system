@@ -31,16 +31,13 @@ WindowManager::WindowManager()
         GrabModeAsync
     );
 
+    m_currentWnd = m_wnds.begin();
+
     syslog(LOG_INFO, "Created [Display: %i, Src: %i, Root: %i]", m_display, m_src, m_rootWnd);
     syslog(LOG_INFO, "Determined resolution [W: %i, H: %i]", m_width, m_height);
 }
 WindowManager::~WindowManager(){
-    auto clients = m_clients;
-    for (auto it = clients.begin(); it != clients.end(); it++){
-        XUnmapWindow(m_display, it->first);
-        Unframe(it->first);
-        Close(it->first);
-    }
+    CloseAllWindows();
     XCloseDisplay(m_display);
     syslog(LOG_INFO, "Closed WindowManager successfully");
 }
@@ -167,6 +164,7 @@ void WindowManager::Unframe(Window w){
     XDestroyWindow(m_display, frame);
     // Remove from lists / maps
     m_clients.erase(w);
+    m_currentWnd--;
     size_t n = m_wnds.size();
     for (size_t i = 0; i < n; i++){
         if (m_wnds[i] == w){
@@ -251,18 +249,29 @@ void WindowManager::SetPtrSTermination(bool *termination){
 }
 
 void WindowManager::NextWindow(){
+    // Ignore if vector is empty
+    if (m_currentWnd == m_wnds.end())
+        return;
+    // Iteration
     if (++m_currentWnd == m_wnds.end())
         m_currentWnd = m_wnds.begin();
-    /*for (auto it = m_wnds.begin(); it != m_wnds.end(); it++){
-
-    }*/
+    // Raise window
     XRaiseWindow(m_display, m_clients[*m_currentWnd]);
     XSetInputFocus(m_display, *m_currentWnd, RevertToPointerRoot, CurrentTime);
     syslog(LOG_INFO, "Raised %i", *m_currentWnd);
+    // Synchronize display (to make changes visible)
     XSync(m_display, 0);
 }
 void WindowManager::StopEventLoop(){
     m_eventloop = false;
+}
+void WindowManager::CloseAllWindows(){
+    auto clients = m_clients;
+    for (auto it = clients.begin(); it != clients.end(); it++){
+        XUnmapWindow(m_display, it->first);
+        Unframe(it->first);
+        Close(it->first);
+    }
 }
 
 // Static private functions
