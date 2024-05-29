@@ -170,17 +170,24 @@ void EndpointManager::InitializeEndpointSockets(){
         // Ignore if it is GLOBAL endpoint
         if (ptr->ip == EP_GLOBAL_IP)
             continue;
-        ptr->socket = new ClientSocket();
-        ConnectSocket(&m_data[i]);
-        // To do if connected
-        if (ptr->socket && ptr->socket->IsConnected()){
-            // Authenticate // FIXME need to handle if not authenticated (maybe save this information)
-            ptr->socket->Send("AUTHK \2kotki145\3");
-            string r; // FIXME needed to not receive all data in one message
-            ptr->socket->Read(r);
-            // Add endpoint to update
-            m_toUpdate.push_back(ptr);
-        }  
+
+        // Create client socket
+        if (ptr->socket == NULL)
+            ptr->socket = new ClientSocket();
+        // Connect if not connected
+        if (!ptr->socket->IsConnected()){
+            ConnectSocket(ptr);
+            // If successfully connected
+            if (ptr->socket && ptr->socket->IsConnected()){
+                // Authenticate // FIXME need to handle if not authenticated (maybe save this information)
+                ptr->socket->Send("AUTHK \2kotki145\3");
+                string r; // FIXME needed to not receive all data in one message
+                ptr->socket->Read(r);
+                // Add endpoint to update
+                m_toUpdate.push_back(ptr);
+                syslog(LOG_WARNING, "Successfully connected to endpoint");
+            }
+        }
     }
 }
 void EndpointManager::SendToAll(const string &message){

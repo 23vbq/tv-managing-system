@@ -109,12 +109,12 @@ int main(int argc, char* argv[]){
     try{
         m_EndpointManager->LoadSettingsData();
         m_EndpointManager->InitializeEndpointSockets();
+        m_EndpointManager->SendUpdate();
     } catch (const char* ex){
         syslog(LOG_ERR, "[EndpointManager] %s", ex);
         CleanUp();
         return 1;
     }
-    m_EndpointManager->SendUpdate();
     // Initialize commands
     m_CommandHandler = new CommandHandler;
     InitializeCommands();
@@ -137,6 +137,7 @@ int main(int argc, char* argv[]){
             return CommandHandler::CMD_BAD;
         });
         m_EndpointManager->SaveSettings();
+        m_EndpointManager->InitializeEndpointSockets();
         m_EndpointManager->SendUpdate();
         m_AuthManager->Handle();
         this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
