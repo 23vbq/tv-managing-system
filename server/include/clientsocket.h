@@ -52,7 +52,7 @@ public:
      * @param result variable to store read data
      * @return True if successfully read data
     */
-    bool Read(string&);
+    bool Read(string*);
     /**
      * Sends disconnect message to server and closes socket
     */

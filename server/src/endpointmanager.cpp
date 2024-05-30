@@ -176,13 +176,15 @@ void EndpointManager::InitializeEndpointSockets(){
             ptr->socket = new ClientSocket();
         // Connect if not connected
         if (!ptr->socket->IsConnected()){
+            string r;
             ConnectSocket(ptr);
             // If successfully connected
             if (ptr->socket && ptr->socket->IsConnected()){
-                // Authenticate // FIXME need to handle if not authenticated (maybe save this information)
+                ptr->socket->Read(&r); // Read HELLO
+                // Authenticate
                 ptr->socket->Send("AUTHK \2kotki145\3");
-                string r; // FIXME needed to not receive all data in one message
-                ptr->socket->Read(r);
+                ptr->socket->Read(&r); // Read AUTH
+                syslog(LOG_ERR, "SRV %s", &r[0]);
                 // Add endpoint to update
                 m_toUpdate.push_back(ptr);
                 syslog(LOG_WARNING, "Successfully connected to endpoint");
@@ -192,8 +194,10 @@ void EndpointManager::InitializeEndpointSockets(){
 }
 void EndpointManager::SendToAll(const string &message){
     for (const EndpointConnection& x : m_data){
-        if (x.socket)
-            x.socket->Send(message);
+        if (x.socket == NULL || !x.socket->IsConnected())
+            continue;
+        x.socket->Send(message);
+        x.socket->Read(NULL);
     }
 }
 bool EndpointManager::SendToOne(const string &name, const string &message){
@@ -218,7 +222,7 @@ void EndpointManager::SendUpdate(){
         if (m_toUpdate[i]->socket->Send("SETEPSET \2" + sr.Serialize() + "\3")){
             delIters.push_back(i);
             string r; // FIXME needed to not receive all data in one message
-            m_toUpdate[i]->socket->Read(r);
+            m_toUpdate[i]->socket->Read(&r);
         }
     }
     // Clear toUpdate list

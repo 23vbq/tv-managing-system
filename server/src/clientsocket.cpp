@@ -23,6 +23,16 @@ void ClientSocket::CreateSocket(){
     if ((m_client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         throw "Creating client socket fd failed";
     }
+    struct timeval t;
+    t.tv_sec = 5;
+    t.tv_usec = 0;
+    setsockopt(
+        m_client_fd,
+        SOL_SOCKET,
+        SO_RCVTIMEO,
+        (const void *)(&t),
+        sizeof(t)
+    );
     syslog(LOG_INFO, "Successfully created ClientSocket socket");
 }
 void ClientSocket::CloseSocket(){
@@ -89,15 +99,17 @@ bool ClientSocket::Send(const string& message){
     syslog(LOG_DEBUG, "Message sent to [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
     return true;
 }
-bool ClientSocket::Read(string &result){
+bool ClientSocket::Read(string *result){
     if ((m_readsize = read(m_client_fd, m_readbuff, _READBUFF_LEN -1)) < 1){
-        result = "";
+        if (result)
+            *result = "";
         isConnected = false;
         CloseSocket();
         syslog(LOG_ERR, "Error on reading from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
         return false;
     }
-    result = string(m_readbuff, m_readsize);
+    if (result)
+        *result = string(m_readbuff, m_readsize);
     syslog(LOG_DEBUG, "Successfully read from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
     return true;
 }
