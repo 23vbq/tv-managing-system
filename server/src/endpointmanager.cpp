@@ -200,13 +200,18 @@ void EndpointManager::SendToAll(const string &message){
         x.socket->Read(NULL);
     }
 }
-bool EndpointManager::SendToOne(const string &name, const string &message){
+bool EndpointManager::SendToOne(const string &name, const string &message, string *result){
     ClientSocket *ptr = GetSocket(name);
     if (!ptr) {
         syslog(LOG_WARNING, "Cannot find socket for endpoint name %s", &name[0]);
         return false;
     }
-    return ptr->Send(message);
+    bool ret = (ptr->Send(message) && ptr->Read(result));
+    if (!ret)
+        return ret;
+    if (result->find("OK\r\n") != string::npos)
+        *result = result->substr(4);
+    return ret;
 }
 void EndpointManager::SendUpdate(){
     size_t n = m_toUpdate.size();

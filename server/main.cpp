@@ -165,11 +165,11 @@ void LoadServerConfig(){
 }
 void InitializeCommands(){
     m_CommandHandler->AddCommand("HELLO", Command{0, CommandFunctions::hello, false});
-    m_CommandHandler->AddCommand("REV", Command{1, CommandFunctions::rtest, true});
     m_CommandHandler->AddCommand("DISCON", Command{0, CommandFunctions::disconnect, true});
     m_CommandHandler->AddCommand("GETEPSET", Command{1, CommandFunctions::getEndpointSettingsByName, true});
     m_CommandHandler->AddCommand("GETEPLS", Command{0, CommandFunctions::getEndpointList, true});
     m_CommandHandler->AddCommand("SETEPSET", Command{2, CommandFunctions::setEndpointSettings, true});
+    m_CommandHandler->AddCommand("PING", Command{1, CommandFunctions::ping, true});
     m_CommandHandler->AddCommand("AUTHK", Command{1, CommandFunctions::authKey, false});
 }
 void CleanUp(){

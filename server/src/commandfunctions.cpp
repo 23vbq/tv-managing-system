@@ -49,6 +49,12 @@ namespace CommandFunctions{
         EndpointSettings newSettings{sr.DeserializeNext(), sr.DeserializeNext<bool>(), sr.DeserializeNext(), sr.DeserializeNext<unsigned int>()};
         m_EndpointManager->SetSettings(ep, newSettings);
     }
+    void ping(CF_ARGS){
+        output = "";
+        if (!m_EndpointManager->SendToOne(x[0], "PING", &output)){
+            output = "BAD";
+        }
+    }
     void authKey(CF_ARGS){
         int sd = m_CommandHandler->GetCurrentSd();
         string sock_info = m_ServerSocket->GetSocketInfo(sd);
@@ -63,11 +69,5 @@ namespace CommandFunctions{
     }
     void hello(CF_ARGS){
         output = ServerSocket::SMSG_HELLO;
-    }
-    void rtest(CF_ARGS){
-        size_t n = x[0].length();
-        output = "";
-        for (int i = n - 1; i >= 0; i--)
-            output += x[0][i];
     }
 }

@@ -122,9 +122,10 @@ public:
      * Sends provided message to one endpoint specified by name
      * @param name endpoint name to send to
      * @param message data to send
+     * @param result pointer to result string (pass NULL if not require result)
      * @return True if message was sent, False if error on sending or can't find socket with name
     */
-    bool SendToOne(const string&, const string&);
+    bool SendToOne(const string&, const string&, string*);
     /**
      * Sends update to endpoints that are marked to update.
     */
