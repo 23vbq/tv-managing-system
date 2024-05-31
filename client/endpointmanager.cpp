@@ -44,6 +44,18 @@ bool EndpointManager::SaveEndpointSettings(){
         return false;
     return true;
 }
+bool EndpointManager::Ping(const std::string &name){
+    if (!m_ClientSocket->IsConnected())
+        return false;
+    m_ClientSocket->Send("PING \2" + name + "\3");
+    std::string result;
+    if (!m_ClientSocket->Read(result) || result.rfind("OK\r\n", 0)){
+        return false;
+    }
+    if (result.rfind("BAD") != std::string::npos)
+        return false;
+    return true;
+}
 void EndpointManager::SetLocalCfg(const bool& value){
     m_settings.localcfg = value;
 }

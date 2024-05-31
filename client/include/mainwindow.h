@@ -42,6 +42,7 @@ private:
 
     void LoadEndpointListView(std::string&);
     void LoadEndpointSettings();
+    void LoadEndpointInfo();
     void ClearEndpointSettings();
     void SaveEndpointSettings();
 

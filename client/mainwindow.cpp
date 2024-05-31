@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // ListWidget signals
     connect(ui->endpointListWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::LoadEndpointSettings);
+    connect(ui->endpointListWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::LoadEndpointInfo);
 
     // cw = new ConnectWindow(this);
     // cw->show();
@@ -116,6 +117,14 @@ void MainWindow::LoadEndpointSettings(){
     ui->epDirLineEdit->setText(QString::fromStdString(ep.dir));
     ui->epShowtimeSpinBox->setValue(ep.showtime);
     ui->epSettings->setEnabled(true);
+}
+void MainWindow::LoadEndpointInfo(){
+    std::string name = ui->endpointListWidget->currentIndex().data().toString().toStdString();
+    bool connected = m_EndpointManager->Ping(name);
+    ui->epInfoConIcon->setPixmap(QPixmap( connected ?
+        ":/icon/connection/img/icon/connection/green.png" :
+        ":/icon/connection/img/icon/connection/red.png"
+    ));
 }
 void MainWindow::ClearEndpointSettings(){
     ui->epNameLabel->setText("");

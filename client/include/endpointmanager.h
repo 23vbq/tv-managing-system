@@ -13,6 +13,8 @@ public:
     bool GetEndpointSettings(std::string&, EndpointSettings&);
     bool SaveEndpointSettings();
 
+    bool Ping(const std::string&);
+
     void SetLocalCfg(const bool&);
     void SetDir(const std::string&);
     void SetShowtime(const unsigned int&);
