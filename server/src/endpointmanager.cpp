@@ -184,7 +184,6 @@ void EndpointManager::InitializeEndpointSockets(){
                 // Authenticate
                 ptr->socket->Send("AUTHK \2kotki145\3");
                 ptr->socket->Read(&r); // Read AUTH
-                syslog(LOG_ERR, "SRV %s", &r[0]);
                 // Add endpoint to update
                 m_toUpdate.push_back(ptr);
                 syslog(LOG_WARNING, "Successfully connected to endpoint");

@@ -158,7 +158,6 @@ void ServerLoopThread(){
     while(!s_termination){
          m_ServerSocket->Handle([](char msg[], int n, int sd) -> string {
             string s(msg, n);
-            syslog(LOG_ERR, "Err %s", msg);
             int h = m_CommandHandler->Handle(s, sd);
             if (h == CMD_H_VALID){
                 return CommandHandler::CMD_VALID + m_CommandHandler->GetOutput() + "\r\n";
