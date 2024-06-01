@@ -121,6 +121,8 @@ int main(int argc, char* argv[]){
     // Create ServerSocket
     m_ServerSocket = new ServerSocket(&s_termination, m_serversettings.listeningPort, m_serversettings.maxConnections);
 
+    syslog(LOG_INFO, "Initialization completed successfully");
+
     // Main loop
     while (!s_termination)
     {

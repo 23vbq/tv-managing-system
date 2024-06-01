@@ -1,0 +1,16 @@
+# Server settings
+ListeningPort = 5555
+MaxConnections = 5
+# List of endpoints
+Endpoints = [
+    {
+        Name = Test1
+        Ip = 192.168.0.222
+        Port = 34321
+    }
+    {
+        Name = Test2
+        Ip = 192.168.0.223
+        Port = 24321
+    }
+]
