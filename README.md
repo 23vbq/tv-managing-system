@@ -42,7 +42,7 @@ To disable daemon just stop service. Ex:
 systemctl stop tmsd
 ```
 
-*Server do not require any external libraries*
+**Server do not require any external libraries**
 
 ### Client
 IDK - TODO
@@ -88,10 +88,14 @@ Server uses two files for it's configuration:
 - [authkey](server/authkey.def) - to store authentication key for server *(now it is stored in plain text - [read here](#security)])*
 
 File `settings.cfg` stores configuration of basic server socket settings and also list of endpoints, that server needs to connect to.
-You need to add your endpoints here:
-> **Name** - unique name of endpoint
-> **Ip** - address of endpoint
-> **Port** - port on that endpoint is listening
+<details>
+<summary>You need to add your endpoints here.</summary>
+>>>
+**Name** - unique name of endpoint
+**Ip** - address of endpoint
+**Port** - port on that endpoint is listening
+>>>
+</details>
 
 In `authkey` you only need to store your server password (in plain text), that will need be required for clients to connect.
 
@@ -99,7 +103,8 @@ Configuration of each endpoint is stored in `/etc/tmsd/epconf/` and is automatic
 By default endpoint configuration is empty [struct](shared/include/endpointsettings.h).
 Global endpoint configuration is stored in file named `[Global Settings].ep`.
 
-**Names of endpoint configurations are created from their names, so name definied in `settings.cfg` must be unique**
+> [!IMPORTANT]
+> **Names of endpoint configurations are created from their names, so name definied in `settings.cfg` must be unique**
 
 ### Client
 At this point client do not store any settings. Maybe in future it will be able to save IP, certificates etc.
@@ -110,7 +115,7 @@ Default settings are stored in def files in repo and are copied to desired locat
 
 Endpoint uses two files for it's configuration:
 - [settings.cfg](endpoint/setting.cfg.def) - to store basic server socket settings
-- [authkey](endpoint/authkey.def) - to store authentication key for server *(now it is stored in plain text - [read here](#security)])* **NOW IS UNUSED - wait for update**
+- [authkey](endpoint/authkey.def) - to store authentication key for server *(now it is stored in plain text - [read here](#security))* **NOW IS UNUSED - wait for update**
 
 Endpoint do not store major configuration (meaning directory to lookup for images, etc.).
 It is provided by server when connection occurs. It prevents endpoint from loading old configuration.
