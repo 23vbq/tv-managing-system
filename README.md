@@ -23,7 +23,6 @@ Very important is that, this system is opensource, so you can customize it how y
 TODO
 
 ## 📦 Installation
-TODO
 ### Server
 To install server daemon just run below command in repo directory:
 ```
@@ -89,12 +88,15 @@ Server uses two files for it's configuration:
 
 File `settings.cfg` stores configuration of basic server socket settings and also list of endpoints, that server needs to connect to.
 <details>
+
 <summary>You need to add your endpoints here.</summary>
+
 >>>
 **Name** - unique name of endpoint
 **Ip** - address of endpoint
 **Port** - port on that endpoint is listening
 >>>
+
 </details>
 
 In `authkey` you only need to store your server password (in plain text), that will need be required for clients to connect.
