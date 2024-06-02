@@ -23,7 +23,7 @@ debug: builddir
 	chmod 777 ${OUT}
 
 install: tmsd defaults
-	@echo "[#] Copying binaries"
+	@echo "[#] Copying binaries and service"
 	cp ${OUT} /usr/bin
 	cp tmsd.service /etc/systemd/system
 

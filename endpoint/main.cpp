@@ -35,7 +35,7 @@ const char* PROCNAME = "tmse";
  * Config
 */
 const char* CONFIG_PATH = _CONFIG_PATH;
-const char* CONFIG_SETTINGS_FILE = "serversocket.cfg"; // Inside CONFIG_PATH
+const char* CONFIG_SETTINGS_FILE = "settings.cfg"; // Inside CONFIG_PATH
 const char* CONFIG_AUTHKEY_FILE = "authkey"; // Inside CONFIG_PATH
 
 /*
