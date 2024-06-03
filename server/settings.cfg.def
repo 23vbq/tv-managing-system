@@ -7,10 +7,12 @@ Endpoints = [
         Name = Test1
         Ip = 192.168.0.222
         Port = 34321
+        AuthKey = EndpointPassword321
     }
     {
         Name = Test2
         Ip = 192.168.0.223
         Port = 24321
+        AuthKey = EndpointPassword123
     }
 ]

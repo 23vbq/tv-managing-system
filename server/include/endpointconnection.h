@@ -14,6 +14,7 @@ struct EndpointConnection
     unsigned short port;
     EndpointSettings settings;
     ClientSocket* socket = nullptr;
+    string authkey; // FIXME very unsecure
 };
 
 #endif

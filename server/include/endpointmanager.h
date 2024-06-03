@@ -7,6 +7,7 @@
 #include "endpointconnection.h"
 #include "configloader.h"
 #include "serializer.h"
+#include "serversocket.h"
 // #include "actionqueue.h"
 
 #include <vector>

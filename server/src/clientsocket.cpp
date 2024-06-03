@@ -100,7 +100,9 @@ bool ClientSocket::Send(const string& message){
     return true;
 }
 bool ClientSocket::Read(string *result){
+    // Try to read
     if ((m_readsize = read(m_client_fd, m_readbuff, _READBUFF_LEN -1)) < 1){
+        // Error when reading
         if (result)
             *result = "";
         isConnected = false;
@@ -108,6 +110,7 @@ bool ClientSocket::Read(string *result){
         syslog(LOG_ERR, "Error on reading from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));
         return false;
     }
+    // string response = string(m_readbuff, m_readsize);
     if (result)
         *result = string(m_readbuff, m_readsize);
     syslog(LOG_DEBUG, "Successfully read from [%s:%i]", inet_ntoa(m_address.sin_addr), ntohs(m_address.sin_port));

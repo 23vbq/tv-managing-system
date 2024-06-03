@@ -97,6 +97,7 @@ void EndpointManager::LoadConnectionData(vector<Config>* endpoints){
         x.GetProperty<string>("Name", buffer.settings.name, code);
         x.GetProperty<string>("Ip", buffer.ip, code);
         x.GetProperty<unsigned short>("Port", buffer.port, code);
+        x.GetProperty<string>("AuthKey", buffer.authkey, code);
         if (code)
             syslog(LOG_DEBUG, "Failure on loading EndpointConnection. Failcode: %i", code);
         else {
@@ -208,6 +209,19 @@ bool EndpointManager::SendToOne(const string &name, const string &message, strin
     bool ret = (ptr->Send(message) && ptr->Read(result));
     if (!ret)
         return ret;
+    // Check for authentication
+    if (result->find(ServerSocket::SMSG_AUTH_REQ) != string::npos){
+        string auth_result;
+        EndpointConnection* ep = GetEndpoint(name);
+        ptr->Send("AUTHK \2" + ep->authkey + "\3");
+        ptr->Read(&auth_result);
+        // Authentication failure
+        if (auth_result.find("SUCCESS") == string::npos){
+            syslog(LOG_ERR, "Cannot authenticate to endpoint %s [%s:%i]", &name[0], &(ep->ip)[0], ep->port);
+            return false;
+        }
+        return SendToOne(name, message, result);
+    }
     if (result->find("OK\r\n") != string::npos)
         *result = result->substr(4);
     return ret;
