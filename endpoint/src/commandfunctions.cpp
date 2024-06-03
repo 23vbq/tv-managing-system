@@ -1,11 +1,13 @@
 #include "commandfunctions.h"
 #include "serializer.h"
 #include "slideshowmanager.h"
+#include "authmanager.h"
 
 extern CommandHandler* m_CommandHandler;
 extern ServerSocket* m_ServerSocket;
 extern SettingsManager* m_SettingsManager;
 extern SlideshowManager* m_SlideshowManager;
+extern AuthManager* m_AuthManager;
 
 namespace CommandFunctions{
     void disconnect(CF_ARGS){
@@ -32,6 +34,18 @@ namespace CommandFunctions{
         // Handle
         if (reloadImg)
             m_SlideshowManager->ReloadImages(buff.dir);
+    }
+    void authKey(CF_ARGS){
+        int sd = m_CommandHandler->GetCurrentSd();
+        string sock_info = m_ServerSocket->GetSocketInfo(sd);
+        syslog(LOG_AUTH, "Client auth %s", &sock_info[0]);
+        if (m_AuthManager->Auth(sd, x[0])){
+            output = "SUCCESS";
+            syslog(LOG_AUTH, "Successfully authenticated %s", &sock_info[0]);
+        } else{
+            output = "FAIL";
+            syslog(LOG_AUTH, "Failure authentication %s", &sock_info[0]);
+        }
     }
     void hello(CF_ARGS){
         output = ServerSocket::SMSG_HELLO;

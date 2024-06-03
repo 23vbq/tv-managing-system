@@ -173,9 +173,8 @@ void ServerLoopThread(){
 void InitializeCommands(){
     m_CommandHandler->AddCommand("HELLO", Command{0, CommandFunctions::hello, false});
     m_CommandHandler->AddCommand("DISCON", Command{0, CommandFunctions::disconnect, true});
-    // FIXME disabled auth for testing
-    m_CommandHandler->AddCommand("SETEPSET", Command{1, CommandFunctions::setEndpointSettings, false});
-    // m_CommandHandler->AddCommand("AUTHK", Command{1, CommandFunctions::authKey, false});
+    m_CommandHandler->AddCommand("SETEPSET", Command{1, CommandFunctions::setEndpointSettings, true});
+    m_CommandHandler->AddCommand("AUTHK", Command{1, CommandFunctions::authKey, false});
     m_CommandHandler->AddCommand("PING", Command{0, CommandFunctions::ping, false});
 }
 void CleanUp(){
