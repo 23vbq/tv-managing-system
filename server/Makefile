@@ -27,6 +27,11 @@ install: tmsd defaults
 	cp ${OUT} /usr/bin
 	cp tmsd.service /etc/systemd/system
 
+ndinstall: tmsd
+	@echo "[#] Copying binaries and service"
+	cp ${OUT} /usr/bin
+	cp tmsd.service /etc/systemd/system
+
 clean:
 	@echo "[#] Cleaning build"
 	rm ${OUT}

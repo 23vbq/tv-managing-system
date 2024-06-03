@@ -233,14 +233,18 @@ void EndpointManager::SendUpdate(){
     for (size_t i = 0; i < n; i++){
         Serializer sr;
         settings = &(m_toUpdate[i]->settings);
+        // Handle local / global settings
+        if (!settings->localcfg)
+            settings = &(m_data[0].settings);
+        // Serialize data
         sr.AddValue(settings->name);
         sr.AddValue<bool>(settings->localcfg);
         sr.AddValue(settings->dir);
         sr.AddValue<unsigned int>(settings->showtime);
+        // Send data
         if (m_toUpdate[i]->socket->Send("SETEPSET \2" + sr.Serialize() + "\3")){
             delIters.push_back(i);
-            string r; // FIXME needed to not receive all data in one message
-            m_toUpdate[i]->socket->Read(&r);
+            m_toUpdate[i]->socket->Read(NULL);
         }
     }
     // Clear toUpdate list
