@@ -91,11 +91,10 @@ File `settings.cfg` stores configuration of basic server socket settings and als
 
 <summary>You need to add your endpoints here.</summary>
 
->>>
-**Name** - unique name of endpoint
-**Ip** - address of endpoint
-**Port** - port on that endpoint is listening
->>>
+> **Name** - unique name of endpoint  
+> **Ip** - address of endpoint  
+> **Port** - port on that endpoint is listening  
+> **AuthKey** - key to authenticate connection to that endpoint
 
 </details>
 
