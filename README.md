@@ -134,4 +134,4 @@ It is planned to implement hashed passwords and SSL secured connections.
 ## 🛠 Contribution
 **ToDo list:** [here](TODO.md)
 
-> **SEGFAULT COUNTER**: 8
+> **SEGFAULT COUNTER**: 9

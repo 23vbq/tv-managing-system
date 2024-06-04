@@ -200,31 +200,46 @@ void EndpointManager::SendToAll(const string &message){
         x.socket->Read(NULL);
     }
 }
-bool EndpointManager::SendToOne(const string &name, const string &message, string *result){
-    ClientSocket *ptr = GetSocket(name);
-    if (!ptr) {
-        syslog(LOG_WARNING, "Cannot find socket for endpoint name %s", &name[0]);
+bool EndpointManager::SendToOne(EndpointConnection *ep, const string &message, string *result){
+    // If socket not exists
+    if (!ep->socket) {
+        syslog(LOG_WARNING, "Socket for endpoint name %s not exists", &(ep->settings.name)[0]);
         return false;
     }
-    bool ret = (ptr->Send(message) && ptr->Read(result));
+    // If result is null
+    bool result_isNull = (result == NULL);
+    if (result_isNull)
+        result = new string();
+    bool ret = (ep->socket->Send(message) && ep->socket->Read(result));
     if (!ret)
         return ret;
     // Check for authentication
     if (result->find(ServerSocket::SMSG_AUTH_REQ) != string::npos){
         string auth_result;
-        EndpointConnection* ep = GetEndpoint(name);
-        ptr->Send("AUTHK \2" + ep->authkey + "\3");
-        ptr->Read(&auth_result);
+        ep->socket->Send("AUTHK \2" + ep->authkey + "\3");
+        ep->socket->Read(&auth_result);
         // Authentication failure
         if (auth_result.find("SUCCESS") == string::npos){
-            syslog(LOG_ERR, "Cannot authenticate to endpoint %s [%s:%i]", &name[0], &(ep->ip)[0], ep->port);
+            syslog(LOG_ERR, "Cannot authenticate to endpoint %s [%s:%i]", &(ep->settings.name)[0], &(ep->ip)[0], ep->port);
             return false;
         }
-        return SendToOne(name, message, result);
+        return SendToOne(ep, message, result);
     }
     if (result->find("OK\r\n") != string::npos)
         *result = result->substr(4);
+    // Is result was null
+    if (result_isNull)
+        delete result;
     return ret;
+}
+bool EndpointManager::SendToOne(const string &name, const string &message, string *result){
+    // ClientSocket *ptr = GetSocket(name);
+    EndpointConnection* ep = GetEndpoint(name);
+    if (ep == NULL){
+        syslog(LOG_WARNING, "Cannot find endpoint %s", &name[0]);
+        return false;
+    }
+    return SendToOne(ep, message, result);
 }
 void EndpointManager::SendUpdate(){
     size_t n = m_toUpdate.size();
@@ -242,9 +257,12 @@ void EndpointManager::SendUpdate(){
         sr.AddValue(settings->dir);
         sr.AddValue<unsigned int>(settings->showtime);
         // Send data
-        if (m_toUpdate[i]->socket->Send("SETEPSET \2" + sr.Serialize() + "\3")){
+        /*if (m_toUpdate[i]->socket->Send("SETEPSET \2" + sr.Serialize() + "\3")){
             delIters.push_back(i);
             m_toUpdate[i]->socket->Read(NULL);
+        }*/
+        if (SendToOne(m_toUpdate[i], "SETEPSET \2" + sr.Serialize() + "\3", NULL)){
+            delIters.push_back(i);
         }
     }
     // Clear toUpdate list

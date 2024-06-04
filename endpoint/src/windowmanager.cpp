@@ -268,9 +268,11 @@ void WindowManager::StopEventLoop(){
 void WindowManager::CloseAllWindows(){
     auto clients = m_clients;
     for (auto it = clients.begin(); it != clients.end(); it++){
+        syslog(LOG_ERR, "Closing %i", it->first);
         XUnmapWindow(m_display, it->first);
         Unframe(it->first);
         Close(it->first);
+        XSync(m_display, 0);
     }
 }
 

@@ -119,6 +119,7 @@ public:
      * @param message data to send
     */
     void SendToAll(const string&);
+    bool SendToOne(EndpointConnection*, const string&, string*);
     /**
      * Sends provided message to one endpoint specified by name
      * @param name endpoint name to send to

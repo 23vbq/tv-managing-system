@@ -29,7 +29,7 @@ install: tmse defaults
 
 clean:
 	@echo "[#] Cleaning build"
-	rm ${OUT}
+	rm -f ${OUT}
 
 builddir:
 	@echo "[#] Creating build dir"
