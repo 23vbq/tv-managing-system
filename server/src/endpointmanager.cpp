@@ -16,7 +16,7 @@ EndpointManager::EndpointManager(string configPath){
     EndpointConnection global;
     global.ip = EP_GLOBAL_IP;
     global.port = EP_GLOBAL_PORT;
-    global.settings.name = "[Global Settings]";
+    global.settings.name = EP_GLOBAL_NAME;
     m_data.push_back(global);
 }
 EndpointManager::~EndpointManager(){
@@ -68,6 +68,13 @@ EndpointConnection* EndpointManager::GetEndpoint(const string& name){
             return &x;
     }
     return NULL;
+}
+void EndpointManager::UpdateAddGlobal(){
+    size_t n = m_data.size();
+    for (size_t i = 0; i < n; i++){
+        if (!m_data[i].settings.localcfg)
+            m_toUpdate.push_back(&(m_data[i]));
+    }
 }
 
 // Public functions
@@ -158,7 +165,10 @@ void EndpointManager::SetSettings(EndpointSettings* ptr, EndpointSettings& setti
     ptr->dir = settings.dir;
     ptr->showtime = settings.showtime;
     m_toSave.push_back(ptr);
-    m_toUpdate.push_back(GetEndpoint(ptr->name));
+    if (ptr->name == EP_GLOBAL_NAME)
+        UpdateAddGlobal();
+    else
+        m_toUpdate.push_back(GetEndpoint(ptr->name));
     // m_ActionQueue->Add(this, &EndpointManager::SaveSettings, false);
     syslog(LOG_INFO, "Successfully changed settings for endpoint: %s", &ptr->name[0]);
 }

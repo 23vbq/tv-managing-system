@@ -3,6 +3,7 @@
 
 #define EP_GLOBAL_IP "GLOBAL"
 #define EP_GLOBAL_PORT 0
+#define EP_GLOBAL_NAME "[Global Settings]"
 
 #include "endpointconnection.h"
 #include "configloader.h"
@@ -22,6 +23,7 @@ public:
 private:
     vector<EndpointConnection> m_data; // Stores loaded endpoints
     vector<EndpointSettings*> m_toSave; // List of pointers to endpoint settings that need to be saved
+    // FIXME optimize - maybe use something else than vector
     vector<EndpointConnection*> m_toUpdate; // List of pointers to endpoint connection that update need to be sent
 
     string m_configPath; // Path to directory of config files
@@ -59,6 +61,10 @@ private:
      * @return NULL if endpoint not found
     */
     EndpointConnection* GetEndpoint(const string&);
+    /**
+     * Adds all endpoints to update
+    */
+    void UpdateAddGlobal();
 public:
     /**
      * Constructor of endpoint manager
@@ -119,6 +125,13 @@ public:
      * @param message data to send
     */
     void SendToAll(const string&);
+    /**
+     * Sends provided message to one endpoint specified by name
+     * @param ep endpoint connection to send to
+     * @param message data to send
+     * @param result pointer to result string (pass NULL if not require result)
+     * @return True if message was sent, False if error on sending or can't find socket with name
+    */
     bool SendToOne(EndpointConnection*, const string&, string*);
     /**
      * Sends provided message to one endpoint specified by name
