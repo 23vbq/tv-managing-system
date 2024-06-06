@@ -1,0 +1,30 @@
+name: Endpoint build test
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - endpoint/**
+      - shared/**
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: make
+      working-directory: ./endpoint
+      run: make
+    - name: make clean install
+      working-directory: ./endpoint
+      run: sudo make clean install
+    - name: make clean ndinstall
+      working-directory: ./endpoint
+      run: sudo make clean ndinstall
+    - name: make debug
+      working-directory: ./endpoint
+      run: make debug
