@@ -13,7 +13,7 @@ CONFIGDIR := /etc/tmse
 
 all: tmse
 
-tmsd: builddir
+tmse: builddir
 	@echo "[#] Building PRODUCTION version"
 	${CC} ${MAIN} ${INCLUDES} ${LIBS} ${SHAREDSRC} ${SRCS} -o ${OUT}
 	chmod 744 ${OUT}
