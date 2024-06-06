@@ -24,9 +24,13 @@ TODO
 
 ## 📦 Installation
 ### Server
-To install server daemon just run below command in repo directory:
+To install server daemon you need to build and create default config files. To do that just run below command in repo directory:
 ```
 sudo make clean install
+```
+If you don't want to override your configs use *(probably temporary solution)*:
+```
+sudo make clean ndinstall
 ```
 Next important step will be configuration of basic settings - [read here](#server-2)
 
@@ -47,7 +51,30 @@ systemctl stop tmsd
 IDK - TODO
 
 ### Endpoint
-`sudo make clean install`
+To install endpoint application first build it:
+```
+sudo make clean install
+```
+Or without overriding your existing config:
+```
+sudo make clean ndinstall
+```
+Next step will be configuration - [read here](#endpoint-2)
+
+*After configuring endpoint you can add it to server configuration.*
+
+To start endpoint you need to add it to your `.xinitrc`.
+If you don't know how to do this here is [xinit configuration](https://wiki.archlinux.org/title/xinit).
+Installed binaries are in `/usr/bin` by default.
+
+To run endpoint application use:
+```
+startx
+```
+
+For closing endpoint there are two methods:
+- Kill it from shell (ex. `pkill tmse`)
+- Use keyboard shortcut `ALT + Q`
 
 
 ## 📜 Description

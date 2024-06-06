@@ -27,6 +27,10 @@ install: tmse defaults
 	@echo "[#] Copying binaries"
 	cp ${OUT} /usr/bin
 
+ndinstall: tmse
+	@echo "[#] Copying binaries and service"
+	cp ${OUT} /usr/bin
+
 clean:
 	@echo "[#] Cleaning build"
 	rm -f ${OUT}
