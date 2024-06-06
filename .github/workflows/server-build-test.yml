@@ -1,0 +1,25 @@
+name: Server build test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: cdSrv
+      run: cd server
+    - name: make
+      run: make
+    - name: make clean install
+      run: sudo make clean install
+    - name: make clean ndinstall
+      run: sudo make clean ndinstall
+    - name: make debug
+      run: make debug
