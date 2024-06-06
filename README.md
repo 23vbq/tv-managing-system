@@ -28,6 +28,8 @@ To install server daemon you need to build and create default config files. To d
 ```
 sudo make clean install
 ```
+**Server do not require any external libraries**
+
 If you don't want to override your configs use *(probably temporary solution)*:
 ```
 sudo make clean ndinstall
@@ -45,7 +47,6 @@ To disable daemon just stop service. Ex:
 systemctl stop tmsd
 ```
 
-**Server do not require any external libraries**
 
 ### Client
 IDK - TODO
@@ -55,6 +56,19 @@ To install endpoint application first build it:
 ```
 sudo make clean install
 ```
+
+<details>
+
+<summary>
+
+**Required libraries**
+
+</summary>
+
+- libx11
+
+</details>
+
 Or without overriding your existing config:
 ```
 sudo make clean ndinstall
@@ -71,6 +85,19 @@ To run endpoint application use:
 ```
 startx
 ```
+
+<details>
+
+<summary>
+
+**Required packages**
+
+</summary>
+
+- xorg-server
+- xorg-xinit
+
+</details>
 
 For closing endpoint there are two methods:
 - Kill it from shell (ex. `pkill tmse`)
