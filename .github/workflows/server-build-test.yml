@@ -13,13 +13,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: cdSrv
-      run: cd server
     - name: make
+      working-directory: ./server
       run: make
     - name: make clean install
+      working-directory: ./server
       run: sudo make clean install
     - name: make clean ndinstall
+      working-directory: ./server
       run: sudo make clean ndinstall
     - name: make debug
+      working-directory: ./server
       run: make debug
