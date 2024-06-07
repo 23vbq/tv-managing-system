@@ -65,6 +65,7 @@ ServerSettings m_serversettings;
 using namespace std;
 
 void LoadServerConfig();
+void ServerLoopThread();
 void InitializeCommands();
 void CleanUp();
 
@@ -77,16 +78,6 @@ int main(int argc, char* argv[]){
     // Create signal handles
     SignalCallbacks::SetupCallbacks(&s_termination);
 
-    // FIXME test
-    /*ClientSocket *cst = new ClientSocket();
-    if(cst->Connect("127.0.0.1", 24321)){
-        cst->Send("TESTING OF CONNECTION");
-        string res;
-        cst->Read(res);
-        printf("%s", &res[0]);
-    }
-    delete cst;*/
-
     // Initialize EndpointManager
     m_EndpointManager = new EndpointManager((string)CONFIG_PATH + CONFIG_ENDPOINTS_DIR);
     //Initialize AuthManager
@@ -97,19 +88,14 @@ int main(int argc, char* argv[]){
         CleanUp();
         exit(1);
     }
-    // Initialize ActionQueue
-    // FIXME test of actionqueue
-    /*m_ActionQueue = new ActionQueue();
-    int* a = new int(7);
-    m_ActionQueue->Add(a, false);
-    m_ActionQueue->Handle();*/
+
     // Load config
     LoadServerConfig();
     // Load endpoints config
     try{
         m_EndpointManager->LoadSettingsData();
-        m_EndpointManager->InitializeEndpointSockets();
-        m_EndpointManager->SendUpdate();
+        /*m_EndpointManager->InitializeEndpointSockets();
+        m_EndpointManager->SendUpdate();*/
     } catch (const char* ex){
         syslog(LOG_ERR, "[EndpointManager] %s", ex);
         CleanUp();
@@ -123,27 +109,22 @@ int main(int argc, char* argv[]){
 
     syslog(LOG_INFO, "Initialization completed successfully");
 
+    thread srv_thread(ServerLoopThread);
+    srv_thread.detach();
+
     // Main loop
     while (!s_termination)
     {
-        //m_ActionQueue->Handle();
-        m_ServerSocket->Handle([](char msg[], int n, int sd) -> string {
-            string s(msg, n);
-            int h = m_CommandHandler->Handle(s, sd);
-            if (h == CMD_H_VALID){
-                return CommandHandler::CMD_VALID + m_CommandHandler->GetOutput() + "\r\n";
-            }
-            else if (h == CMD_H_AUTHERR){
-                return ServerSocket::SMSG_AUTH_REQ;
-            }
-            return CommandHandler::CMD_BAD;
-        });
         m_EndpointManager->SaveSettings();
         m_EndpointManager->InitializeEndpointSockets();
         m_EndpointManager->SendUpdate();
         m_AuthManager->Handle();
-        this_thread::sleep_for(chrono::milliseconds(250)); // FIXME time to change
+        this_thread::sleep_for(chrono::seconds(5)); // FIXME time to change
     }
+
+    // Stop server loop
+    if (srv_thread.joinable())
+        srv_thread.join();
 
     // Program end
     CleanUp();
@@ -164,6 +145,22 @@ void LoadServerConfig(){
     vector<Config>* epList = cfgl.GetList("Endpoints");
     m_EndpointManager->LoadConnectionData(epList);
     delete epList;
+}
+void ServerLoopThread(){
+    while(!s_termination){
+        m_ServerSocket->Handle([](char msg[], int n, int sd) -> string {
+            string s(msg, n);
+            int h = m_CommandHandler->Handle(s, sd);
+            if (h == CMD_H_VALID){
+                return CommandHandler::CMD_VALID + m_CommandHandler->GetOutput() + "\r\n";
+            }
+            else if (h == CMD_H_AUTHERR){
+                return ServerSocket::SMSG_AUTH_REQ;
+            }
+            return CommandHandler::CMD_BAD;
+        });
+        this_thread::sleep_for(chrono::milliseconds(100));
+    }
 }
 void InitializeCommands(){
     m_CommandHandler->AddCommand("HELLO", Command{0, CommandFunctions::hello, false});

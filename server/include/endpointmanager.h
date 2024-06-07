@@ -62,9 +62,15 @@ private:
     */
     EndpointConnection* GetEndpoint(const string&);
     /**
-     * Adds all endpoints to update
+     * Adds endpoints with localcfg param = false, to update
     */
     void UpdateAddGlobal();
+    /**
+     * Authenticates to endpoint
+     * @param ep endpoint to auth
+     * @return True - success, False - failure
+     */
+    bool Authenticate(EndpointConnection*);
 public:
     /**
      * Constructor of endpoint manager

@@ -1,7 +1,5 @@
 #include "endpointmanager.h"
 
-// extern ActionQueue* m_ActionQueue;
-
 // Static variables
 
 const std::string EndpointManager::SETTINGS_EXTENSION = ".ep";
@@ -75,6 +73,17 @@ void EndpointManager::UpdateAddGlobal(){
         if (!m_data[i].settings.localcfg)
             m_toUpdate.push_back(&(m_data[i]));
     }
+}
+bool EndpointManager::Authenticate(EndpointConnection *ep){
+    string auth_result;
+    ep->socket->Send("AUTHK \2" + ep->authkey + "\3");
+    ep->socket->Read(&auth_result);
+    // Authentication failure
+    if (auth_result.find("SUCCESS") == string::npos){
+        syslog(LOG_ERR, "Cannot authenticate to endpoint %s [%s:%i]", &(ep->settings.name)[0], &(ep->ip)[0], ep->port);
+        return false;
+    }
+    return true;
 }
 
 // Public functions
@@ -193,8 +202,7 @@ void EndpointManager::InitializeEndpointSockets(){
             if (ptr->socket && ptr->socket->IsConnected()){
                 ptr->socket->Read(&r); // Read HELLO
                 // Authenticate
-                ptr->socket->Send("AUTHK \2kotki145\3");
-                ptr->socket->Read(&r); // Read AUTH
+                Authenticate(ptr);
                 // Add endpoint to update
                 m_toUpdate.push_back(ptr);
                 syslog(LOG_WARNING, "Successfully connected to endpoint");
@@ -225,14 +233,8 @@ bool EndpointManager::SendToOne(EndpointConnection *ep, const string &message, s
         return ret;
     // Check for authentication
     if (result->find(ServerSocket::SMSG_AUTH_REQ) != string::npos){
-        string auth_result;
-        ep->socket->Send("AUTHK \2" + ep->authkey + "\3");
-        ep->socket->Read(&auth_result);
-        // Authentication failure
-        if (auth_result.find("SUCCESS") == string::npos){
-            syslog(LOG_ERR, "Cannot authenticate to endpoint %s [%s:%i]", &(ep->settings.name)[0], &(ep->ip)[0], ep->port);
+        if (!Authenticate(ep))
             return false;
-        }
         return SendToOne(ep, message, result);
     }
     if (result->find("OK\r\n") != string::npos)
