@@ -50,7 +50,7 @@ bool AuthManager::Auth(const int& sd, const string& key){
     if (key == GetKey())
         as.access = true;
     m_auth[sd] = as;
-    syslog(LOG_INFO, "Successfully authenticated %s", &(m_ServerSocket->GetSocketInfo(sd))[0]);
+    // syslog(LOG_DEBUG, "AUTH %s == %s %s", &key[0], &(GetKey())[0], &(m_ServerSocket->GetSocketInfo(sd))[0]);
     return as.access;
 }
 void AuthManager::Unauth(const int& sd){
