@@ -16,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Install requirements
+      run: apt install libx11
     - name: make
       working-directory: ./endpoint
       run: make
