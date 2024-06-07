@@ -6,7 +6,7 @@ on:
     paths:
       - endpoint/**
       - shared/**
-      - workflows/**
+      - .github/workflows/endpoint-build-test.yml
   pull_request:
     branches: [ "main" ]
 
