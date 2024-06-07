@@ -6,6 +6,7 @@ on:
     paths:
       - endpoint/**
       - shared/**
+      - workflows/endpoint-build-test.yml
   pull_request:
     branches: [ "main" ]
 
@@ -17,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install requirements
-      run: apt install libx11
+      run: sudo apt install libx11
     - name: make
       working-directory: ./endpoint
       run: make
