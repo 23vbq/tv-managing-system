@@ -10,6 +10,9 @@
 
 #endif
 
+#define LT_SRVHND chrono::milliseconds(100)
+#define LT_MAINLOOP chrono::seconds(5)
+
 #include <syslog.h>
 
 #include "signalcallbacks.h"
@@ -119,7 +122,7 @@ int main(int argc, char* argv[]){
         m_EndpointManager->InitializeEndpointSockets();
         m_EndpointManager->SendUpdate();
         m_AuthManager->Handle();
-        this_thread::sleep_for(chrono::seconds(5)); // FIXME time to change
+        this_thread::sleep_for(LT_MAINLOOP); // FIXME time to change
     }
 
     // Stop server loop
@@ -159,7 +162,7 @@ void ServerLoopThread(){
             }
             return CommandHandler::CMD_BAD;
         });
-        this_thread::sleep_for(chrono::milliseconds(100));
+        this_thread::sleep_for(LT_SRVHND);
     }
 }
 void InitializeCommands(){
