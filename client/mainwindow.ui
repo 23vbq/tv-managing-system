@@ -296,6 +296,25 @@
       <pixmap resource="resources.qrc">:/icon/connection/img/icon/connection/red.png</pixmap>
      </property>
     </widget>
+    <widget class="QLabel" name="epInfoConLabel">
+     <property name="geometry">
+      <rect>
+       <x>36</x>
+       <y>15</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Roboto</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Not connected</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

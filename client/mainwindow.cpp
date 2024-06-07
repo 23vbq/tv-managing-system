@@ -125,6 +125,12 @@ void MainWindow::LoadEndpointInfo(){
         ":/icon/connection/img/icon/connection/green.png" :
         ":/icon/connection/img/icon/connection/red.png"
     ));
+    ui->epInfoConLabel->setText( connected ?
+        "Connected" :
+        "Not connected"
+    );
+    ui->epInfoConLabel->setStyleSheet((QString)"QLabel { color: " + (connected ? "green" : "red") + ";}");
+    ui->epInfo->setEnabled(true);
 }
 void MainWindow::ClearEndpointSettings(){
     ui->epNameLabel->setText("");
