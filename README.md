@@ -20,7 +20,20 @@ Main purpose of this system is to allow you to easily setup display system (e.g.
 Very important is that, this system is opensource, so you can customize it how you want and adapt to your needs.
 
 ## Usage
-TODO
+Install server on linux machine that will have access to connect to endpoints and will give access for clients to connect.
+After installation and configuration you need to allow connections on firewall to server port.
+
+Next step will be deploying endpoints.
+Follow installation process, and after that you can add your endpoints in server configuration.
+You can also deploy endpoints on the go (when server is running), but you will need to restart server after changing configuration.
+
+Server and Endpoints are using `syslog` to write some logs. This allows you to verify if everything is working.
+
+Client allows you to manage system.
+When server starts you will be able to connect to it using client and change configurations.
+You need to provide address, port and credentials to connect to server.
+
+All new endpoints will use global configuration if config is not found.
 
 ## 📦 Installation
 ### Server
