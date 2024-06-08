@@ -19,7 +19,7 @@ Main purpose of this system is to allow you to easily setup display system (e.g.
 
 Very important is that, this system is opensource, so you can customize it how you want and adapt to your needs.
 
-## Usage
+## 🕹 Usage
 Install server on linux machine that will have access to connect to endpoints and will give access for clients to connect.
 After installation and configuration you need to allow connections on firewall to server port.
 
