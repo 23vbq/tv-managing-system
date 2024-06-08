@@ -1,6 +1,10 @@
 # 🖥 tv-managing-system
-System designated to implement in company easy TV display system.
-It allows deploy TVs (endpoints) based on linux (e.g. Raspberry Pi) and manage all of them using single pc.
+<p align="center">
+<!-- ![TMS Icon](icon-256.png "Icon") -->
+  <img src="icon-256.png" height="128px"/><br><br>
+  System designated to implement in company easy TV display system.<br>
+  It allows deploy TVs (endpoints) based on linux (e.g. Raspberry Pi) and manage all of them using single pc.<br>
+</p>
 
 >
 > \[!NOTE]
