@@ -49,7 +49,16 @@ systemctl stop tmsd
 
 
 ### Client
-IDK - TODO
+Download installer `.msi` or portable version from [Releases](releases/).
+- for installer follow simple installation process *(by default client is installed in `C:\Program Files (x86)\23vbq\TMSC`)*
+- for portable just extract `.7z` file *(dll's must be in same directory as executable)*
+
+If you want to build client by your self you need to download and install [Qt](https://www.qt.io/download),
+clone repository and open project from `CMakeLists.txt`.
+
+To deploy your build you can use `windeployqt` tool which is installed with Qt.
+It will copy all required libraries to directory with executable.
+Also you can use [AdvancedInstaller template](client/TMSC.aip) to deploy it in installable package.
 
 ### Endpoint
 To install endpoint application first build it:
@@ -59,11 +68,7 @@ sudo make clean install
 
 <details>
 
-<summary>
-
-**Required libraries**
-
-</summary>
+<summary><b>Required libraries</b></summary>
 
 - libx11
 
@@ -88,11 +93,7 @@ startx
 
 <details>
 
-<summary>
-
-**Required packages**
-
-</summary>
+<summary><b>Required packages</b></summary>
 
 - xorg-server
 - xorg-xinit
