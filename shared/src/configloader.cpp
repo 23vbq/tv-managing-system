@@ -1,5 +1,7 @@
 #include "configloader.h"
 
+// Private functions
+
 ifstream* ConfigLoader::OpenFile(){
     ifstream* in = new ifstream;
     in->open(m_path);
@@ -19,13 +21,35 @@ void ConfigLoader::ClearWhitespaces(string& line){
         }
     }
 }
-// void ConfigLoader::LoadList(string& key, string& line, bool& isList, int& n){
-//     m_properties[key] += line
-// }
+void ConfigLoader::ClearTrailingSpaces(string& data){
+    size_t n = data.length();
+    size_t i;
+
+    // Front spaces
+    for (i = 0; i < n; i++){
+        if (data[i] != ' ' &&
+            data[i] != '\t')
+            break;
+    }
+    data.erase(data.begin(), data.begin() + i);
+
+    // Back spaces
+    for (i = 0; i < n; i++){
+        char dbg = data[n - i - 1];
+        if (data[n - i - 1] != ' ' &&
+            data[n - i - 1] != '\t')
+            break;
+    }
+    data.erase(data.begin() + n - i, data.begin() + n);
+}
+
+// Constructors
 
 ConfigLoader::ConfigLoader(string path){
     m_path = path;
 }
+
+// Public functions
 
 string ConfigLoader::GetPath(){
     return m_path;
@@ -51,13 +75,13 @@ void ConfigLoader::Load(){
             continue;
         if (line[0] == '#')
             continue;
+
         // Remove comment part
         size_t sharpPos = line.find('#');
         if (sharpPos != string::npos){
             line = line.substr(0, sharpPos);
         }
-        // Remove whitespaces
-        ClearWhitespaces(line);
+
         size_t eqPos;
         // Handle if is list
         if (isList){
@@ -77,25 +101,31 @@ void ConfigLoader::Load(){
             syslog(LOG_DEBUG, "List line: %s", &line[0]);
             continue;
         }
+
         // Handle if equals not found
         if ((eqPos = line.find('=')) == string::npos){
             syslog(LOG_ERR, "Invalid data at line %i in file %s", n, &m_path[0]);
             continue;
         }
+
         // Get key and validate if exists
         key = line.substr(0, eqPos);
+        ClearTrailingSpaces(key);
         if (m_properties.count(key) != 0){
             syslog(LOG_WARNING, "Key %s at line %i already set. Skipping.", &key[0], n);
             continue;
         }
+
         // Get value
         value = line.substr(eqPos + 1);
+        ClearTrailingSpaces(value);
         // Open list check
         if (value.find('[') != string::npos){
             isList = true;
             m_properties[key] = "";
             continue;
         }
+
         // Set value
         m_properties[key] = value;
         syslog(LOG_DEBUG, "%s => %s", &key[0], &value[0]);

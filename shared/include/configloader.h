@@ -24,6 +24,11 @@ private:
      * Removes whitespaces from string
     */
     void ClearWhitespaces(string&);
+    /**
+     * Removes trailing whitespaces from string. (`' '`, `'\ t'`)
+     * @param data string to remove from
+     */
+    void ClearTrailingSpaces(string&);
     // void LoadList(string&, string&, bool&, int&);
 public:
     // ConfigLoader();
