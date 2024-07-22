@@ -17,8 +17,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install requirements
-      run: sudo apt install libx11-dev libx11-devel
     - name: make
       working-directory: ./endpoint
       run: make
