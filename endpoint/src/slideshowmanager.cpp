@@ -3,7 +3,7 @@
 
 extern WindowManager* m_WindowManager;
 
-const std::string SlideshowManager::s_openProg = "feh -Y -Z";
+std::string SlideshowManager::s_openProg = "feh -Y -. -Z -F";
 const std::set<std::string> SlideshowManager::s_extensions = {
     ".jpg",
     ".png"
@@ -20,6 +20,10 @@ void SlideshowManager::ExtensionToLower(std::string &extension){
 }
 
 // Public functions
+
+void SlideshowManager::SetOpenProg(const std::string &ImageCommand){
+    SlideshowManager::s_openProg = ImageCommand;
+}
 
 bool SlideshowManager::GetFilesInPath(const std::string &path){
     int n = 0;

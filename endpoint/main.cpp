@@ -81,13 +81,17 @@ int main(int argc, char* argv[]){
     } catch(const char *e){
         syslog(LOG_ERR, "[WindowManager] %s", e);
         printf("[WindowManager] %s\n", e);
+#ifndef DEBUG
         CleanUp();
         exit(1);
+#endif
     }
 
-    // Setup WM thread
+    // Setup WM thread (ignore if is in debug mode)
+#ifndef DEBUG
     thread wm_thread(&WindowManager::Run, m_WindowManager);
     wm_thread.detach();
+#endif
 
     // Timer
     time_t timer_now;
@@ -136,9 +140,11 @@ int main(int argc, char* argv[]){
     }
 
     // Stop WM
+#ifndef DEBUG
     m_WindowManager->StopEventLoop();
     if (wm_thread.joinable())
         wm_thread.join();
+#endif
 
     // Wait for server loop stop
     if (srv_thread.joinable())
@@ -151,6 +157,9 @@ void LoadServerConfig(){
     ConfigLoader cfgl = ConfigLoader((string) CONFIG_PATH + CONFIG_SETTINGS_FILE);
     cfgl.Load();
     cfgl.GetProperty<unsigned short>("ListeningPort", m_endpointserversettings.listeningPort);
+    string openProg;
+    cfgl.GetProperty("ImageCommand", openProg);
+    SlideshowManager::SetOpenProg(openProg);
 }
 void ServerLoopThread(){
     // Main loop

@@ -1,1 +1,2 @@
 ListeningPort = 24321
+ImageCommand = feh -Y -. -Z -F

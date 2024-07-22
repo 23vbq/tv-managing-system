@@ -11,7 +11,7 @@ namespace fs = std::filesystem;
 
 class SlideshowManager{
 private:
-    static const std::string s_openProg;
+    static std::string s_openProg;
     static const std::set<std::string> s_extensions;
 
     std::vector<std::string> m_paths;
@@ -19,6 +19,8 @@ private:
     void ExtensionToLower(std::string&);
     
 public:
+    static void SetOpenProg(const std::string&);
+
     bool GetFilesInPath(const std::string&);
     // void OpenImage(const int&);
     void OpenAllImages();
