@@ -155,7 +155,7 @@ Server configuration is stored in `/etc/tmsd/`.
 Default settings are stored in def files in repo and are copied to desired location when installing.
 
 Server uses two files for it's configuration:
-- [settings.cfg](server/setting.cfg.def) - to store basic server socket settings
+- [settings.cfg](server/settings.cfg.def) - to store basic server socket settings
 - [authkey](server/authkey.def) - to store authentication key for server *(now it is stored in plain text - [read here](#security)])*
 
 File `settings.cfg` stores configuration of basic server socket settings and also list of endpoints, that server needs to connect to.
@@ -187,8 +187,11 @@ Endpoint configuration is stored in `/etc/tmse`.
 Default settings are stored in def files in repo and are copied to desired location when installing.
 
 Endpoint uses two files for it's configuration:
-- [settings.cfg](endpoint/setting.cfg.def) - to store basic server socket settings
+- [settings.cfg](endpoint/settings.cfg.def) - to store basic settings
 - [authkey](endpoint/authkey.def) - to store authentication key for server *(now it is stored in plain text - [read here](#security))* **NOW IS UNUSED - wait for update**
+
+By default endpoint is using [feh](https://github.com/derf/feh), but it can be to any image viewer.
+You can set up any command you want for opening images (through `settings.cfg`). Opening images is implemented in [SlideshowManager::OpenAllImages()](endpoint/src/slideshowmanager.cpp).
 
 Endpoint do not store major configuration (meaning directory to lookup for images, etc.).
 It is provided by server when connection occurs. It prevents endpoint from loading old configuration.
