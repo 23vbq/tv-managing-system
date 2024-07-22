@@ -1,5 +1,29 @@
 #include "config.h"
 
+// Template specialization
+
+/**
+ * Gets string property from key-value pair based config
+ * @param key key to search in config
+ * @param valueOut variable to store string value of property
+ * @return TRUE if property found, FALSE if property not found or config is empty
+ */
+template <>
+bool Config::GetProperty<string>(string key, string& valueOut){
+    if (m_properties.size() == 0){
+        syslog(LOG_WARNING, "Config not loaded or is empty.");
+        return false;
+    }
+    if (!m_properties.count(key)){
+        syslog(LOG_WARNING, "Property [%s] not found!", &key[0]);
+        return false;
+    }
+    valueOut = m_properties[key];
+    return true;
+}
+
+// Public functions
+
 vector<Config>* Config::GetList(string listKey){
     if (m_properties.size() == 0){
         syslog(LOG_WARNING, "Config not loaded or is empty.");
