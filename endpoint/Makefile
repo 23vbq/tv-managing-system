@@ -15,12 +15,12 @@ all: tmse
 
 tmse: builddir
 	@echo "[#] Building PRODUCTION version"
-	${CC} ${MAIN} ${INCLUDES} ${LIBS} ${SHAREDSRC} ${SRCS} -o ${OUT}
+	${CC} ${MAIN} ${INCLUDES} ${SHAREDSRC} ${SRCS} -o ${OUT} ${LIBS}
 	chmod 744 ${OUT}
 
 debug: builddir
 	@echo "[#] Building DEBUG version"
-	${CC} -g -D DEBUG ${MAIN} ${INCLUDES} ${LIBS} ${SHAREDSRC} ${SRCS} -o ${OUT}
+	${CC} -g -D DEBUG ${MAIN} ${INCLUDES} ${SHAREDSRC} ${SRCS} -o ${OUT} ${LIBS}
 	chmod 777 ${OUT}
 
 install: tmse defaults
