@@ -11,11 +11,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setFixedSize(QSize(1280, 741));
     ClearEndpointSettings();
+    ClearEndpointInfo();
     ReloadEndpointListView();
 
     // PushButtons signals
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::ReloadEndpointListView);
     connect(ui->epSavePushButton, &QPushButton::clicked, this, &MainWindow::SaveEndpointSettings);
+    connect(ui->epInfoReload, &QPushButton::clicked, this, &MainWindow::LoadEndpointInfo);
 
     // ListWidget signals
     connect(ui->endpointListWidget, &QListWidget::itemSelectionChanged, this, &MainWindow::LoadEndpointSettings);
@@ -120,6 +122,7 @@ void MainWindow::LoadEndpointSettings(){
 }
 void MainWindow::LoadEndpointInfo(){
     std::string name = ui->endpointListWidget->currentIndex().data().toString().toStdString();
+    // Set connected info
     bool connected = m_EndpointManager->Ping(name);
     ui->epInfoConIcon->setPixmap(QPixmap( connected ?
         ":/icon/connection/img/icon/connection/green.png" :
@@ -138,6 +141,11 @@ void MainWindow::ClearEndpointSettings(){
     ui->epDirLineEdit->setText("");
     ui->epShowtimeSpinBox->setValue(0);
     ui->epSettings->setEnabled(false);
+}
+void MainWindow::ClearEndpointInfo(){
+    ui->epInfoConLabel->setText("");
+    ui->epInfoConIcon->setPixmap(QPixmap());
+    ui->epInfo->setEnabled(false);
 }
 void MainWindow::SaveEndpointSettings(){
     m_EndpointManager->SetLocalCfg((ui->epLocalCfgCheckBox->checkState() == Qt::CheckState::Checked ? true : false)); // ui->epLocalCfgCheckBox->isChecked()
@@ -166,6 +174,7 @@ void MainWindow::on_actionDisconnect_triggered()
     m_ClientSocket->Disconnect();
     ReloadEndpointListView();
     ClearEndpointSettings();
+    ClearEndpointInfo();
 }
 
 
@@ -177,5 +186,7 @@ void MainWindow::on_actionReconnect_triggered()
     on_actionDisconnect_triggered();
     cw->Connect(connection_info.first, connection_info.second);
     CloseConnectWindow();
+    ClearEndpointSettings();
+    ClearEndpointInfo();
 }
 

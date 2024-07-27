@@ -44,6 +44,7 @@ private:
     void LoadEndpointSettings();
     void LoadEndpointInfo();
     void ClearEndpointSettings();
+    void ClearEndpointInfo();
     void SaveEndpointSettings();
 
     Ui::MainWindow *ui;
