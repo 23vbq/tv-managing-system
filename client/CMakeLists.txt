@@ -40,9 +40,11 @@ include_directories(../shared/include)
 # add_library(serializer ../shared/src/serializer.cpp ../shared/include/serializer.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
     qt_add_executable(client
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${app_icon_resource_windows}
         connectwindow.ui
         authwindow.ui
         resources.qrc
