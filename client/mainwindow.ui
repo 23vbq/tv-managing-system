@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>TvManagingSystem Client</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icon/icon.ico</normaloff>:/icon/icon.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QListWidget" name="endpointListWidget">
     <property name="geometry">

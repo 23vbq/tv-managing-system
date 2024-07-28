@@ -3,4 +3,7 @@
         <file>img/icon/connection/green.png</file>
         <file>img/icon/connection/red.png</file>
     </qresource>
+    <qresource prefix="/icon">
+        <file>icon.ico</file>
+    </qresource>
 </RCC>
