@@ -39,6 +39,29 @@ You need to provide address, port and credentials to connect to server.
 
 All new endpoints will use global configuration if config is not found.
 
+## 🛠️ Tech stack
+### Languages
+- **C++** (core implementation: server + endpoint + shared code)
+- **C** (small low-level/compat pieces)
+
+### Build & tooling
+- **CMake** (project configuration / build generation)
+- **Make** (build + install targets)
+
+### Components & platforms
+- **Server (Linux)**
+  - **systemd** service (`tmsd`) for daemon lifecycle
+  - **syslog** for logging
+
+- **Endpoint (Linux / e.g. Raspberry Pi)**
+  - **X11** for display output
+  - **xinit/startx** for session startup
+
+- **Client (Windows)**
+  - **Qt** (GUI client)
+  - **windeployqt** (shipping Qt runtime with builds)
+  - Installer packaging via **Advanced Installer** template (`client/TMSC.aip`)
+
 ## 📦 Installation
 ### Server
 To install server daemon you need to build and create default config files. To do that just run below command in repo directory:
